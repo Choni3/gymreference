@@ -125,17 +125,89 @@ async function addTemplateRoutines() {
   return { added, extended };
 }
 
+// Read-check-write work that creates routines/exercises runs one at a time across all open
+// tabs: an update reloads every tab at once, and each one used to create the templates.
+function exclusive(fn) {
+  return navigator.locks ? navigator.locks.request('gymreference-write', fn) : fn();
+}
+
+// Repair for duplicates created by tabs running the template setup at the same time: keeps
+// one routine per template name (a user-edited one wins) and merges same-name exercises into
+// one (the one the kept routines use), moving over notes, links and non-default photos.
+async function dedupeTemplates() {
+  const ops = [];
+  const kept = [];
+  const names = new Set();
+  const routines = (await db.all('routines')).sort((a, b) => !!a.template - !!b.template || a.updatedAt - b.updatedAt || a.id.localeCompare(b.id));
+  for (const r of routines) {
+    const key = r.name.trim().toLowerCase();
+    if (r.template && names.has(key)) ops.push({ store: 'routines', delete: r.id });
+    else kept.push(r);
+    names.add(key);
+  }
+  const used = new Set(kept.flatMap((r) => r.items.map((i) => i.exerciseId)));
+  const groups = new Map();
+  for (const e of await db.all('exercises')) {
+    const key = e.name.trim().toLowerCase();
+    groups.set(key, [...(groups.get(key) || []), e]);
+  }
+  const remap = new Map();
+  for (const [key, group] of groups) {
+    if (group.length < 2) continue;
+    const keeper = group.find((e) => used.has(e.id)) || group[0];
+    const defaults = new Set((starterByName.get(key)?.photos || []).map((p) => p.caption));
+    const keeperPhotos = await Promise.all(keeper.photoIds.map((id) => db.get('photos', id)));
+    const keeperHasDefaults = keeperPhotos.some((p) => p && defaults.has(p.caption));
+    for (const dup of group) {
+      if (dup === keeper) continue;
+      remap.set(dup.id, keeper.id);
+      for (const id of dup.photoIds) {
+        const photo = await db.get('photos', id);
+        if (photo && keeperHasDefaults && defaults.has(photo.caption)) ops.push({ store: 'photos', delete: id });
+        else if (photo) keeper.photoIds.push(id);
+      }
+      const notes = dup.notes.trim();
+      if (notes && !keeper.notes.includes(notes)) keeper.notes = [keeper.notes.trim(), notes].filter(Boolean).join('\n');
+      // Never drop cues the user wrote: they replace default cues, else go into the notes.
+      const isDefault = (c) => !c.trim() || c === starterByName.get(key)?.cues || LEGACY_CUES.has(`${key}:${cueHash(c)}`);
+      if (!isDefault(dup.cues) && dup.cues !== keeper.cues) {
+        if (isDefault(keeper.cues)) keeper.cues = dup.cues;
+        else keeper.notes = [keeper.notes.trim(), dup.cues.trim()].filter(Boolean).join('\n');
+      }
+      const defaultMuscles = (m) => !m.trim() || m === starterByName.get(key)?.muscles;
+      if (!defaultMuscles(dup.muscles) && dup.muscles !== keeper.muscles) {
+        if (defaultMuscles(keeper.muscles)) keeper.muscles = dup.muscles;
+        else keeper.notes = [keeper.notes.trim(), `Muscles: ${dup.muscles.trim()}`].filter(Boolean).join('\n');
+      }
+      keeper.links = [...new Set([...keeper.links, ...dup.links])];
+      ops.push({ store: 'exercises', delete: dup.id });
+    }
+    ops.push({ store: 'exercises', value: { ...keeper, updatedAt: Date.now() } });
+  }
+  for (const r of kept) {
+    if (r.items.some((i) => remap.has(i.exerciseId))) {
+      ops.push({ store: 'routines', value: { ...r, items: r.items.map((i) => ({ ...i, exerciseId: remap.get(i.exerciseId) || i.exerciseId })) } });
+    }
+  }
+  if (ops.length) await db.writeMany(ops);
+  return ops.length > 0;
+}
+
 // Once per DEFAULTS_VERSION (retried while offline), refresh defaults on existing exercises.
-// Version 3 introduced the routine templates: create them once.
-async function upgradeDefaults() {
+// Version 3 introduced the routine templates: create them once. Version 4 repairs duplicates.
+function upgradeDefaults() {
+  return exclusive(upgradeDefaultsLocked);
+}
+async function upgradeDefaultsLocked() {
   const prev = Number(localStorage.getItem('defaultsVersion'));
   if (prev >= DEFAULTS_VERSION) return;
   const routinesAdded = prev < 3 && !localStorage.getItem('templatesAdded') ? (await addTemplateRoutines()).added : 0;
   localStorage.setItem('templatesAdded', '1');
+  const repaired = await dedupeTemplates();
   const { updated, complete } = await applyDefaultsToAll();
   if (complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));
-  if (updated || routinesAdded) {
-    toast(routinesAdded
+  if (updated || routinesAdded || repaired) {
+    toast(repaired && !routinesAdded ? 'Removed duplicate routines and exercises.' : routinesAdded
       ? `Added ${routinesAdded} routine template${routinesAdded > 1 ? 's' : ''}.`
       : `Updated default cues & photos for ${updated} exercise${updated > 1 ? 's' : ''}.`);
     if (!location.hash.includes('/edit')) render(); // don't discard edits in progress
@@ -636,25 +708,28 @@ async function settingsScreen() {
     if (!file) return;
     try {
       const { exerciseNames, routines } = parseStrong(await file.text());
-      const byName = new Map((await db.all('exercises')).map((e) => [e.name.trim().toLowerCase(), e]));
-      const before = byName.size;
-      const current = await db.all('routines');
-      const ops = [];
-      let newR = 0;
-      for (const n of exerciseNames) await exerciseFor(n, byName, ops);
-      for (const r of routines) {
-        // Keep the user's own routines; replace untouched templates with the real routine.
-        const existing = current.find((c) => c.name.trim().toLowerCase() === r.name.toLowerCase());
-        if (existing && !existing.template) continue;
-        const items = r.items.map((i) => ({ exerciseId: byName.get(i.name.toLowerCase()).id, sets: i.sets ? String(i.sets) : '', reps: i.reps, note: '' }));
-        ops.push({ store: 'routines', value: {
-          id: existing?.id || db.uid(), name: r.name, updatedAt: Date.now(),
-          items: await withExtras(items, templateFor(r.name), byName, ops),
-        } });
-        newR++;
-      }
-      const newEx = byName.size - before;
-      await db.writeMany(ops);
+      const { newR, newEx } = await exclusive(async () => {
+        const byName = new Map((await db.all('exercises')).map((e) => [e.name.trim().toLowerCase(), e]));
+        const before = byName.size;
+        const current = await db.all('routines');
+        const ops = [];
+        let newR = 0;
+        for (const n of exerciseNames) await exerciseFor(n, byName, ops);
+        for (const r of routines) {
+          // Keep the user's own routines; replace untouched templates with the real routine.
+          const existing = current.find((c) => c.name.trim().toLowerCase() === r.name.toLowerCase());
+          if (existing && !existing.template) continue;
+          const items = r.items.map((i) => ({ exerciseId: byName.get(i.name.toLowerCase()).id, sets: i.sets ? String(i.sets) : '', reps: i.reps, note: '' }));
+          ops.push({ store: 'routines', value: {
+            id: existing?.id || db.uid(), name: r.name, updatedAt: Date.now(),
+            items: await withExtras(items, templateFor(r.name), byName, ops),
+          } });
+          newR++;
+        }
+        const newEx = byName.size - before;
+        await db.writeMany(ops);
+        return { newR, newEx };
+      });
       toast(`Imported ${newR} routines and ${newEx} new exercises.`);
     } catch (err) {
       toast(err.message);
@@ -705,8 +780,11 @@ async function settingsScreen() {
     h('div', { class: 'card' },
       h('p', {}, `Routine templates: ${STARTER_ROUTINES.map((t) => t.name).join(', ')}. Adds the ones you don't have (matched by name), with default cues and photos.`),
       h('button', { class: 'btn', onclick: async () => {
-        const { added, extended } = await addTemplateRoutines();
-        await applyDefaultsToAll(); // photos for any exercise that missed them
+        const { added, extended } = await exclusive(async () => {
+          const result = await addTemplateRoutines();
+          await applyDefaultsToAll(); // photos for any exercise that missed them
+          return result;
+        });
         toast(added || extended
           ? `Added ${added} routine${added === 1 ? '' : 's'}${extended ? `, updated ${extended}` : ''}.`
           : 'You already have all the template routines.');

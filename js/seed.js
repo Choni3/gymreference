@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 3;
+export const DEFAULTS_VERSION = 4;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
