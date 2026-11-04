@@ -298,7 +298,15 @@ async function homeScreen() {
     h('div', { class: 'list' },
       h('a', { class: 'row', href: '#/exercises' },
         h('div', { class: 'row-text' }, h('strong', {}, 'All exercises'), h('span', { class: 'muted' }, `${exercises.length} exercises`)),
-        h('span', { class: 'chev' }, '›'))));
+        h('span', { class: 'chev' }, '›'))),
+    versionFooter());
+}
+
+// "GymReference v7 · Check for updates" at the bottom of the home screen.
+function versionFooter() {
+  const label = h('span', {}, 'GymReference');
+  appVersion().then((v) => { label.textContent = `GymReference ${v}`; });
+  return h('p', { class: 'muted app-footer' }, label, ' · ', h('button', { class: 'link', onclick: updateButtonClick }, 'Check for updates'));
 }
 
 async function exercisesScreen() {
@@ -769,7 +777,13 @@ async function settingsScreen() {
     }
   }
 
+  const version = h('span', {}, '…');
+  appVersion().then((v) => { version.textContent = v; });
   return screen({ title: 'Settings', back: '#/' },
+    h('h2', {}, 'App'),
+    h('div', { class: 'card' },
+      h('p', {}, 'Installed version: ', version),
+      h('button', { class: 'btn primary', onclick: updateButtonClick }, 'Check for updates')),
     h('h2', {}, 'Import'),
     h('div', { class: 'card' },
       h('p', {}, 'In Strong: Settings → Export Strong Data. Save the CSV to Files, then pick it here. Each workout becomes a routine (from its latest session).'),
@@ -854,32 +868,81 @@ window.addEventListener('hashchange', render);
 resumeHash();
 render().then(upgradeDefaults).catch((err) => console.error(err));
 
-// Updates: a new service worker waits until you tap "Update", then the page reloads once.
+// Updates: a new version installs in the background and waits. The banner, or the
+// "Check for updates" buttons, activate it and the page reloads once on the new version.
+let reloading = false;
+function reloadOnce() {
+  if (!reloading) { reloading = true; location.reload(); }
+}
+
+function activate(worker) {
+  worker.addEventListener('statechange', () => { if (worker.state === 'activated') reloadOnce(); });
+  worker.postMessage('skipWaiting');
+}
+
 function offerUpdate(worker) {
   if (document.querySelector('.update-banner')) return;
   document.body.append(h('div', { class: 'update-banner', role: 'status' },
     h('span', {}, 'A new version is ready.'),
-    h('button', { class: 'btn small primary', onclick: () => worker.postMessage('skipWaiting') }, 'Update')));
+    h('button', { class: 'btn small primary', onclick: () => activate(worker) }, 'Update')));
 }
 
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
+// Installed version, read from the service worker's cache name ("gymreference-v7" → "v7").
+async function appVersion() {
+  const key = 'caches' in window && (await caches.keys()).find((k) => /^gymreference-v\d+$/.test(k));
+  return key ? key.slice('gymreference-'.length) : 'installing…';
+}
+
+// Fetch sw.js now; if it changed, wait for the new version to download, then switch to it.
+// Resolves 'updating', 'latest' or 'failed'.
+async function checkForUpdates() {
+  const reg = await navigator.serviceWorker?.getRegistration();
+  if (!reg) return 'failed';
+  if (reg.waiting) { // already downloaded (works offline too)
+    activate(reg.waiting);
+    return 'updating';
+  }
+  await reg.update();
+  const w = reg.installing;
+  if (w) {
+    await new Promise((ok) => w.addEventListener('statechange', () => { if (w.state !== 'installing') ok(); }));
+  }
+  if (!reg.waiting) return w ? 'failed' : 'latest';
+  activate(reg.waiting);
+  return 'updating';
+}
+
+async function updateButtonClick() {
+  toast('Checking for updates…');
+  try {
+    const result = await checkForUpdates();
+    if (result === 'updating') toast('Updating…');
+    else if (result === 'latest') toast(`You have the latest version (${await appVersion()}).`);
+    else toast('Could not download the update. Check your connection and try again.');
+  } catch {
+    toast('Could not check for updates. Are you offline?');
+  }
+}
+
+if ('serviceWorker' in navigator && isSecureContext) {
   navigator.serviceWorker.register('./sw.js').then((reg) => {
-    if (reg.waiting && navigator.serviceWorker.controller) offerUpdate(reg.waiting);
-    reg.addEventListener('updatefound', () => {
-      const w = reg.installing;
-      w?.addEventListener('statechange', () => {
-        if (w.state === 'installed' && navigator.serviceWorker.controller) offerUpdate(w);
-      });
-    });
+    // Offer a new version once it has downloaded. It may already be installing or waiting
+    // here: 'updatefound' can fire before this callback runs, so don't rely on it alone.
+    const watch = (w) => {
+      if (!w) return;
+      const offer = () => { if (w.state === 'installed' && navigator.serviceWorker.controller) offerUpdate(w); };
+      offer();
+      w.addEventListener('statechange', offer);
+    };
+    watch(reg.waiting);
+    watch(reg.installing);
+    reg.addEventListener('updatefound', () => watch(reg.installing));
     // Home-screen apps are often resumed rather than reloaded: check for updates on resume.
     document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update().catch(() => {}); });
   });
-  // Reload only when replacing a running version, not when the first install takes control.
-  let reloading = false;
+  // Another tab activated a new version: reload onto it (not when the first install takes control).
   const hadController = !!navigator.serviceWorker.controller;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (hadController && !reloading) { reloading = true; location.reload(); }
-  });
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController) reloadOnce(); });
   // Keep the default exercise photos available offline (fetched by defaultPhotoOps).
   caches.open('gymreference-defaults-v1').then(async (cache) => {
     for (const s of STARTER) for (const p of s.photos) if (!(await cache.match(p.src))) await cache.add(p.src).catch(() => {});
