@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 5;
+export const DEFAULTS_VERSION = 6;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -1158,6 +1158,45 @@ Programming tips
 - Rest 1–2 min; use the same seat notch every session
 - Top of the range on every set → one pin heavier, restart low`,
   },
+  {
+    name: 'Leg Curl (Machine)',
+    photos: photos('Seated_Leg_Curl', 'Start: legs nearly straight, thigh pad locked', 'End: heels curled down and back, squeeze'),
+    muscles: 'Hamstrings, calves (assist)',
+    links: [
+      'https://www.strengthlog.com/seated-leg-curl/',
+      'https://sci-sport.com/en/hypertrophy-and-hamstring-protection-seated-prone-leg-curl/',
+    ],
+    cues: `Setup
+- Line the knees up with the machine's pivot point
+- Lower pad just above the heels, on the lower calves
+- Thigh pad locked snug just above the knees
+- Back flat against the pad, hold the handles firmly
+
+Execution
+- Brace, keep hips and back on the pad
+- Curl the heels down and back as far as possible
+- Squeeze the hamstrings briefly at full knee bend
+- Return slowly to nearly straight legs
+
+Breathing & tempo
+- Exhale as you curl the pad down
+- Inhale during the slow return
+- About 1 s curl, short squeeze, 2–3 s back
+- Don't let the stack slam between reps
+
+Common mistakes
+- Knees off the pivot → realign the knee with the machine axis
+- Loose thigh pad, thighs lift → tighten the pad on the thighs
+- Swinging or jerking the weight → lighten the load, control every rep
+- Partial reps near the stretch → use the full range
+- Hips sliding forward → adjust the back pad, sit tall
+
+Programming tips
+- Hypertrophy: 3–4 sets × 8–15 reps, 0–2 reps in reserve
+- Rest 1.5–2 min between sets
+- Add reps first, then the smallest weight step
+- Seated beats lying for growth: ~14% vs ~9% (Maeo 2021)`,
+  },
 ];
 
 // Routine templates (the user's Strong routines). Created once automatically if a
@@ -1174,7 +1213,7 @@ export const STARTER_ROUTINES = [
   },
   {
     name: 'Legs',
-    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Lying Leg Curl (Machine)', 'Calf Press (Machine)'],
+    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Leg Curl (Machine)', 'Calf Press (Machine)'],
   },
   {
     name: 'Workout A',
@@ -1186,4 +1225,10 @@ export const STARTER_ROUTINES = [
     // Added by the user on top of their Strong routine: appended to an existing "Biceps" routine too.
     ensure: ['Preacher Curl (Machine)'],
   },
+];
+
+// Exercises swapped in a routine at the user's request (the old exercise is kept in the
+// library). Applied once to existing routines when upgrading from before `since`.
+export const SWAPS = [
+  { since: 6, routine: 'Legs', from: 'Lying Leg Curl (Machine)', to: 'Leg Curl (Machine)' },
 ];
