@@ -21,7 +21,8 @@ advice, organised by the routine I'm running that day.
      tap "Capture frame". Repeat for each key position.
    - Each photo can have a short caption ("bottom position, knees out").
    - Photos are downscaled/compressed on device so storage stays small.
-5. **Defaults + personal additions.** Known lifts come with default cues; adding
+5. **Defaults + personal additions.** Known lifts come with default cues and two
+   captioned reference photos (public-domain, bundled in the app); adding
    photos, video frames or a quick dated note is one tap from the exercise page.
 6. **Get started quickly.**
    - Import routines and exercise names from a Strong CSV export.

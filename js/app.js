@@ -19,6 +19,24 @@ function newExercise(name) {
   return { id: db.uid(), name, muscles: s?.muscles || '', cues: s?.cues || '', notes: '', links: [], photoIds: [], updatedAt: Date.now() };
 }
 
+// Default reference photos for a known lift that has no photos yet. Adds the new ids to
+// ex.photoIds and returns the photo writes. If any download fails (offline), nothing is added.
+async function defaultPhotoOps(ex, starter = starterByName.get(ex.name.trim().toLowerCase())) {
+  if (!starter || ex.photoIds.length) return [];
+  const ops = [];
+  try {
+    for (const p of starter.photos) {
+      const res = await fetch(p.src);
+      if (!res.ok) return [];
+      ops.push({ store: 'photos', value: { id: db.uid(), blob: await res.blob(), caption: p.caption } });
+    }
+  } catch {
+    return []; // offline: all or nothing, so it can be retried later from Settings
+  }
+  ex.photoIds.push(...ops.map((o) => o.value.id));
+  return ops;
+}
+
 async function findExerciseByName(name) {
   const key = name.trim().toLowerCase();
   return (await db.all('exercises')).find((e) => e.name.trim().toLowerCase() === key);
@@ -162,7 +180,8 @@ async function routineEditScreen(id) {
   }
   draw();
 
-  const options = h('datalist', { id: 'ex-options' }, exercises.map((e) => h('option', { value: e.name })));
+  const suggestions = new Set([...exercises.map((e) => e.name), ...STARTER.map((s) => s.name)]);
+  const options = h('datalist', { id: 'ex-options' }, [...suggestions].map((n) => h('option', { value: n })));
   const addInput = h('input', { list: 'ex-options', placeholder: 'Exercise name (existing or new)' });
   async function addExercise() {
     const n = addInput.value.trim();
@@ -170,8 +189,8 @@ async function routineEditScreen(id) {
     let ex = await findExerciseByName(n);
     if (!ex) {
       ex = newExercise(n);
-      await db.put('exercises', ex);
-      options.append(h('option', { value: ex.name }));
+      await db.writeMany([...(await defaultPhotoOps(ex)), { store: 'exercises', value: ex }]);
+      if (!suggestions.has(ex.name)) options.append(h('option', { value: ex.name }));
     }
     exName.set(ex.id, ex.name);
     items.push({ exerciseId: ex.id, sets: '3', reps: '', note: '' });
@@ -406,7 +425,8 @@ async function exerciseEditScreen(id, params) {
       links: links.value.split('\n').map((s) => s.trim()).filter(Boolean),
       updatedAt: Date.now(),
     });
-    await db.put('exercises', { ...ex });
+    const photoOps = starter ? await defaultPhotoOps(ex, starter) : [];
+    await db.writeMany([...photoOps, { store: 'exercises', value: { ...ex } }]);
     location.hash = viewHref;
   }
 
@@ -455,7 +475,7 @@ async function settingsScreen() {
         if (idByName.has(n.toLowerCase())) continue;
         const ex = newExercise(n);
         idByName.set(n.toLowerCase(), ex.id);
-        ops.push({ store: 'exercises', value: ex });
+        ops.push(...(await defaultPhotoOps(ex)), { store: 'exercises', value: ex });
         newEx++;
       }
       for (const r of routines) {
@@ -473,16 +493,23 @@ async function settingsScreen() {
     }
   }
 
-  async function addStarter() {
+  // Fill in default cues and photos on existing exercises that don't have their own yet.
+  async function applyDefaults() {
+    toast('Applying defaults…');
     const ops = [];
-    let added = 0, filled = 0;
-    for (const s of STARTER) {
-      const ex = await findExerciseByName(s.name);
-      if (!ex) { ops.push({ store: 'exercises', value: { ...newExercise(s.name), muscles: s.muscles, cues: s.cues } }); added++; }
-      else if (!ex.cues.trim()) { ops.push({ store: 'exercises', value: { ...ex, muscles: ex.muscles || s.muscles, cues: s.cues, updatedAt: Date.now() } }); filled++; }
+    let updated = 0;
+    for (const ex of await db.all('exercises')) {
+      const s = starterByName.get(ex.name.trim().toLowerCase());
+      if (!s) continue;
+      const fillCues = !ex.cues.trim();
+      const photoOps = await defaultPhotoOps(ex, s);
+      if (!fillCues && !photoOps.length) continue;
+      if (fillCues) Object.assign(ex, { cues: s.cues, muscles: ex.muscles || s.muscles });
+      ops.push(...photoOps, { store: 'exercises', value: { ...ex, updatedAt: Date.now() } });
+      updated++;
     }
     await db.writeMany(ops);
-    toast(`Added ${added} exercises, filled cues for ${filled}.`);
+    toast(updated ? `Added defaults to ${updated} exercise${updated > 1 ? 's' : ''}.` : 'Nothing to add: your exercises already have cues and photos.');
   }
 
   async function doExport() {
@@ -517,8 +544,8 @@ async function settingsScreen() {
       h('p', {}, 'In Strong: Settings → Export Strong Data. Save the CSV to Files, then pick it here. Each workout becomes a routine (from its latest session).'),
       h('button', { class: 'btn', onclick: importStrong }, 'Import Strong CSV')),
     h('div', { class: 'card' },
-      h('p', {}, 'New exercises with a known name (e.g. "Squat (Barbell)") get default cues automatically. This adds the starter lifts to your library and fills in default cues for existing ones that have none.'),
-      h('button', { class: 'btn', onclick: addStarter }, 'Add starter cues')),
+      h('p', {}, `New exercises with a known name (e.g. "Squat (Barbell)") get default cues and 2 reference photos automatically (${STARTER.length} lifts). This fills them in for existing exercises that have no cues or no photos yet.`),
+      h('button', { class: 'btn', onclick: applyDefaults }, 'Apply default cues & photos')),
     h('h2', {}, 'Backup'),
     h('div', { class: 'card' },
       h('p', {}, 'Everything is stored only on this device. Export a backup now and then (save it to iCloud Drive).'),
