@@ -1,6 +1,6 @@
 // Offline support: serve the app shell from cache, refresh it in the background.
 // Bump VERSION when shipping changes so old caches are cleared.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `gymreference-${VERSION}`;
 const SHELL = [
   './',

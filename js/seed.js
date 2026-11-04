@@ -1,313 +1,720 @@
-// Default cues and reference photos for common lifts. Names match Strong's naming
-// so they attach to exercises imported from a Strong export. Photos are bundled in
-// defaults/images (public domain, see defaults/CREDITS.md).
+// Default cues, source links and reference photos for common lifts. Names match
+// Strong's naming so they attach to exercises imported from a Strong export.
+// Cues were researched from the linked sources (Stronger By Science, NASM, ACE,
+// BarBend, Outlift…). Photos are bundled in defaults/images (public domain, see
+// defaults/CREDITS.md). Generated from research notes; edit freely.
 
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
+
+// Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
+export const DEFAULTS_VERSION = 2;
+
+// Short hash of a cues text, used to recognise untouched older default cues.
+export function cueHash(text) {
+  let h = 0x811c9dc5;
+  for (const c of text.trim()) {
+    h ^= c.codePointAt(0);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(36);
+}
+
+// "<lowercase name>:<cueHash>" of earlier default cues: these get replaced by the
+// current defaults; anything the user edited is left alone.
+export const LEGACY_CUES = new Set([
+  'bench press (barbell):1v4oau0',
+  'bent over row (barbell):1ewozbh',
+  'bulgarian split squat:100s5u9',
+  'deadlift (barbell):1kyfhmu',
+  'face pull (cable):19z5fz6',
+  'hammer curl (dumbbell):rnnmyw',
+  'incline bench press (barbell):o1wzds',
+  'incline bench press (dumbbell):7m7lk',
+  'iso-lateral row (machine):1t2b3b5',
+  'lat pulldown (cable):1gkqe1f',
+  'leg extension (machine):a2fn3h',
+  'lying leg curl (machine):1jcvxf6',
+  'overhead press (barbell):1iuojeu',
+  'pull up:wso6b9',
+  'romanian deadlift (barbell):a7z4ut',
+  'seated overhead press (dumbbell):16bof8r',
+  'squat (barbell):dgdi13'
+]);
 
 export const STARTER = [
   {
     name: 'Squat (Barbell)',
     photos: photos('Barbell_Squat', 'Top: standing tall, bar on upper back', 'Bottom: hips just below knees, chest up'),
-    muscles: 'Quads, glutes, adductors',
+    muscles: 'Quads, glutes, adductors, hamstrings, spinal erectors, core',
+    links: [
+      'https://www.strongerbyscience.com/how-to-squat/',
+      'https://barbend.com/back-squat/',
+    ],
     cues: `Setup
-- Bar on upper traps (high bar) or rear delts (low bar), hands just outside shoulders
-- Feet shoulder width, toes out 15–30°
-- Big breath into the belly, brace before each rep
+- Bar on upper traps (high bar) or rear delts (low bar), not neck
+- Feet about shoulder width, toes out roughly 15–30°
+- Hands just outside shoulders; squeeze bar, upper back tight
+- Unrack, take two or three steps back, set feet
 
 Execution
-- Break at hips and knees together, knees track over toes
-- Sit down between your heels, chest stays up
-- Hit at least parallel (hip crease at knee level)
-- Drive up through mid-foot, keep the bar over mid-foot
+- Break at hips and knees together; sit down between heels
+- Knees track over toes; knees past toes is fine
+- Squat as deep as you can with a neutral back
+- Keep weight over mid-foot, whole foot planted
+- Drive up: push the floor away, traps back into the bar
+
+Breathing & tempo
+- Big belly breath, brace like bracing for a punch
+- Hold breath through the rep; exhale at the top
+- Controlled descent, as fast as you can stay in control
+- Stand up explosively
 
 Common mistakes
-- Knees caving in → push them out
-- Heels lifting → sit back more, check ankle mobility
-- Good-morning out of the hole → lead with the chest`,
+- Hips shoot up first ("good morning squat") → lead with chest and traps
+- Cutting depth short → lower the load, squat to your full depth
+- Knees caving in → push knees out over toes
+- Rocking to toes or heels → keep pressure mid-foot
+- Bar digs into neck → set bar on muscle, tighten upper back
+
+Programming tips
+- Hypertrophy: 3–4 sets of 6–10 reps, 1–3 reps in reserve
+- Strength: 3–5 sets of 3–5 reps, heavy but crisp
+- Rest 2–3 min (hypertrophy), 3–5 min (strength)
+- Progress: add reps to top of range, then add 2.5–5 kg`,
   },
   {
     name: 'Bench Press (Barbell)',
     photos: photos('Barbell_Bench_Press_-_Medium_Grip', 'Top: arms locked, bar over shoulders', 'Bottom: bar touches lower chest'),
     muscles: 'Chest, front delts, triceps',
+    links: [
+      'https://www.strongerbyscience.com/how-to-bench/',
+      'https://outlift.com/bench-press/',
+    ],
     cues: `Setup
-- Eyes under the bar, shoulder blades squeezed back and down
-- Slight arch, feet planted, glutes on the bench
-- Grip ~1.5× shoulder width, wrists stacked over elbows
+- Eyes under the bar; feet planted firmly on the floor
+- Grip about 1.5–2× shoulder width; bar low in the palm
+- Pull shoulder blades back and down; keep them pinned
+- Moderate arch: lift the chest, not just the lower back
+- Wrists stacked over elbows; squeeze the bar hard
 
 Execution
-- Unrack, bar over shoulders
-- Lower to lower chest / sternum, elbows ~45–70° from torso
-- Touch, then press up and slightly back toward the face
-- Keep shoulder blades pinned the whole set
+- Lower the bar under control to lower chest / sternum
+- Elbows roughly 45° from torso, under the bar
+- Touch the chest lightly, no bounce
+- Press up and slightly back toward the shoulders
+- Drive heels into the floor; glutes stay on the bench
+
+Breathing & tempo
+- Deep breath at the top before lowering; hold it
+- Exhale near lockout or between reps
+- 1–2 s controlled lowering; press with intent
 
 Common mistakes
-- Elbows flared at 90° → tuck slightly
-- Bouncing off the chest → controlled touch
-- Butt leaving the bench`,
+- Bouncing the bar off the chest → touch and press, brief pause if needed
+- Wrists bent back → grip lower in palm, knuckles to ceiling
+- Elbows flared to 90° → tuck to about 45°
+- Shoulders roll forward at the top → keep blades pinned throughout
+- Big low-back arch, flat chest → arch by lifting the chest
+
+Programming tips
+- Hypertrophy: 3–4 sets of 6–12 reps, 1–3 reps in reserve
+- Strength: 3–5 sets of 3–5 reps
+- Rest 2–3 min; 3–5 min on heavy sets
+- Always use safeties or a spotter near failure
+- Progress: add reps, then add 1–2.5 kg`,
   },
   {
     name: 'Deadlift (Barbell)',
     photos: photos('Barbell_Deadlift', 'Setup: bar over mid-foot, back flat', 'Lockout: standing tall, glutes squeezed'),
-    muscles: 'Hamstrings, glutes, back',
+    muscles: 'Glutes, hamstrings, adductors, spinal erectors, quads, lats, traps, grip',
+    links: [
+      'https://www.strongerbyscience.com/how-to-deadlift/',
+      'https://www.nasm.org/resource-center/exercise-library/barbell-deadlift',
+    ],
     cues: `Setup
-- Bar over mid-foot (~3 cm from shins), feet hip width
-- Hinge down, grip just outside legs
-- Shins touch bar, chest up, lats tight ("protect your armpits")
-- Brace hard, take the slack out of the bar
+- Feet about hip width; bar over mid-foot
+- Bar an inch or so from the shins
+- Grip just outside the legs; arms straight
+- Hinge down until shins touch the bar; shoulders slightly ahead of it
+- Lats on: "shoulder blades in back pockets"
 
 Execution
-- Push the floor away, bar drags up the legs
-- Hips and shoulders rise together
-- Finish standing tall, glutes squeezed — no leaning back
-- Lower by pushing hips back first, then bend knees past them
+- Pull the slack out before the bar leaves the floor
+- Push the floor away; hips and chest rise together
+- Bar drags up your shins and thighs
+- Finish standing tall: hips through, glutes squeezed
+- Lower by hinging, bar close, back neutral
+
+Breathing & tempo
+- Big belly breath and brace before each pull
+- Hold the breath through the rep
+- Exhale and re-brace at the top or on the floor
+- Smooth start, no jerking; controlled lowering
 
 Common mistakes
-- Hips shooting up first
-- Rounded lower back → reset, brace, lighter weight
-- Bar drifting away from the body`,
+- Jerking the bar → build tension first, then push
+- Hips shoot up early → brace harder, push with the legs first
+- Bar drifts forward → engage lats, keep bar touching legs
+- Rounded lower back → lighter load, brace, set spine first
+- Leaning back at lockout → just stand tall, glutes squeezed
+- Bending the arms → arms are hooks, keep elbows straight
+
+Programming tips
+- Strength: 3–5 sets of 1–5 reps
+- Hypertrophy: 3–4 sets of 5–8 reps, 2–3 reps in reserve
+- Rest 3–5 min between heavy sets
+- Reset each rep on the floor
+- Progress: add 2.5–5 kg when all reps look clean`,
   },
   {
     name: 'Overhead Press (Barbell)',
     photos: photos('Standing_Military_Press', 'Start: bar on front delts', 'Lockout: bar over mid-foot'),
-    muscles: 'Shoulders, triceps, upper chest',
+    muscles: 'Front and side delts, triceps, upper chest, upper traps, core',
+    links: [
+      'https://outlift.com/overhead-press/',
+      'https://barbend.com/overhead-press/',
+    ],
     cues: `Setup
-- Grip just outside shoulders, forearms vertical
-- Bar on front delts, elbows slightly in front of the bar
-- Squeeze glutes and quads, brace
+- Rack the bar at upper-chest height
+- Grip slightly wider than shoulders; bar in the heel of the palm
+- Forearms vertical, wrists stacked over elbows
+- Feet about shoulder width; squeeze glutes and quads
+- Bar on upper chest, elbows slightly in front of the bar
 
 Execution
-- Press straight up, move the head back out of the way
-- Once the bar passes the forehead, push the head "through the window"
-- Lockout with bar over mid-foot, shrug up at the top
+- Tuck chin, move head back so the bar clears your face
+- Press straight up, close to your face
+- Once the bar passes the forehead, push head "through the window"
+- Lock out with bar over mid-foot; shrug up at the top
+- Ribs down; don't lean back to press
+
+Breathing & tempo
+- Breathe and brace before each rep
+- Hold through the press; exhale at lockout
+- Press explosively off the chest
+- Lower under control back to the collarbones
 
 Common mistakes
-- Leaning back excessively → squeeze glutes harder
-- Bar path looping forward around the face`,
+- Pressing around the head → move head back, bar path straight
+- Big lower-back lean → glutes tight, ribs down, lighter load
+- Wrists bent back → bar low in palm, stack wrists
+- Grip too wide → forearms roughly vertical mid-press
+- Sneaky leg drive → keep knees locked for a strict press
+
+Programming tips
+- Hypertrophy: 3–4 sets of 6–10 reps, 1–3 reps in reserve
+- Strength: 3–5 sets of 3–5 reps
+- Rest 2–3 min; up to 4 min when heavy
+- Progress slowly: microplates (0.5–1.25 kg) or add reps`,
   },
   {
     name: 'Bent Over Row (Barbell)',
     photos: photos('Bent_Over_Barbell_Row', 'Start: hinged, arms long', 'Top: bar pulled to lower ribs'),
-    muscles: 'Upper back, lats, biceps',
+    muscles: 'Lats, rhomboids, mid/lower traps, rear delts, biceps, spinal erectors',
+    links: [
+      'https://outlift.com/barbell-row/',
+      'https://barbend.com/bent-over-row/',
+    ],
     cues: `Setup
-- Hinge to ~45°, soft knees, flat back
-- Grip a bit wider than shoulders
+- Feet hip width; grip a bit wider than shoulders
+- Hinge like an RDL; slight knee bend
+- Torso between parallel and about 45°, as mobility allows
+- Neutral spine, braced core, arms hanging straight
 
 Execution
-- Pull to the lower ribs / belly button
-- Lead with the elbows, squeeze shoulder blades together
-- Lower under control to a full stretch
+- Drive elbows back toward the hips
+- Pull the bar to lower chest or upper stomach
+- Squeeze shoulder blades together at the top
+- Keep torso angle fixed; no standing up
+- Lower fully; let shoulder blades spread for a stretch
+
+Breathing & tempo
+- Brace before the pull; exhale as the bar returns
+- Pull smoothly, brief squeeze at the top
+- Lower over 1–3 s; no dropping
 
 Common mistakes
-- Standing up more each rep → keep torso angle fixed
-- Jerking the weight with the hips`,
+- Torso rises each rep → lighter load, hold the hip angle
+- Heaving with the hips → strict reps, cut the weight
+- Rounded lower back → brace, shorten hinge depth
+- Pulling with arms only → lead with the elbows
+- Short reps at the bottom → reach arms fully each rep
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–15 reps, 1–2 reps in reserve
+- Strength: 3–5 sets of 5–6 reps
+- Higher reps spare the lower back
+- Rest 2–3 min
+- Progress: reps first, then 2.5 kg`,
   },
   {
     name: 'Romanian Deadlift (Barbell)',
     photos: photos('Romanian_Deadlift', 'Bottom: hips back, bar below knees', 'Top: standing, soft knees'),
-    muscles: 'Hamstrings, glutes',
+    muscles: 'Hamstrings, glutes, adductors, spinal erectors, grip',
+    links: [
+      'https://outlift.com/romanian-deadlift/',
+      'https://www.nasm.org/resource-center/exercise-library/romanian-deadlift-barbell',
+    ],
     cues: `Setup
-- Start standing with the bar, soft knees (fixed bend)
+- Start standing, bar from a rack or the floor
+- Feet hip width, toes about forward
+- Grip just outside the thighs; shoulders back and down
+- Soft knees; brace core, neutral spine
 
 Execution
-- Push hips straight back, bar slides down the thighs
-- Go until you feel a strong hamstring stretch (usually just below knee)
-- Back stays flat, then drive hips forward to stand
+- Push hips back; keep knees softly bent
+- Bar slides down the thighs, close to the legs
+- Shins stay near vertical
+- Lower until a big hamstring stretch, often mid-shin
+- Drive hips forward to stand; squeeze glutes
+
+Breathing & tempo
+- Breathe and brace at the top
+- Hold through the rep; exhale at the top
+- Slow lowering, 2–3 s
+- No bouncing at the bottom
 
 Common mistakes
-- Bending the knees more as you go down (turns into a squat)
-- Rounding the back to reach lower`,
+- Rounded lower back → stop where the hips stop moving back
+- Too much knee bend → hips back, knees soft only
+- Bar drifts forward → lats on, bar touching legs
+- Chasing the floor → depth is set by hamstring flexibility
+- Going too heavy → choose a load you control
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–12 reps, 1–3 reps in reserve
+- Strength: 3–4 sets of 5–8 reps
+- Rest 2–3 min
+- Straps are fine if grip limits your sets
+- Progress: reps first, then add 2.5–5 kg`,
   },
   {
     name: 'Lat Pulldown (Cable)',
     photos: photos('Wide-Grip_Lat_Pulldown', 'Start: arms long, slight lean back', 'Bottom: bar to upper chest'),
-    muscles: 'Lats, biceps',
+    muscles: 'Lats, teres major, rhomboids, traps, rear delts, biceps',
+    links: [
+      'https://barbend.com/lat-pulldown/',
+      'https://breakingmuscle.com/lat-pulldown/',
+    ],
     cues: `Setup
-- Thighs locked under the pad, grip slightly wider than shoulders
-- Slight lean back
+- Thigh pad snug; feet flat on the floor
+- Overhand grip a few inches wider than shoulders
+- Bar in the middle of the palms; arms fully extended
+- Sit tall, chest up, slight lean back
 
 Execution
-- Start by pulling shoulders down, then drive elbows to your sides
-- Bar to upper chest, chest up to meet it
-- Control the way up to a full stretch
+- Start by pulling the shoulder blades down
+- Drive elbows down toward your back pockets
+- Pull the bar to upper chest or chin level
+- Keep torso still; minimal lean
+- Return overhead under control to a full stretch
+
+Breathing & tempo
+- Exhale as you pull down
+- Inhale as the bar returns
+- 1 s pull, brief squeeze, 2–3 s return
 
 Common mistakes
-- Pulling behind the neck
-- Swinging the torso to move the weight`,
+- Swinging the torso → lighter load, keep chest still
+- Leaning way back → stay nearly upright
+- Behind-the-neck pulls → pull to the front
+- Half reps → full stretch at the top every rep
+- Arms doing the work → think elbows, try a thumbless grip
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–12 reps, 1–2 reps in reserve
+- Strength: 2–3 sets of 6–8 reps
+- Rest 90 s–2 min
+- Progress: add reps, then the next weight on the stack`,
   },
   {
     name: 'Pull Up',
     photos: photos('Pullups', 'Start: dead hang', 'Top: chin over the bar'),
-    muscles: 'Lats, biceps, upper back',
-    cues: `Execution
-- Dead hang, then pull shoulders down and back
-- Drive elbows down toward hips, chest to the bar
-- Chin clears the bar, lower all the way under control
+    muscles: 'Lats, rhomboids, mid/lower traps, rear delts, biceps, core',
+    links: [
+      'https://www.nasm.org/resource-center/exercise-library/pull-up',
+      'https://barbend.com/pull-up-guide/',
+    ],
+    cues: `Setup
+- Overhand grip slightly wider than shoulders
+- Bar across mid-palm; full grip
+- Start from a still dead hang, arms straight
+- Brace core; legs still or slightly in front
+
+Execution
+- Pull shoulder blades down first
+- Drive elbows down toward your back pockets
+- Pull until the chin clears the bar
+- Lower to a full hang every rep
+- Keep the body still; no kicking
+
+Breathing & tempo
+- Exhale on the way up
+- Inhale on the way down
+- Brief hold at the top; lower in 2–3 s
 
 Common mistakes
-- Half reps → full hang at the bottom
-- Kipping / swinging`,
+- Kipping or swinging → pause in the dead hang, strict reps
+- Half reps → full hang to chin over bar
+- Yanking with the arms → start with the shoulder blades
+- Dropping fast → control the descent
+- Shrugging up to the ears → shoulders down, away from ears
+
+Programming tips
+- Hypertrophy: 3–4 sets of 6–12 reps, 1–2 reps in reserve
+- Strength: 3–5 sets of 3–5 reps, add weight
+- Rest 2–3 min
+- Can't do one yet? Use bands, slow negatives, or pulldowns
+- Progress: add reps, then a belt with 1–2.5 kg`,
   },
   {
     name: 'Seated Overhead Press (Dumbbell)',
     photos: photos('Seated_Dumbbell_Press', 'Top: arms extended, dumbbells over shoulders', 'Bottom: dumbbells at ear / shoulder level'),
-    muscles: 'Shoulders, triceps',
+    muscles: 'Front and side delts, triceps, upper chest, upper traps',
+    links: [
+      'https://barbend.com/dumbbell-shoulder-press/',
+      'https://barbend.com/seated-vs-standing-shoulder-press/',
+    ],
     cues: `Setup
-- Bench upright (80–90°), back and head on the pad
-- Dumbbells at shoulder height, palms forward, forearms vertical
-- Feet planted wide, brace your core
+- Bench nearly upright, one notch below vertical
+- Back and hips against the pad; feet planted
+- Dumbbells on knees; kick them up one at a time
+- Dumbbells at shoulders, elbows under wrists
+- Elbows slightly in front of the body, not straight out
 
 Execution
-- Press up and slightly in, dumbbells meet above the head without clanking
-- Lower under control until dumbbells reach ear / shoulder level
-- Keep ribs down: don't arch the lower back off the pad
+- Press up and slightly in, over the shoulders
+- Lock out without clanking the dumbbells together
+- Lower to about shoulder or ear level
+- Keep ribs down; head neutral
+
+Breathing & tempo
+- Breathe in at the bottom; brace
+- Exhale as you press up
+- Lower over 2–3 s under control
 
 Common mistakes
-- Elbows flaring straight out to the sides → keep them slightly forward
-- Half reps at the bottom
-- Leaning back to turn it into an incline press`,
+- Leaning back into an incline press → back on the pad, lighter load
+- Hips sliding forward → sit all the way back
+- Short reps → lower to shoulder level each rep
+- Elbows flared painfully → bring elbows slightly forward
+- Dropping dumbbells after the set → bring them to your knees first
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–12 reps, 1–2 reps in reserve
+- Strength focus: 3–4 sets of 6–8 reps
+- Rest 90 s–2.5 min
+- Progress: hit the top of the range, then the next dumbbell`,
   },
   {
     name: 'Incline Bench Press (Barbell)',
     photos: photos('Barbell_Incline_Bench_Press_-_Medium_Grip', 'Top: arms locked over the shoulders', 'Bottom: bar touches upper chest'),
     muscles: 'Upper chest, front delts, triceps',
+    links: [
+      'https://barbend.com/incline-barbell-bench-press-guide/',
+      'https://www.barbellmedicine.com/blog/best-upper-chest-exercises-for-bigger-pecs/',
+    ],
     cues: `Setup
-- Bench at 30–45°, eyes under the bar
-- Shoulder blades back and down, feet planted
-- Grip slightly wider than shoulders
+- Bench at 30–45°; about 30° is a good start
+- Feet planted, hips and upper back stay on the bench
+- Grip slightly wider than shoulders; forearms vertical at the bottom
+- Shoulder blades back and down, squeeze the bar hard
+- Unrack, then bring the bar over your shoulders before lowering
 
 Execution
-- Lower to the upper chest (just below the collarbone)
-- Elbows ~45–60° from the torso
-- Press straight up over the shoulders
+- Lower under control to the upper chest, just below the collarbones
+- Elbows under the bar, tucked about 45–70° from the torso
+- Touch lightly or pause briefly, no bouncing
+- Press up and slightly back over the shoulders
+- Stop just short of a hard lockout, stay tight
+
+Breathing & tempo
+- Breathe in and brace before each rep
+- Hold the breath on the way down, exhale near the top
+- About 2–3 s down, press up with intent
 
 Common mistakes
-- Bench too steep → turns into a shoulder press
-- Bouncing the bar off the chest
-- Shoulders rolling forward at the top`,
+- Feeling it mostly in the shoulders → lower the bench angle
+- Bouncing off the chest → brief pause on touch
+- Shoulders roll forward off the bench → re-set shoulder blades before unracking
+- Hard lower-back arch or butt lifting → glutes down, reduce load
+- Elbows flared to 90° → tuck elbows slightly toward your sides
+
+Programming tips
+- Hypertrophy: 3–4 sets of 6–12 reps, 1–3 reps in reserve
+- Strength: 3–5 sets of 3–6 reps, rest 3–5 min
+- Rest 2–3 min on most sets; use safety pins or a spotter
+- Progress: add reps within the range, then add 2.5–5 kg`,
   },
   {
     name: 'Incline Bench Press (Dumbbell)',
     photos: photos('Incline_Dumbbell_Press', 'Bottom: dumbbells at upper chest, elbows under wrists', 'Top: arms extended over the chest'),
     muscles: 'Upper chest, front delts, triceps',
+    links: [
+      'https://www.nasm.org/resource-center/exercise-library/two-arm-incline-dumbbell-chest-press',
+      'https://www.acefitness.org/resources/everyone/exercise-library/25/incline-chest-press/',
+    ],
     cues: `Setup
-- Bench at 30–45°, kick the dumbbells up off your knees one at a time
-- Shoulder blades squeezed back, feet planted
+- Bench at 30–45°; steeper shifts work to the front delts
+- Sit with dumbbells on your thighs, kick them up as you lie back
+- Feet flat, shoulder blades back and down into the pad
+- Start with dumbbells over the upper chest, wrists over elbows
 
 Execution
-- Lower until dumbbells are beside the upper chest, deep stretch
-- Wrists stacked over elbows, elbows ~45° from torso
-- Press up and slightly together, don't clank at the top
+- Lower toward the upper chest, slightly out toward the armpits
+- Elbows about 45° from the torso, forearms vertical
+- Deep, controlled stretch; stop before shoulders roll forward
+- Press up and slightly in; dumbbells don't need to touch
+- Keep wrists neutral, not bent back
+
+Breathing & tempo
+- Inhale on the way down, exhale as you press
+- 2–3 s down, brief pause in the stretch
+- Brace before each rep so the torso stays still
 
 Common mistakes
-- Elbows flared at 90°
-- Cutting the range short at the bottom
-- Dropping the dumbbells to the side when finished → bring them back to your knees`,
+- Bench too steep → set it to 30–45°
+- Bouncing at the bottom → control the stretch, brief pause
+- Elbows flared straight out → angle them ~45° from the torso
+- Arching to finish reps → reduce the load, ribs down
+- Dropping dumbbells to the sides → bring them to your thighs and sit up
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–12 reps, 1–2 reps in reserve
+- Strength-focused: 3–4 sets of 6–8 reps
+- Rest 2–3 min between sets
+- Progress: top of the range on all sets, then the next dumbbell`,
   },
   {
     name: 'Iso-Lateral Row (Machine)',
     photos: photos('Leverage_Iso_Row', 'Start: arms long, chest on the pad', 'End: elbows driven back, shoulder blades squeezed'),
-    muscles: 'Lats, upper back, biceps',
+    muscles: 'Lats, mid traps, rhomboids, rear delts, biceps',
+    links: [
+      'https://www.lifefitness.com/en-eu/catalog/strength-training/plate-loaded/plate-loaded-iso-lateral-row',
+      'https://barbend.com/chest-supported-row/',
+    ],
     cues: `Setup
-- Seat height so handles are at mid/lower chest
-- Chest firmly on the pad the whole set
+- Seat so the handles line up with mid-to-lower chest
+- Sternum firmly on the chest pad, feet planted
+- Grip: neutral favors lats, overhand favors upper back
+- Start with arms long, shoulder blades reaching forward slightly
 
 Execution
-- Start by pulling the shoulder blades back, then drive elbows behind you
-- Pause and squeeze at the back
-- Return slowly to a full stretch, let the shoulder blades come forward
+- Pull the shoulder blades back first, then drive the elbows back
+- Pull toward the lower ribs: "elbows to back pockets"
+- Pause briefly with shoulder blades squeezed
+- Return slowly to a full stretch, arms straight
+- Try one arm at a time to fix imbalances
+
+Breathing & tempo
+- Exhale as you pull, inhale on the way back
+- About 1 s pull, 1 s squeeze, 2–3 s back
+- Chest stays on the pad the whole set
 
 Common mistakes
-- Chest coming off the pad to cheat the weight
-- Shrugging the shoulders up to the ears
-- Short range: no stretch at the front`,
+- Chest lifting off the pad → lighten the load, stay pinned
+- Shrugging toward the ears → shoulders down, lead with the elbows
+- Short reps → full stretch and full squeeze
+- Yanking with the biceps → loose grip, "drive the elbows"
+- Grip fails first → use straps on heavy sets
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–12 reps, 1–2 reps in reserve
+- Strength: 4–5 sets of 5–6 reps
+- Rest 1.5–2.5 min between sets
+- Progress: add reps, then a small plate per side`,
   },
   {
     name: 'Face Pull (Cable)',
     photos: photos('Face_Pull', 'Start: arms extended toward the pulley', 'End: rope at the face, hands apart, elbows high'),
-    muscles: 'Rear delts, upper back, rotator cuff',
+    muscles: 'Rear delts, mid traps, rhomboids, rotator cuff',
+    links: [
+      'https://www.nasm.org/resource-center/exercise-library/face-pull',
+      'https://barbend.com/face-pulls/',
+    ],
     cues: `Setup
-- Rope on a high pulley (about forehead height)
-- Overhand or thumbs-back grip, step back, slight lean
+- Rope on the pulley at about eye level or slightly higher
+- Overhand or thumbs-back grip, step back until the cable is taut
+- Staggered or square stance, soft knees, core braced
+- Stand tall, ribs down, shoulders back and down
 
 Execution
-- Pull toward the forehead, pulling the rope apart
-- Elbows high and out, finish with the hands beside the ears ("double biceps" pose)
-- Pause, then return slowly
+- Pull the middle of the rope toward your forehead / eyes
+- Pull the rope ends apart as they reach your face
+- Elbows high, at or above shoulder height
+- Finish rotated out, knuckles up: "double-biceps" pose
+- Return slowly until the arms are straight
+
+Breathing & tempo
+- Exhale as you pull, inhale on the return
+- Pause 1 s at the face, 2 s return
+- Smooth, no jerking
 
 Common mistakes
-- Going too heavy and leaning back to row it
-- Elbows dropping → it turns into a row
-- Rushing the return`,
+- Elbows drop, it becomes a row → elbows high, pull to the face
+- Leaning back to move the weight → lighten it, torso still
+- Shrugging → shoulders down away from the ears
+- Too heavy, half reps → light weight, full range
+
+Programming tips
+- 2–4 sets of 12–20 reps, light and controlled
+- Also a good warm-up: 2–3 easy sets of 15–20
+- Rest 60–90 s; pairs well with pressing
+- Progress: more reps or a longer pause before adding weight`,
   },
   {
     name: 'Hammer Curl (Dumbbell)',
     photos: photos('Hammer_Curls', 'Start: arms straight, palms facing in', 'Top: curled up, elbows still by your sides'),
-    muscles: 'Biceps, brachialis, forearms',
+    muscles: 'Brachialis, brachioradialis, biceps',
+    links: [
+      'https://www.acefitness.org/resources/everyone/exercise-library/10/hammer-curl/',
+      'https://barbend.com/hammer-curls/',
+    ],
     cues: `Setup
 - Stand tall, dumbbells at your sides, palms facing each other
+- Brace your core, shoulders down and back
+- Wrists straight, firm grip
+- Upper arms against your sides
 
 Execution
-- Curl up keeping palms facing in (like holding a hammer)
-- Elbows stay pinned to your sides
-- Lower slowly all the way down
+- Curl by bending only at the elbow
+- Keep the neutral grip throughout, no twisting
+- Bring the dumbbells toward the front of the shoulders
+- Squeeze briefly at the top, elbows by your sides
+- Lower all the way to full elbow extension
+
+Breathing & tempo
+- Exhale as you curl, inhale as you lower
+- About 1 s up, brief squeeze, 2–3 s down
+- Both arms together or alternating, same control
 
 Common mistakes
-- Swinging the body to lift the weight
-- Elbows drifting forward
-- Dropping the weight on the way down`,
+- Swinging the torso → lighten the load, stand tall
+- Elbows drift forward → pin upper arms to your sides
+- Twisting the wrists → thumbs up the whole time
+- Half reps at the bottom → straighten the arm fully
+- Shrugging → shoulders down
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–15 reps, 0–2 reps in reserve
+- Strength: 4–5 sets of 6–8 reps, rest about 2 min
+- Rest 60–90 s for hypertrophy sets
+- Progress: add reps first, then the next dumbbell`,
   },
   {
     name: 'Bulgarian Split Squat',
     photos: photos('Split_Squat_with_Dumbbells', 'Top: rear foot on the bench, standing tall', 'Bottom: back knee near the floor, front shin fairly vertical'),
-    muscles: 'Quads, glutes, adductors',
+    muscles: 'Quads, glutes, adductors, hamstrings, core',
+    links: [
+      'https://www.nasm.org/resource-center/exercise-library/bulgarian-split-squat',
+      'https://catalystathletics.com/exercise/173/Bulgarian-Split-Squat/',
+    ],
     cues: `Setup
-- Rear foot laces-down on a bench, front foot about a big step forward
-- Test the stance: at the bottom the front heel stays down
+- Rear foot laces-down on a knee-height bench
+- Front foot about 2–3 foot-lengths ahead of the bench
+- Test depth with one bodyweight rep, adjust your foot spot
+- Dumbbells at your sides, or hold a support for balance
+- Shorter stance = more quads, longer stance = more glutes
 
 Execution
-- Lower straight down until the back knee nearly touches the floor
-- Most weight on the front foot, drive up through the whole front foot
-- Slight forward lean = more glutes, upright torso = more quads
+- Drop straight down, rear knee toward the floor
+- Most of your weight stays on the front foot
+- Front knee tracks over the toes, no caving in
+- Go until the rear knee is just above the floor
+- Drive up through the whole front foot
+
+Breathing & tempo
+- Inhale and brace at the top, exhale on the way up
+- 2–3 s down, don't crash into the bottom
+- Finish all reps on one leg, then switch
 
 Common mistakes
-- Front foot too close → heel lifts, knee pain
-- Pushing off the back leg
-- Front knee caving in`,
+- Front foot too close, heel lifts → step further forward
+- Front knee caves in → push the knee out over the middle toes
+- Pushing off the back leg → weight on the front foot
+- Shallow reps → lighten the load, reach full depth
+- Losing balance → use a support or lighter dumbbells first
+
+Programming tips
+- Hypertrophy: 2–4 sets of 8–15 reps per leg
+- Strength: 3–4 sets of 5–8 reps per leg
+- Rest 1.5–2 min; start with your weaker leg
+- Progress: master bodyweight reps, then add dumbbells gradually`,
   },
   {
     name: 'Leg Extension (Machine)',
     photos: photos('Leg_Extensions', 'Start: knees bent ~90°, pad on lower shins', 'Top: legs straight, quads squeezed'),
     muscles: 'Quads',
+    links: [
+      'https://www.strongerbyscience.com/leg-extension-muscle-growth/',
+      'https://barbend.com/leg-extension/',
+    ],
     cues: `Setup
-- Knee joint lined up with the machine's pivot
-- Pad on the lower shin just above the ankles
+- Line up your knee joint with the machine's pivot
+- Shin pad on the lower shin, just above the ankle
+- Recline the back pad if possible: more stretch on the quads
 - Hold the handles, hips down in the seat
+- Start with knees bent about 90° or deeper
 
 Execution
-- Extend until the legs are straight, squeeze the quads for a second
-- Lower under control, don't let the stack slam
+- Extend smoothly with the quads, no kicking
+- Squeeze hard near full extension, don't snap the knees
+- Lower slowly to the deepest bend you can control
+- Hips and back stay still against the seat
+
+Breathing & tempo
+- Exhale as you extend, inhale as you lower
+- About 1 s up, 1 s squeeze, 2–3 s down
+- Keep tension at the bottom, no resting
 
 Common mistakes
-- Kicking the weight up with momentum
-- Hips lifting off the seat
-- Partial reps`,
+- Hips lift off the seat → hold the handles, lighten the load
+- Swinging the weight up → control both directions
+- Knee not lined up with the pivot → re-adjust back pad and shin pad
+- Stack slams down → slow down the lowering
+- Skipping the stretch → use the deepest range you can control
+
+Programming tips
+- Hypertrophy: 3–4 sets of 10–15 reps, 0–2 reps in reserve
+- Not a strength lift; keep it mostly at 8+ reps
+- Rest 1–2 min between sets
+- Progress: add reps, then one plate; last set can go to failure`,
   },
   {
     name: 'Lying Leg Curl (Machine)',
     photos: photos('Lying_Leg_Curls', 'Start: legs straight, pad just above the heels', 'Top: curled up, hips still pressed down'),
-    muscles: 'Hamstrings',
+    muscles: 'Hamstrings, calves assist',
+    links: [
+      'https://www.acefitness.org/resources/everyone/exercise-library/153/lying-hamstrings-curl/',
+      'https://barbend.com/lying-leg-curl/',
+    ],
     cues: `Setup
-- Knees just off the end of the bench, lined up with the pivot
-- Pad on the back of the ankles, above the heels
+- Lie face down, knee joint lined up with the pivot
+- Pad on the lower calves, just above the heels
+- Kneecaps just off the edge of the bench, legs nearly straight
 - Hold the handles, hips pressed into the pad
 
 Execution
-- Curl the heels toward the glutes
-- Squeeze at the top, then lower slowly to almost straight
+- Curl the heels toward the glutes, past 90°
+- Keep hips down by pressing the thighs into the pad
+- Squeeze briefly at the top
+- Lower slowly to nearly straight legs
+
+Breathing & tempo
+- Exhale as you curl, inhale as you lower
+- About 1 s up, 1 s squeeze, 2–3 s down
+- Smooth, no momentum at the bottom
 
 Common mistakes
-- Hips rising off the pad
-- Swinging the weight up
-- Letting the weight drop on the way down`,
+- Hips lift off the pad → lighten the load, press hips down
+- Lower back arches → brace abs, reduce the weight
+- Partial reps → full stretch at the bottom, curl past 90°
+- Jerking the weight up → slow, controlled reps
+
+Programming tips
+- Hypertrophy: 3–4 sets of 8–15 reps, 0–2 reps in reserve
+- Rest 1–2 min between sets
+- Progress: add reps, then add load in small steps
+- If available, seated leg curls tend to grow hamstrings more`,
   },
 ];

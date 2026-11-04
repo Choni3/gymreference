@@ -2,7 +2,7 @@ import * as db from './db.js';
 import { h, blobURL, revokeURLs, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
-import { STARTER } from './seed.js';
+import { STARTER, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
 import { exportBackup, importBackup } from './backup.js';
 
 const app = document.getElementById('app');
@@ -16,7 +16,7 @@ const starterByName = new Map(STARTER.map((s) => [s.name.toLowerCase(), s]));
 // Known lifts start from the built-in default cues; the user adds their own notes/photos on top.
 function newExercise(name) {
   const s = starterByName.get(name.trim().toLowerCase());
-  return { id: db.uid(), name, muscles: s?.muscles || '', cues: s?.cues || '', notes: '', links: [], photoIds: [], updatedAt: Date.now() };
+  return { id: db.uid(), name, muscles: s?.muscles || '', cues: s?.cues || '', notes: '', links: [...(s?.links || [])], photoIds: [], updatedAt: Date.now() };
 }
 
 // Default reference photos for a known lift that has no photos yet. Adds the new ids to
@@ -35,6 +35,54 @@ async function defaultPhotoOps(ex, starter = starterByName.get(ex.name.trim().to
   }
   ex.photoIds.push(...ops.map((o) => o.value.id));
   return ops;
+}
+
+// Bring existing exercises up to date with the defaults: fill empty cues or replace untouched
+// older default cues, add missing links and missing photos. User-edited content is kept.
+// complete=false means some default photos couldn't be downloaded (offline).
+async function applyDefaultsToAll() {
+  let updated = 0, complete = true;
+  for (const { id, name } of await db.all('exercises')) {
+    const s = starterByName.get(name.trim().toLowerCase());
+    if (!s) continue;
+    const before = await db.get('exercises', id);
+    const photoOps = await defaultPhotoOps({ name, photoIds: before.photoIds.slice() }, s);
+    if (!before.photoIds.length && !photoOps.length) complete = false;
+    // Re-read after the (slow) downloads so concurrent edits aren't overwritten.
+    const ex = await db.get('exercises', id);
+    if (!ex) continue; // deleted meanwhile
+    let changed = false, photoWrites = [];
+    if (photoOps.length && !ex.photoIds.length) {
+      ex.photoIds = photoOps.map((o) => o.value.id);
+      photoWrites = photoOps;
+      changed = true;
+    }
+    const oldDefault = LEGACY_CUES.has(`${s.name.toLowerCase()}:${cueHash(ex.cues)}`);
+    if ((!ex.cues.trim() || oldDefault) && ex.cues !== s.cues) {
+      ex.cues = s.cues;
+      if (!ex.muscles) ex.muscles = s.muscles;
+      changed = true;
+    }
+    if (!ex.links.length && s.links.length) {
+      ex.links = [...s.links];
+      changed = true;
+    }
+    if (!changed) continue;
+    await db.writeMany([...photoWrites, { store: 'exercises', value: { ...ex, updatedAt: Date.now() } }]);
+    updated++;
+  }
+  return { updated, complete };
+}
+
+// Once per DEFAULTS_VERSION (retried while offline), refresh defaults on existing exercises.
+async function upgradeDefaults() {
+  if (Number(localStorage.getItem('defaultsVersion')) >= DEFAULTS_VERSION) return;
+  const { updated, complete } = await applyDefaultsToAll();
+  if (complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));
+  if (updated) {
+    toast(`Updated default cues & photos for ${updated} exercise${updated > 1 ? 's' : ''}.`);
+    if (!location.hash.includes('/edit')) render(); // don't discard edits in progress
+  }
 }
 
 async function findExerciseByName(name) {
@@ -360,7 +408,7 @@ async function exerciseScreen(id, params) {
     ex.cues && h('section', { class: 'cues' }, renderCues(ex.cues)),
     notesSection,
     ex.links.length > 0 && h('section', {}, h('h2', {}, 'Videos & links'),
-      h('ul', { class: 'links' }, ex.links.map((l) => h('li', {}, h('a', { href: l, target: '_blank', rel: 'noopener' }, l))))),
+      h('ul', { class: 'links' }, ex.links.map((l) => h('li', {}, h('a', { href: l, target: '_blank', rel: 'noopener' }, l.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')))))),
     !ex.cues && h('p', { class: 'muted' }, 'No technique cues yet. Tap Edit to write some.'));
 }
 
@@ -425,6 +473,7 @@ async function exerciseEditScreen(id, params) {
       links: links.value.split('\n').map((s) => s.trim()).filter(Boolean),
       updatedAt: Date.now(),
     });
+    if (starter && !ex.links.length) ex.links = [...starter.links];
     const photoOps = starter ? await defaultPhotoOps(ex, starter) : [];
     await db.writeMany([...photoOps, { store: 'exercises', value: { ...ex } }]);
     location.hash = viewHref;
@@ -493,23 +542,11 @@ async function settingsScreen() {
     }
   }
 
-  // Fill in default cues and photos on existing exercises that don't have their own yet.
   async function applyDefaults() {
     toast('Applying defaults…');
-    const ops = [];
-    let updated = 0;
-    for (const ex of await db.all('exercises')) {
-      const s = starterByName.get(ex.name.trim().toLowerCase());
-      if (!s) continue;
-      const fillCues = !ex.cues.trim();
-      const photoOps = await defaultPhotoOps(ex, s);
-      if (!fillCues && !photoOps.length) continue;
-      if (fillCues) Object.assign(ex, { cues: s.cues, muscles: ex.muscles || s.muscles });
-      ops.push(...photoOps, { store: 'exercises', value: { ...ex, updatedAt: Date.now() } });
-      updated++;
-    }
-    await db.writeMany(ops);
-    toast(updated ? `Added defaults to ${updated} exercise${updated > 1 ? 's' : ''}.` : 'Nothing to add: your exercises already have cues and photos.');
+    const { updated, complete } = await applyDefaultsToAll();
+    if (!complete) toast('Some default photos could not be downloaded. Try again when online.');
+    else toast(updated ? `Added defaults to ${updated} exercise${updated > 1 ? 's' : ''}.` : 'Nothing to add: your exercises already have cues and photos.');
   }
 
   async function doExport() {
@@ -591,7 +628,7 @@ async function render() {
 }
 
 window.addEventListener('hashchange', render);
-render();
+render().then(upgradeDefaults).catch((err) => console.error(err));
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('./sw.js');
