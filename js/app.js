@@ -2,7 +2,7 @@ import * as db from './db.js';
 import { h, blobURL, revokeURLs, takeURLs, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
-import { STARTER, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
+import { STARTER, STARTER_ROUTINES, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
 import { exportBackup, importBackup } from './backup.js';
 
 const app = document.getElementById('app');
@@ -74,13 +74,70 @@ async function applyDefaultsToAll() {
   return { updated, complete };
 }
 
+const templateFor = (name) => STARTER_ROUTINES.find((t) => t.name.toLowerCase() === name.trim().toLowerCase());
+
+// The exercise with this name, created with its defaults if missing (writes go to ops).
+// byName: Map of lowercase name → exercise.
+async function exerciseFor(name, byName, ops) {
+  const key = name.trim().toLowerCase();
+  let ex = byName.get(key);
+  if (!ex) {
+    ex = newExercise(name.trim());
+    byName.set(key, ex);
+    ops.push(...(await defaultPhotoOps(ex)), { store: 'exercises', value: ex });
+  }
+  return ex;
+}
+
+// Items plus the template's extra exercises (e.g. Preacher Curl on Biceps) that are missing.
+async function withExtras(items, template, byName, ops) {
+  const out = [...items];
+  for (const n of template?.ensure || []) {
+    const ex = await exerciseFor(n, byName, ops);
+    if (!out.some((i) => i.exerciseId === ex.id)) out.push({ exerciseId: ex.id, sets: '3', reps: '', note: '' });
+  }
+  return out;
+}
+
+// Create the template routines whose name doesn't exist yet (marked template: true until
+// the user edits them), and add template extras to existing routines of the same name.
+async function addTemplateRoutines() {
+  const routines = await db.all('routines');
+  const byName = new Map((await db.all('exercises')).map((e) => [e.name.trim().toLowerCase(), e]));
+  const ops = [];
+  let added = 0, extended = 0;
+  for (const t of STARTER_ROUTINES) {
+    const existing = routines.find((r) => r.name.trim().toLowerCase() === t.name.toLowerCase());
+    if (existing) {
+      const items = await withExtras(existing.items, t, byName, ops);
+      if (items.length !== existing.items.length) {
+        ops.push({ store: 'routines', value: { ...existing, items, updatedAt: Date.now() } });
+        extended++;
+      }
+      continue;
+    }
+    const items = [];
+    for (const n of t.exercises) items.push({ exerciseId: (await exerciseFor(n, byName, ops)).id, sets: '3', reps: '', note: '' });
+    ops.push({ store: 'routines', value: { id: db.uid(), name: t.name, items, template: true, updatedAt: Date.now() } });
+    added++;
+  }
+  await db.writeMany(ops);
+  return { added, extended };
+}
+
 // Once per DEFAULTS_VERSION (retried while offline), refresh defaults on existing exercises.
+// Version 3 introduced the routine templates: create them once.
 async function upgradeDefaults() {
-  if (Number(localStorage.getItem('defaultsVersion')) >= DEFAULTS_VERSION) return;
+  const prev = Number(localStorage.getItem('defaultsVersion'));
+  if (prev >= DEFAULTS_VERSION) return;
+  const routinesAdded = prev < 3 && !localStorage.getItem('templatesAdded') ? (await addTemplateRoutines()).added : 0;
+  localStorage.setItem('templatesAdded', '1');
   const { updated, complete } = await applyDefaultsToAll();
   if (complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));
-  if (updated) {
-    toast(`Updated default cues & photos for ${updated} exercise${updated > 1 ? 's' : ''}.`);
+  if (updated || routinesAdded) {
+    toast(routinesAdded
+      ? `Added ${routinesAdded} routine template${routinesAdded > 1 ? 's' : ''}.`
+      : `Updated default cues & photos for ${updated} exercise${updated > 1 ? 's' : ''}.`);
     if (!location.hash.includes('/edit')) render(); // don't discard edits in progress
   }
 }
@@ -141,7 +198,9 @@ function exerciseRow(ex, photo, { href, meta }) {
 // ---------- screens ----------
 
 async function homeScreen() {
-  const routines = (await db.all('routines')).sort(byName);
+  // Template routines first in their usual order (Push, Pull, Legs…), then the rest by name.
+  const rank = (r) => { const i = STARTER_ROUTINES.findIndex((t) => t.name.toLowerCase() === r.name.trim().toLowerCase()); return i < 0 ? Infinity : i; };
+  const routines = (await db.all('routines')).sort((a, b) => rank(a) - rank(b) || byName(a, b));
   const exercises = await db.all('exercises');
   const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
   const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
@@ -249,7 +308,8 @@ async function routineEditScreen(id) {
   }
 
   async function save() {
-    await db.put('routines', { ...r, name: name.value.trim() || 'Untitled routine', items, updatedAt: Date.now() });
+    // Edited by the user: no longer a template a Strong import may replace.
+    await db.put('routines', { ...r, name: name.value.trim() || 'Untitled routine', items, template: false, updatedAt: Date.now() });
     location.hash = `#/routine/${r.id}`;
   }
 
@@ -409,7 +469,7 @@ async function exerciseScreen(id, params) {
   // Order: what you need between sets first (target, photos, your notes, cues), adding last.
   const view = screen({ title: ex.name, back, action: h('a', { class: 'bar-btn', href: `#/exercise/${ex.id}/edit${routine ? `?r=${routine.id}&i=${params.get('i') ?? ''}` : ''}` }, 'Edit') },
     (item?.sets || item?.note) && h('div', { class: 'target' },
-      item.sets && h('strong', {}, `${item.sets} × ${item.reps || '?'}`),
+      item.sets && h('strong', {}, item.reps ? `${item.sets} × ${item.reps}` : `${item.sets} sets`),
       item.note && h('span', {}, item.note)),
     galleryArea,
     notesSection,
@@ -576,26 +636,24 @@ async function settingsScreen() {
     if (!file) return;
     try {
       const { exerciseNames, routines } = parseStrong(await file.text());
-      const existing = await db.all('exercises');
-      const idByName = new Map(existing.map((e) => [e.name.trim().toLowerCase(), e.id]));
-      const existingRoutines = new Set((await db.all('routines')).map((r) => r.name.trim().toLowerCase()));
+      const byName = new Map((await db.all('exercises')).map((e) => [e.name.trim().toLowerCase(), e]));
+      const before = byName.size;
+      const current = await db.all('routines');
       const ops = [];
-      let newEx = 0, newR = 0;
-      for (const n of exerciseNames) {
-        if (idByName.has(n.toLowerCase())) continue;
-        const ex = newExercise(n);
-        idByName.set(n.toLowerCase(), ex.id);
-        ops.push(...(await defaultPhotoOps(ex)), { store: 'exercises', value: ex });
-        newEx++;
-      }
+      let newR = 0;
+      for (const n of exerciseNames) await exerciseFor(n, byName, ops);
       for (const r of routines) {
-        if (existingRoutines.has(r.name.toLowerCase())) continue;
+        // Keep the user's own routines; replace untouched templates with the real routine.
+        const existing = current.find((c) => c.name.trim().toLowerCase() === r.name.toLowerCase());
+        if (existing && !existing.template) continue;
+        const items = r.items.map((i) => ({ exerciseId: byName.get(i.name.toLowerCase()).id, sets: i.sets ? String(i.sets) : '', reps: i.reps, note: '' }));
         ops.push({ store: 'routines', value: {
-          id: db.uid(), name: r.name, updatedAt: Date.now(),
-          items: r.items.map((i) => ({ exerciseId: idByName.get(i.name.toLowerCase()), sets: i.sets ? String(i.sets) : '', reps: i.reps, note: '' })),
+          id: existing?.id || db.uid(), name: r.name, updatedAt: Date.now(),
+          items: await withExtras(items, templateFor(r.name), byName, ops),
         } });
         newR++;
       }
+      const newEx = byName.size - before;
       await db.writeMany(ops);
       toast(`Imported ${newR} routines and ${newEx} new exercises.`);
     } catch (err) {
@@ -644,6 +702,15 @@ async function settingsScreen() {
     h('div', { class: 'card' },
       h('p', {}, `New exercises with a known name (e.g. "Squat (Barbell)") get default cues and 2 reference photos automatically (${STARTER.length} lifts). This fills them in for existing exercises that have no cues or no photos yet.`),
       h('button', { class: 'btn', onclick: applyDefaults }, 'Apply default cues & photos')),
+    h('div', { class: 'card' },
+      h('p', {}, `Routine templates: ${STARTER_ROUTINES.map((t) => t.name).join(', ')}. Adds the ones you don't have (matched by name), with default cues and photos.`),
+      h('button', { class: 'btn', onclick: async () => {
+        const { added, extended } = await addTemplateRoutines();
+        await applyDefaultsToAll(); // photos for any exercise that missed them
+        toast(added || extended
+          ? `Added ${added} routine${added === 1 ? '' : 's'}${extended ? `, updated ${extended}` : ''}.`
+          : 'You already have all the template routines.');
+      } }, 'Add routine templates')),
     h('h2', {}, 'Backup'),
     h('div', { class: 'card' },
       h('p', {}, 'Everything is stored only on this device. Export a backup now and then (save it to iCloud Drive).'),

@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 2;
+export const DEFAULTS_VERSION = 3;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -716,5 +716,463 @@ Programming tips
 - Rest 1–2 min between sets
 - Progress: add reps, then add load in small steps
 - If available, seated leg curls tend to grow hamstrings more`,
+  },
+  {
+    name: 'Pec Deck (Machine)',
+    photos: photos('Butterfly', 'Squeeze: handles together in front of the chest', 'Stretch: arms open, elbows slightly bent'),
+    muscles: 'Chest, front delts',
+    links: [
+      'https://www.strengthlog.com/machine-chest-fly/',
+      'https://gravitus.com/guides/exercises/machine-fly',
+    ],
+    cues: `Setup
+- Seat so elbows sit level with or just below shoulders
+- Set the start lever for a chest stretch, not a shoulder stretch
+- Head, upper back and hips flat on the pad
+- Feet flat, slight bend in the elbows
+
+Execution
+- Sweep the handles together in a wide arc in front of the chest
+- Keep the elbow bend fixed the whole set
+- Squeeze about 1 s when the handles nearly touch
+- Open slowly back to a full chest stretch
+
+Breathing & tempo
+- Exhale as you bring the handles together
+- Inhale as you open to the stretch
+- About 1 s in, 1 s squeeze, 2–3 s back
+- Don't let the stack touch between reps
+
+Common mistakes
+- Seat too low → raise it so elbows are near shoulder height
+- Shoulders roll off the pad → upper back pinned, go lighter
+- Lever set too far back → shorten the start; stretch chest, not shoulder
+- Elbows bending/straightening → lock the angle, reduce weight
+- Jerking from the stretch → start each rep smooth, no momentum
+
+Programming tips
+- Hypertrophy: 2–3 sets × 10–15 reps, 0–2 reps in reserve
+- Not a strength lift; heavy low reps strain the elbows
+- Rest 1–2 min
+- 15 reps on every set → add a plate, drop to 10`,
+  },
+  {
+    name: 'Shoulder Press (Machine)',
+    photos: photos('Machine_Shoulder_Military_Press', 'Start: handles at shoulder height', 'Top: arms nearly straight overhead'),
+    muscles: 'Front delts, triceps, side delts, upper chest',
+    links: [
+      'https://www.strengthlog.com/machine-shoulder-press/',
+      'https://gravitus.com/guides/exercises/shoulder-press-machine',
+    ],
+    cues: `Setup
+- Seat so the handles start at shoulder height
+- Back and head against the pad, feet planted
+- Neutral or overhand grip, wrists stacked over forearms
+- Elbows slightly in front of your body
+- Note your seat notch so you can reuse it
+
+Execution
+- Brace abs, press up until arms are nearly straight
+- Let the shoulder blades move up naturally with the press
+- Hips and back stay on the pad
+- Lower under control to shoulder height
+
+Breathing & tempo
+- Breathe in and brace before each press
+- Exhale through the top of the press
+- About 1–2 s up, 2–3 s down
+- Stop just before the stack touches
+
+Common mistakes
+- Seat too low → raise it so the bottom of the rep isn't cut off
+- Arching off the pad → brace abs, back on the pad
+- Shrugging before pressing → start each rep with shoulders relaxed
+- Elbows flared behind the body → keep elbows slightly forward
+- Dropping the weight → lower over 2–3 s
+
+Programming tips
+- Hypertrophy: 3–4 sets × 8–12 reps, 0–2 reps in reserve
+- Strength: 3–5 sets × 5–8 reps, still controlled
+- Rest 2–3 min
+- 12 reps on every set → one pin heavier, drop to 8
+- Neutral handles are usually easier on sore shoulders`,
+  },
+  {
+    name: 'Triceps Pushdown (Cable - Straight Bar)',
+    photos: photos('Triceps_Pushdown', 'Top: forearms about level, elbows pinned', 'Bottom: arms fully straight, triceps squeezed'),
+    muscles: 'Triceps',
+    links: [
+      'https://www.strengthlog.com/tricep-pushdown/',
+      'https://gravitus.com/guides/exercises/pushdown',
+    ],
+    cues: `Setup
+- Pulley at the top, straight bar attached
+- Overhand grip about shoulder width, wrists straight
+- Stand close, feet hip-width, slight lean from the hips
+- Pull the bar down until elbows are pinned at your sides
+
+Execution
+- Only the elbows move; upper arms stay still
+- Push down until the arms are fully straight
+- Squeeze the triceps briefly at the bottom
+- Let the bar rise until forearms are about level with the floor
+
+Breathing & tempo
+- Exhale as you push down
+- Inhale as the bar comes up
+- About 1 s down, 2 s up
+- Keep tension at the top; plates shouldn't touch
+
+Common mistakes
+- Elbows drift forward → pin them to your sides
+- Leaning over the bar → stand taller, use less weight
+- Wrists bending back → keep wrists straight or use a V-bar
+- Cutting the top short → let forearms come back to level
+- Bar flying up → control the return
+
+Programming tips
+- Hypertrophy: 3–4 sets × 8–15 reps, 0–2 reps in reserve
+- Heavy low-rep sets often bother elbows; stay moderate-high reps
+- Rest 1–2 min; do it after your presses
+- Top of the range on every set → one pin heavier, restart low`,
+  },
+  {
+    name: 'Lateral Raise (Dumbbell)',
+    photos: photos('Side_Lateral_Raise', 'Start: dumbbells at your sides', 'Top: arms at shoulder height, slight elbow bend'),
+    muscles: 'Side delts, front delts, upper traps',
+    links: [
+      'https://www.strengthlog.com/dumbbell-lateral-raise/',
+      'https://gravitus.com/guides/exercises/dumbbell-lateral-raise',
+    ],
+    cues: `Setup
+- Pick a weight you can raise for 10+ strict reps
+- Feet hip-width, dumbbells at your sides, palms in
+- Slight bend in the elbows, fixed for the whole set
+- Brace abs, chest tall, shoulders down
+
+Execution
+- Raise the arms out to the sides, leading with the elbows
+- Stop at about shoulder height, palms facing the floor
+- Straight out or up to 30° forward both work
+- Lower slowly to your sides
+
+Breathing & tempo
+- Exhale on the way up
+- Inhale on the way down
+- About 1–2 s up, 2–3 s down
+- No bounce at the bottom
+
+Common mistakes
+- Swinging with hips/back → go lighter, torso still
+- Shrugging → shoulders down, away from the ears
+- Elbows bent to 90° → keep just a slight bend
+- Thumbs down ("pouring the jug") → palms down or neutral
+- Raising far above the shoulders → stop at shoulder height
+
+Programming tips
+- Hypertrophy: 3–4 sets × 10–20 reps, 0–2 reps in reserve
+- Not a strength lift; light and strict wins
+- Rest 1–2 min
+- Add reps first; dumbbell jumps are big for this muscle`,
+  },
+  {
+    name: 'Triceps Extension (Cable)',
+    photos: photos('Cable_Rope_Overhead_Triceps_Extension', 'Stretch: elbows bent behind the head, arms by the ears', 'End: arms straight overhead'),
+    muscles: 'Triceps (long head emphasis)',
+    links: [
+      'https://www.strengthlog.com/overhead-cable-triceps-extension/',
+      'https://gravitus.com/guides/exercises/overhead-tricep-rope-extension',
+    ],
+    cues: `Setup
+- Rope on the pulley at head height or a bit higher
+- Face away, step out until the weight lifts
+- Split stance, slight lean forward from the hips
+- Upper arms beside your ears, rope ends beside the head
+
+Execution
+- Start with elbows bent at least 90° for a stretch
+- Upper arms stay still; only the elbows move
+- Straighten the arms fully; spread the rope ends slightly
+- Return slowly to the deep stretch
+
+Breathing & tempo
+- Brace before the first rep so you aren't pulled back
+- Exhale as you extend
+- Inhale as you lower into the stretch
+- About 1 s out, 2 s back; stack never touches
+
+Common mistakes
+- Elbows flare wide → point them forward, lighten the load
+- Upper arms drop (pullover) → keep them by your ears
+- Stopping short of the stretch → bend to at least 90°
+- Lower back arching → brace abs, or kneel/sit
+- Getting pulled backward → step farther out, stagger feet more
+
+Programming tips
+- Hypertrophy: 3–4 sets × 8–15 reps, 0–2 reps in reserve
+- Avoid heavy low reps; elbows don't like them here
+- Rest 1–2 min
+- Overhead work grew triceps more than pushdowns in one study`,
+  },
+  {
+    name: 'Reverse Fly (Machine)',
+    photos: photos('Reverse_Machine_Flyes', 'Start: arms forward, chest on the pad', 'End: arms swept out in line with the body'),
+    muscles: 'Rear delts, rotator cuff, mid/upper traps, rhomboids',
+    links: [
+      'https://www.strengthlog.com/reverse-machine-fly/',
+      'https://barbend.com/reverse-pec-deck/',
+    ],
+    cues: `Setup
+- Face the pad, chest against it
+- Seat so the arms are parallel to the floor
+- Handles in the narrowest position for full range
+- Neutral (palms in) grip usually hits rear delts best
+
+Execution
+- Slight elbow bend, fixed throughout
+- Sweep the arms out and back until in line with the body
+- Think "part the air", not "pinch the shoulder blades"
+- Return slowly until the handles nearly meet
+
+Breathing & tempo
+- Exhale as you sweep out
+- Inhale as you return
+- About 1–2 s out, brief hold, 2–3 s back
+- Keep tension; don't rest at the front
+
+Common mistakes
+- Too heavy, traps/lats take over → lighter, feel the rear delts
+- Seat too low → raise until arms are level with shoulders
+- Pinching shoulder blades first → lead with the arms
+- Chest leaving the pad → stay pressed in, no rocking
+
+Programming tips
+- Hypertrophy: 3–4 sets × 12–15 reps (up to 20)
+- Beginners: 1–2 sets × 10–15 light reps
+- Rest 1–2 min
+- Add reps before weight; small jumps only`,
+  },
+  {
+    name: 'Bicep Curl (Dumbbell)',
+    photos: photos('Dumbbell_Bicep_Curl', 'Start: arms straight at your sides', 'Top: curled, elbows still at your sides'),
+    muscles: 'Biceps, brachialis, forearm flexors',
+    links: [
+      'https://www.strengthlog.com/dumbbell-curl/',
+      'https://gravitus.com/guides/exercises/dumbbell-curl',
+    ],
+    cues: `Setup
+- Feet hip-width, knees soft, chest up
+- Dumbbells at your sides, arms straight
+- Shoulders slightly back and down, light core brace
+- Palms forward (or turn them up once clear of the thighs)
+
+Execution
+- Elbows stay at your sides; only the elbows bend
+- Palms face up by the time forearms are level
+- Curl until forearms meet biceps, squeeze briefly
+- Lower until the arms are fully straight
+
+Breathing & tempo
+- Exhale as you curl up
+- Inhale as you lower
+- About 1 s up, 2–3 s down
+- Wrists straight throughout
+
+Common mistakes
+- Swinging torso/hips → go lighter, stand still
+- Elbows drifting forward → keep them by your sides
+- Half reps at the bottom → straighten the arms every rep
+- Palms half-turned → rotate fully palm-up
+- Bent wrists → keep wrists neutral and firm
+
+Programming tips
+- Hypertrophy: 3 sets × 8–15 reps, 0–2 reps in reserve
+- Low reps (1–5) suit curls poorly and invite cheating
+- Rest 1–2 min
+- Top of the range on every set → +2.5 kg, restart low`,
+  },
+  {
+    name: 'Calf Press on Leg Press',
+    photos: photos('Calf_Press_On_The_Leg_Press_Machine', 'Stretch: heels lowered, balls of the feet on the edge', 'Top: pressed onto the balls of the feet'),
+    muscles: 'Calves (gastrocnemius, soleus)',
+    links: [
+      'https://www.strengthlog.com/calf-raise-in-leg-press/',
+      'https://gravitus.com/guides/exercises/calf-press-on-leg-press',
+    ],
+    cues: `Setup
+- Set the safety stops one notch below your lowest heel drop
+- Back and hips flat on the pad
+- Balls of the feet on the platform's bottom edge, heels off
+- Feet hip-width, toes forward
+- Place feet before unracking; never move feet when loaded
+
+Execution
+- Legs straight but knees not locked
+- Lower the heels to a deep calf stretch, pause 1–2 s
+- Press through the balls of the feet as high as possible
+- Only the ankles move; knees stay still
+- Rack the sled before moving your feet
+
+Breathing & tempo
+- Exhale as you press up
+- Inhale as you lower into the stretch
+- About 1 s up, 1 s squeeze, 2 s down, pause at the bottom
+- No bouncing out of the stretch
+
+Common mistakes
+- Bouncing at the bottom → pause in the stretch every rep
+- Knees bending (mini leg press) → keep knees fixed
+- On toe tips → keep the ball of the foot on the edge
+- Heels on the platform → slide down so heels hang free
+
+Programming tips
+- Hypertrophy: 3–4 sets × 10–20 reps, 0–2 reps in reserve
+- Calves respond well to 2–3 sessions per week
+- Rest 1–2 min
+- Every set hits 20 → add ~5 kg per side, drop to ~12`,
+  },
+  {
+    name: 'Seated Row (Cable)',
+    photos: photos('Seated_Cable_Rows', 'Stretch: arms long, back neutral', 'End: handle to the stomach, shoulder blades squeezed'),
+    muscles: 'Lats, mid traps, rhomboids, rear delts, biceps',
+    links: [
+      'https://barbend.com/seated-cable-row/',
+      'https://gravitus.com/guides/exercises/seated-cable-row',
+    ],
+    cues: `Setup
+- V-handle on the low pulley, cable not twisted
+- Feet on the platform, knees slightly bent
+- Neutral grip, slide back until the weight lifts
+- Chest up, lower back neutral (not rounded)
+
+Execution
+- Sit upright, drive the elbows back along your sides
+- Pull the handle to your stomach, squeeze shoulder blades
+- Reach forward slightly into the stretch, back stays neutral
+- Torso mostly still; arms and shoulder blades move
+
+Breathing & tempo
+- Breathe in and brace before each pull
+- Exhale as you pull to your stomach
+- About 1 s pull, brief squeeze, 2–3 s return
+- Control the stretch; don't get yanked forward
+
+Common mistakes
+- Leaning back to finish → weight too heavy, reduce it
+- Rounding the lower back at the stretch → reach less, chest up
+- Shrugging toward the ears → shoulders down
+- Pulling with the arms only → lead with the elbows
+- Pushing with the legs → legs still, no sliding
+
+Programming tips
+- Hypertrophy: 3–4 sets × 8–15 reps, 0–2 reps in reserve
+- Strength: 3–5 sets × 5–10 reps, strict form
+- Rest 1.5–3 min
+- 12 reps on every set → one pin heavier, drop to 8`,
+  },
+  {
+    name: 'Bicep Curl (Barbell)',
+    photos: photos('Barbell_Curl', 'Start: bar at the thighs, arms straight', 'Top: curled up, body still'),
+    muscles: 'Biceps, brachialis, forearm flexors',
+    links: [
+      'https://www.strengthlog.com/barbell-curl/',
+      'https://gravitus.com/guides/exercises/barbell-curl',
+    ],
+    cues: `Setup
+- Stand tall, feet hip-width, knees soft, core braced
+- Underhand grip about shoulder width, hands outside the thighs
+- Bar deep in the palms, wrists straight
+- Forearms hang straight down from the elbows
+
+Execution
+- Curl by bending at the elbows; body stays still
+- Elbows at your sides until the bar passes halfway
+- A small elbow rise at the very top is fine
+- Lower until the bar touches the thighs, no bounce
+
+Breathing & tempo
+- Exhale as you curl up
+- Inhale as you lower
+- About 1 s up, 2–3 s down
+- Keep tension at the bottom of each rep
+
+Common mistakes
+- Swinging from rep one → reduce the weight, stay strict
+- Elbows forward at the start → keep them pinned early
+- Wrists bending back → keep the bar deep in the palms
+- Wrists hurt → switch to an EZ bar
+
+Programming tips
+- Hypertrophy: 3–4 sets × 6–12 reps (up to 15), 0–2 reps in reserve
+- Rest 1–2 min
+- Top of the range on every set → smallest plates, restart low
+- Cheat reps only on the last set, if at all`,
+  },
+  {
+    name: 'Preacher Curl (Machine)',
+    photos: photos('Machine_Preacher_Curls', 'Start: arms nearly straight on the pad', 'Top: curled, elbows down on the pad'),
+    muscles: 'Biceps, brachialis, forearm flexors',
+    links: [
+      'https://www.strengthlog.com/machine-bicep-curl/',
+      'https://gravitus.com/guides/exercises/bicep-curl-machine',
+    ],
+    cues: `Setup
+- Adjust the seat so the elbows line up with the machine pivot
+- Backs of the upper arms flat on the pad
+- Underhand grip, wrists straight, arms nearly straight
+- Test with two light reps; handles shouldn't slide
+
+Execution
+- Curl by bending only at the elbows
+- Curl until forearms are close to vertical, squeeze briefly
+- Elbows and shoulders stay down on the pad
+- Lower to nearly straight arms, under control
+
+Breathing & tempo
+- Exhale as you curl
+- Inhale as you lower
+- About 1 s up, 2–3 s down
+- Stop just before the plates touch the stack
+
+Common mistakes
+- Seat too high (pivot at the armpits) → lower it to the elbows
+- Half reps at the bottom → lower to nearly straight arms
+- Elbows lifting off the pad → reduce weight, arms down
+- Leaning back to finish → lighten the load, stay upright
+- Wrists curling at the top → keep wrists neutral
+
+Programming tips
+- Hypertrophy: 3 sets × 8–15 reps, 0–2 reps in reserve
+- Good finisher after free-weight curls
+- Rest 1–2 min; use the same seat notch every session
+- Top of the range on every set → one pin heavier, restart low`,
+  },
+];
+
+// Routine templates (the user's Strong routines). Created once automatically if a
+// routine with the same name doesn't exist, and re-addable from Settings. A Strong
+// import replaces an untouched template of the same name.
+export const STARTER_ROUTINES = [
+  {
+    name: 'Push',
+    exercises: ['Pec Deck (Machine)', 'Shoulder Press (Machine)', 'Incline Bench Press (Dumbbell)', 'Triceps Pushdown (Cable - Straight Bar)', 'Lateral Raise (Dumbbell)', 'Triceps Extension (Cable)'],
+  },
+  {
+    name: 'Pull',
+    exercises: ['Lat Pulldown (Cable)', 'Iso-Lateral Row (Machine)', 'Reverse Fly (Machine)', 'Hammer Curl (Dumbbell)', 'Bicep Curl (Dumbbell)'],
+  },
+  {
+    name: 'Legs',
+    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Lying Leg Curl (Machine)', 'Calf Press on Leg Press'],
+  },
+  {
+    name: 'Workout A',
+    exercises: ['Squat (Barbell)', 'Bench Press (Barbell)', 'Bent Over Row (Barbell)'],
+  },
+  {
+    name: 'Biceps',
+    exercises: ['Deadlift (Barbell)', 'Seated Row (Cable)', 'Lat Pulldown (Cable)', 'Bicep Curl (Barbell)', 'Preacher Curl (Machine)'],
+    // Added by the user on top of their Strong routine: appended to an existing "Biceps" routine too.
+    ensure: ['Preacher Curl (Machine)'],
   },
 ];

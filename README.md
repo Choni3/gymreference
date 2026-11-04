@@ -20,6 +20,8 @@ See [docs/SCOPE.md](docs/SCOPE.md) for goals, non-goals and design choices.
 - Step through a routine at the gym with a big Prev / Next bar; reopens where
   you were if iOS closed the app between sets
 - Full-screen photo viewer: swipe, double-tap to zoom
+- Routine templates (Push, Pull, Legs, Workout A, Biceps) created on first launch,
+  re-addable from Settings
 - Import routines from a **Strong CSV export**
 - Works offline, data stays on your device; export/restore a backup file
 
