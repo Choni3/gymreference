@@ -1,5 +1,5 @@
 import * as db from './db.js';
-import { h, blobURL, revokeURLs, toast, pickFiles, renderCues } from './ui.js';
+import { h, blobURL, revokeURLs, takeURLs, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
 import { STARTER, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
@@ -126,7 +126,9 @@ function screen({ title, back, action }, ...body) {
 }
 
 function thumb(photo, cls = 'thumb') {
-  return photo ? h('img', { class: cls, src: blobURL(photo.blob), alt: '' }) : h('div', { class: `${cls} empty` }, '🏋️');
+  return photo
+    ? h('img', { class: cls, src: blobURL(photo.blob), alt: '', width: 56, height: 56, loading: 'lazy', decoding: 'async' })
+    : h('div', { class: `${cls} empty`, role: 'img', 'aria-label': 'No photo' }, '🏋️');
 }
 
 function exerciseRow(ex, photo, { href, meta }) {
@@ -429,18 +431,44 @@ async function exerciseScreen(id, params) {
   return view;
 }
 
-// Full-screen photo viewer: swipe between photos, double-tap to zoom, ✕ to close.
+// Full-screen photo viewer: swipe between photos, double-tap to zoom, ✕ to close,
+// and write a note (caption) on any photo.
 function openLightbox(photos, index) {
   const counter = h('span', { class: 'counter' }, `${index + 1}/${photos.length}`);
-  const close = () => { box.remove(); document.removeEventListener('keydown', onKey); };
-  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  let edited = false;
+  const close = () => {
+    box.remove();
+    document.removeEventListener('keydown', onKey);
+    if (edited) render(); // show new captions in the gallery
+  };
+  function captionArea(p) {
+    const area = h('div', { class: 'lb-caption' });
+    const show = () => area.replaceChildren(
+      h('button', { class: 'caption-btn', onclick: edit }, p.caption || '✎ Add a note to this photo'));
+    const edit = () => {
+      const input = h('textarea', { rows: 2, value: p.caption || '', placeholder: 'e.g. knees out here, bar over mid-foot' });
+      area.replaceChildren(input, h('div', { class: 'inline' },
+        h('button', { class: 'btn small primary', onclick: async () => {
+          p.caption = input.value.trim();
+          await db.put('photos', { id: p.id, blob: p.blob, caption: p.caption });
+          edited = true;
+          if (!box.isConnected) render(); // closed while saving
+          show();
+        } }, 'Save'),
+        h('button', { class: 'btn small', onclick: show }, 'Cancel')));
+      input.focus();
+    };
+    show();
+    return area;
+  }
+  const onKey = (e) => { if (e.key === 'Escape' && e.target.tagName !== 'TEXTAREA') close(); };
   const strip = h('div', { class: 'gallery lightbox-strip', onscroll: () => {
     counter.textContent = `${Math.round(strip.scrollLeft / strip.clientWidth) + 1}/${photos.length}`;
   } }, photos.map((p) =>
     h('figure', {},
       h('div', { class: 'zoom', ondblclick: (e) => e.currentTarget.classList.toggle('zoomed') },
         h('img', { src: p.url, alt: p.caption || '' })),
-      p.caption ? h('figcaption', {}, p.caption) : null)));
+      captionArea(p))));
   const box = h('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Photos' },
     h('div', { class: 'lightbox-bar' }, photos.length > 1 ? counter : h('span'),
       h('button', { class: 'icon close', 'aria-label': 'Close', onclick: close }, '✕')),
@@ -661,7 +689,7 @@ async function render() {
   const [path, query = ''] = location.hash.replace(/^#/, '').split('?');
   rememberScreen(path);
   const params = new URLSearchParams(query);
-  revokeURLs();
+  const stale = takeURLs(); // revoked once the new screen has replaced the old one
   document.querySelector('.lightbox')?.remove();
   let view;
   try {
@@ -673,6 +701,7 @@ async function render() {
   }
   if (id !== renderId) return; // a newer navigation won
   app.replaceChildren(...[view].flat());
+  stale.forEach((u) => URL.revokeObjectURL(u));
   window.scrollTo(0, 0);
 }
 

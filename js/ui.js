@@ -28,6 +28,12 @@ export function revokeURLs() {
   urls.forEach((u) => URL.revokeObjectURL(u));
   urls = [];
 }
+// Detach the current URLs so they can be revoked after the old screen is gone.
+export function takeURLs() {
+  const taken = urls;
+  urls = [];
+  return taken;
+}
 
 let toastTimer;
 export function toast(msg) {

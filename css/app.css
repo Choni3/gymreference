@@ -200,3 +200,11 @@ section[hidden] { display: none; }
   background: var(--surface-2); border: 1px solid var(--accent); border-radius: var(--radius);
   padding: 10px 12px;
 }
+
+.lb-caption { padding: 8px 14px 0; }
+.lb-caption textarea { font-size: 16px; }
+.caption-btn {
+  display: block; width: 100%; min-height: 44px; padding: 8px;
+  font: inherit; font-size: 16px; color: var(--text); text-align: center;
+  background: none; border: 1px dashed var(--border); border-radius: 10px;
+}
