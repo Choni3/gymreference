@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 4;
+export const DEFAULTS_VERSION = 5;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -22,6 +22,7 @@ export function cueHash(text) {
 // "<lowercase name>:<cueHash>" of earlier default cues: these get replaced by the
 // current defaults; anything the user edited is left alone.
 export const LEGACY_CUES = new Set([
+  'calf press (machine):8x7gnc',
   'bench press (barbell):1v4oau0',
   'bent over row (barbell):1ewozbh',
   'bulgarian split squat:100s5u9',
@@ -40,6 +41,16 @@ export const LEGACY_CUES = new Set([
   'seated overhead press (dumbbell):16bof8r',
   'squat (barbell):dgdi13'
 ]);
+
+// Exercises renamed at the user's request: old lowercase name → new default name. Existing
+// exercises are renamed in place once, and their old default cues/links/photos are replaced.
+export const RENAMED = {
+  'calf press on leg press': {
+    name: 'Calf Press (Machine)',
+    oldLinks: ['https://www.strengthlog.com/calf-raise-in-leg-press/', 'https://gravitus.com/guides/exercises/calf-press-on-leg-press'],
+    oldCaptions: ['Stretch: heels lowered, balls of the feet on the edge', 'Top: pressed onto the balls of the feet'],
+  },
+};
 
 export const STARTER = [
   {
@@ -992,44 +1003,44 @@ Programming tips
 - Top of the range on every set → +2.5 kg, restart low`,
   },
   {
-    name: 'Calf Press on Leg Press',
-    photos: photos('Calf_Press_On_The_Leg_Press_Machine', 'Stretch: heels lowered, balls of the feet on the edge', 'Top: pressed onto the balls of the feet'),
+    name: 'Calf Press (Machine)',
+    photos: photos('Calf_Press', 'Stretch: heels lowered, balls of the feet on the edge', 'Top: pressed onto the balls of the feet, knees still'),
     muscles: 'Calves (gastrocnemius, soleus)',
     links: [
-      'https://www.strengthlog.com/calf-raise-in-leg-press/',
-      'https://gravitus.com/guides/exercises/calf-press-on-leg-press',
+      'https://gravitus.com/guides/exercises/calf-press',
+      'https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2023.1272106/full',
     ],
     cues: `Setup
-- Set the safety stops one notch below your lowest heel drop
-- Back and hips flat on the pad
-- Balls of the feet on the platform's bottom edge, heels off
-- Feet hip-width, toes forward
-- Place feet before unracking; never move feet when loaded
+- Set the seat so your legs are nearly straight at the bottom
+- Balls of the feet on the plate's edge, heels hanging off
+- Feet hip-width, toes forward, back flat on the pad
+- Standing machine: pads on shoulders, knees soft, balls of feet on the block
+- Straight knees work the gastrocnemius; bent knees (seated) mostly the soleus
 
 Execution
-- Legs straight but knees not locked
-- Lower the heels to a deep calf stretch, pause 1–2 s
-- Press through the balls of the feet as high as possible
-- Only the ankles move; knees stay still
-- Rack the sled before moving your feet
+- Lower slowly until the calves are fully stretched, then pause
+- Press through the big toe until the ankles fully point
+- Only the ankles move; knees stay fixed
+- Squeeze hard at the top for about 1 s
+- Rack the weight only after your final rep
 
 Breathing & tempo
-- Exhale as you press up
-- Inhale as you lower into the stretch
-- About 1 s up, 1 s squeeze, 2 s down, pause at the bottom
-- No bouncing out of the stretch
+- Exhale as you press, inhale as you lower
+- About 2 s down, 1 s pause in the stretch
+- Press up smoothly; never bounce out of the bottom
 
 Common mistakes
-- Bouncing at the bottom → pause in the stretch every rep
-- Knees bending (mini leg press) → keep knees fixed
-- On toe tips → keep the ball of the foot on the edge
-- Heels on the platform → slide down so heels hang free
+- Bouncing at the bottom → pause 1 s in the stretch
+- Short range of motion → move the seat closer, let the heels drop fully
+- Knees bending/pushing → legs fixed, only the ankles move
+- Whole foot on the plate → only the balls of the feet on the edge
+- Load too heavy → cut the weight, own every full-range rep
 
 Programming tips
 - Hypertrophy: 3–4 sets × 10–20 reps, 0–2 reps in reserve
-- Calves respond well to 2–3 sessions per week
-- Rest 1–2 min
-- Every set hits 20 → add ~5 kg per side, drop to ~12`,
+- Rest 60–90 s; calves do well with 2–3 sessions per week
+- Add reps first; 20 reps on every set → add weight
+- Mostly straight-knee work for growth; add bent-knee work for the soleus`,
   },
   {
     name: 'Seated Row (Cable)',
@@ -1163,7 +1174,7 @@ export const STARTER_ROUTINES = [
   },
   {
     name: 'Legs',
-    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Lying Leg Curl (Machine)', 'Calf Press on Leg Press'],
+    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Lying Leg Curl (Machine)', 'Calf Press (Machine)'],
   },
   {
     name: 'Workout A',

@@ -2,7 +2,7 @@ import * as db from './db.js';
 import { h, blobURL, revokeURLs, takeURLs, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
-import { STARTER, STARTER_ROUTINES, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
+import { STARTER, STARTER_ROUTINES, RENAMED, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
 import { exportBackup, importBackup } from './backup.js';
 
 const app = document.getElementById('app');
@@ -193,6 +193,39 @@ async function dedupeTemplates() {
   return ops.length > 0;
 }
 
+// Exercises renamed in the defaults (RENAMED): rename in place (routines keep pointing at
+// them), swap the old default photos and links for the new ones, keep everything the user
+// added. Old default cues are replaced afterwards by applyDefaultsToAll (LEGACY_CUES).
+// Skipped while the new photos can't be downloaded, so it's retried next launch.
+async function applyRenames() {
+  let renamed = 0, complete = true;
+  for (const { id, name } of await db.all('exercises')) {
+    const r = RENAMED[name.trim().toLowerCase()];
+    if (!r) continue;
+    const starter = starterByName.get(r.name.toLowerCase());
+    const fresh = await defaultPhotoOps({ name: r.name, photoIds: [] }, starter);
+    if (!fresh.length) { complete = false; continue; }
+    // Re-read after the downloads so edits made meanwhile are kept.
+    const ex = await db.get('exercises', id);
+    if (!ex || ex.name.trim().toLowerCase() !== name.trim().toLowerCase()) continue;
+    const photos = await Promise.all(ex.photoIds.map((pid) => db.get('photos', pid)));
+    const oldIds = photos.filter((p) => p && r.oldCaptions.includes(p.caption)).map((p) => p.id);
+    await db.writeMany([
+      ...oldIds.map((id) => ({ store: 'photos', delete: id })),
+      ...fresh,
+      { store: 'exercises', value: {
+        ...ex,
+        name: r.name,
+        links: [...new Set([...starter.links, ...ex.links.filter((l) => !r.oldLinks.includes(l))])],
+        photoIds: [...fresh.map((o) => o.value.id), ...ex.photoIds.filter((pid) => !oldIds.includes(pid))],
+        updatedAt: Date.now(),
+      } },
+    ]);
+    renamed++;
+  }
+  return { renamed, complete };
+}
+
 // Once per DEFAULTS_VERSION (retried while offline), refresh defaults on existing exercises.
 // Version 3 introduced the routine templates: create them once. Version 4 repairs duplicates.
 function upgradeDefaults() {
@@ -203,10 +236,11 @@ async function upgradeDefaultsLocked() {
   if (prev >= DEFAULTS_VERSION) return;
   const routinesAdded = prev < 3 && !localStorage.getItem('templatesAdded') ? (await addTemplateRoutines()).added : 0;
   localStorage.setItem('templatesAdded', '1');
+  const renames = await applyRenames();
   const repaired = await dedupeTemplates();
   const { updated, complete } = await applyDefaultsToAll();
-  if (complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));
-  if (updated || routinesAdded || repaired) {
+  if (complete && renames.complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));
+  if (updated || routinesAdded || repaired || renames.renamed) {
     toast(repaired && !routinesAdded ? 'Removed duplicate routines and exercises.' : routinesAdded
       ? `Added ${routinesAdded} routine template${routinesAdded > 1 ? 's' : ''}.`
       : `Updated default cues & photos for ${updated} exercise${updated > 1 ? 's' : ''}.`);
