@@ -68,7 +68,7 @@ export function renderCues(text) {
       list.append(h('li', {}, m[1]));
     } else {
       list = null;
-      out.push(h('h3', {}, line));
+      out.push(h('h3', { class: /mistake/i.test(line) ? 'warn' : null }, line));
     }
   }
   return out;

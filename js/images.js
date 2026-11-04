@@ -9,9 +9,12 @@ function canvasToBlob(canvas) {
   );
 }
 
+// One shared canvas: iOS caps total canvas memory, so a new canvas per photo can fail
+// when adding many at once. toBlob() snapshots the pixels, so reuse is safe.
+let canvas;
 function drawScaled(source, w, h) {
   const scale = Math.min(1, MAX_SIDE / Math.max(w, h));
-  const canvas = document.createElement('canvas');
+  canvas ||= document.createElement('canvas');
   canvas.width = Math.round(w * scale);
   canvas.height = Math.round(h * scale);
   canvas.getContext('2d').drawImage(source, 0, 0, canvas.width, canvas.height);

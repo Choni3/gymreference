@@ -1,7 +1,8 @@
-// Offline support: serve the app shell from cache, refresh it in the background.
-// Bump VERSION when shipping changes so old caches are cleared.
-const VERSION = 'v3';
+// Offline support: the app shell is served cache-first from a versioned cache.
+// Bump VERSION on every release; the app then shows "A new version is ready".
+const VERSION = 'v4';
 const CACHE = `gymreference-${VERSION}`;
+const DEFAULTS_CACHE = 'gymreference-defaults-v1'; // filled by the page, see app.js
 const SHELL = [
   './',
   'index.html',
@@ -21,13 +22,18 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // cache: 'reload' skips the HTTP cache so a release never mixes old and new files.
+  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))));
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('gymreference-') && k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('gymreference-') && k !== CACHE && k !== DEFAULTS_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -36,19 +42,6 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   event.respondWith(
-    caches.open(CACHE).then(async (cache) => {
-      const cached = await cache.match(req, { ignoreSearch: true });
-      const network = fetch(req)
-        .then((res) => {
-          if (res.ok) cache.put(req, res.clone());
-          return res;
-        })
-        .catch(() => cached || Response.error());
-      if (cached) {
-        event.waitUntil(network);
-        return cached;
-      }
-      return network;
-    })
+    caches.match(req, { ignoreSearch: true }).then((cached) => cached || fetch(req))
   );
 });

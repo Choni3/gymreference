@@ -147,7 +147,7 @@ async function homeScreen() {
 
   return screen({ title: 'GymReference', action: h('a', { class: 'bar-btn', href: '#/settings', 'aria-label': 'Settings' }, '⚙︎') },
     showInstall && h('div', { class: 'card hint' },
-      h('p', {}, 'Tip: tap ', h('b', {}, 'Share → Add to Home Screen'), ' so it works offline and your photos are kept safe.'),
+      h('p', {}, 'Tip: tap ', h('b', {}, 'Share → Add to Home Screen'), ' first, and use the app from there: it works offline and your photos are kept safe. Data added here in Safari does not carry over (use Settings → Backup to move it).'),
       h('button', { class: 'link', onclick: (e) => { localStorage.setItem('hideInstall', '1'); e.target.closest('.hint').remove(); } }, 'Dismiss')),
     h('h2', {}, 'Routines'),
     routines.length
@@ -305,8 +305,14 @@ function photoAdder(ex, onAdded) {
       if (video.duration) slider.value = Math.round((video.currentTime / video.duration) * 1000);
     });
     video.addEventListener('seeked', () => { time.textContent = `${video.currentTime.toFixed(1)}s`; });
-    // iOS only renders a frame after playback has started once; nudge it.
-    video.addEventListener('loadedmetadata', () => { seek(0.001); }, { once: true });
+    // iOS may not paint a frame until it has seeked once; nudge it.
+    video.addEventListener('loadeddata', () => { seek(0.001); }, { once: true });
+    // Draw only once the seeked-to frame is actually on screen, or iOS gives a stale/black frame.
+    // (requestVideoFrameCallback is not used: it never fires for a paused, settled video.)
+    const frameReady = async () => {
+      if (video.seeking) await new Promise((r) => video.addEventListener('seeked', r, { once: true }));
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    };
     const close = () => { video.pause(); URL.revokeObjectURL(url); grabber.replaceChildren(); };
     grabber.replaceChildren(h('div', { class: 'card grabber' },
       video,
@@ -317,6 +323,7 @@ function photoAdder(ex, onAdded) {
         h('button', { class: 'btn small primary', onclick: async () => {
           if (!video.videoWidth) return toast('Video not ready yet');
           video.pause();
+          await frameReady();
           await addBlobs([await captureFrame(video)]);
           status.textContent = `${++captured} captured`;
         } }, '📸 Capture frame')),
@@ -340,11 +347,11 @@ async function exerciseScreen(id, params) {
     item = routine.items[idx];
     const link = (i, label) => {
       const it = routine.items[i];
-      return it ? h('a', { class: 'btn small', href: `#/exercise/${it.exerciseId}?r=${routine.id}&i=${i}` }, label) : h('span');
+      return it ? h('a', { class: 'nav-btn', href: `#/exercise/${it.exerciseId}?r=${routine.id}&i=${i}` }, label) : h('span', { class: 'nav-btn' });
     };
-    nav = h('div', { class: 'routine-nav' },
+    nav = h('nav', { class: 'routine-nav', 'aria-label': 'Routine' },
       link(idx - 1, '‹ Prev'),
-      h('span', { class: 'muted' }, `${idx + 1}/${routine.items.length}${item?.sets ? ` · ${item.sets} × ${item.reps || '?'}` : ''}`),
+      h('span', { class: 'muted' }, `${idx + 1} / ${routine.items.length}`),
       link(idx + 1, 'Next ›'));
   }
 
@@ -360,10 +367,13 @@ async function exerciseScreen(id, params) {
     const gallery = h('div', { class: 'gallery', onscroll: () => {
       const i = Math.round(gallery.scrollLeft / gallery.clientWidth);
       counter.textContent = `${i + 1}/${photos.length}`;
-    } }, photos.map((p) =>
-      h('figure', {},
-        h('img', { src: blobURL(p.blob), alt: p.caption || ex.name, onclick: (e) => openLightbox(e.target.src, p.caption) }),
-        p.caption ? h('figcaption', {}, p.caption) : null)));
+    } }, photos.map((p, i) => {
+      p.url = blobURL(p.blob);
+      return h('figure', {},
+        h('button', { class: 'photo-btn', 'aria-label': `Open photo ${i + 1} full screen`, onclick: () => openLightbox(photos, i) },
+          h('img', { src: p.url, alt: p.caption || ex.name, decoding: 'async', loading: i ? 'lazy' : 'eager' })),
+        p.caption ? h('figcaption', {}, p.caption) : null);
+    }));
     galleryArea.replaceChildren(h('div', { class: 'gallery-wrap' }, gallery, photos.length > 1 ? counter : null));
   }
   await drawGallery();
@@ -394,29 +404,52 @@ async function exerciseScreen(id, params) {
     input.focus();
   }
 
-  return screen({ title: ex.name, back, action: h('a', { class: 'bar-btn', href: `#/exercise/${ex.id}/edit${routine ? `?r=${routine.id}&i=${params.get('i') ?? ''}` : ''}` }, 'Edit') },
-    nav,
+  // Order: what you need between sets first (target, photos, your notes, cues), adding last.
+  const view = screen({ title: ex.name, back, action: h('a', { class: 'bar-btn', href: `#/exercise/${ex.id}/edit${routine ? `?r=${routine.id}&i=${params.get('i') ?? ''}` : ''}` }, 'Edit') },
+    (item?.sets || item?.note) && h('div', { class: 'target' },
+      item.sets && h('strong', {}, `${item.sets} × ${item.reps || '?'}`),
+      item.note && h('span', {}, item.note)),
     galleryArea,
+    notesSection,
+    ex.muscles && h('p', { class: 'muted' }, ex.muscles),
+    ex.cues ? h('section', { class: 'cues' }, renderCues(ex.cues)) : h('p', { class: 'muted' }, 'No technique cues yet. Tap Edit to write some.'),
+    ex.links.length > 0 && h('section', {}, h('h2', {}, 'Sources & videos'),
+      h('ul', { class: 'links' }, ex.links.map((l) => h('li', {}, h('a', { href: l, target: '_blank', rel: 'noopener' }, l.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')))))),
+    h('h2', {}, 'Add your own'),
     h('div', { class: 'quick-add' },
       h('button', { class: 'btn small', onclick: addPhotos }, '🖼 Photos'),
       h('button', { class: 'btn small', onclick: grabFromVideo }, '🎬 Video frame'),
       h('button', { class: 'btn small', onclick: openNoteForm }, '📝 Note')),
     grabber,
-    noteForm,
-    item?.note && h('div', { class: 'card note' }, item.note),
-    ex.muscles && h('p', { class: 'muted' }, ex.muscles),
-    ex.cues && h('section', { class: 'cues' }, renderCues(ex.cues)),
-    notesSection,
-    ex.links.length > 0 && h('section', {}, h('h2', {}, 'Videos & links'),
-      h('ul', { class: 'links' }, ex.links.map((l) => h('li', {}, h('a', { href: l, target: '_blank', rel: 'noopener' }, l.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')))))),
-    !ex.cues && h('p', { class: 'muted' }, 'No technique cues yet. Tap Edit to write some.'));
+    noteForm);
+  if (nav) {
+    view.push(nav);
+    view[1].classList.add('has-nav');
+  }
+  return view;
 }
 
-function openLightbox(src, caption) {
-  const box = h('div', { class: 'lightbox', onclick: () => box.remove() },
-    h('img', { src, alt: caption || '' }),
-    caption ? h('p', {}, caption) : null);
+// Full-screen photo viewer: swipe between photos, double-tap to zoom, ✕ to close.
+function openLightbox(photos, index) {
+  const counter = h('span', { class: 'counter' }, `${index + 1}/${photos.length}`);
+  const close = () => { box.remove(); document.removeEventListener('keydown', onKey); };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  const strip = h('div', { class: 'gallery lightbox-strip', onscroll: () => {
+    counter.textContent = `${Math.round(strip.scrollLeft / strip.clientWidth) + 1}/${photos.length}`;
+  } }, photos.map((p) =>
+    h('figure', {},
+      h('div', { class: 'zoom', ondblclick: (e) => e.currentTarget.classList.toggle('zoomed') },
+        h('img', { src: p.url, alt: p.caption || '' })),
+      p.caption ? h('figcaption', {}, p.caption) : null)));
+  const box = h('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Photos' },
+    h('div', { class: 'lightbox-bar' }, photos.length > 1 ? counter : h('span'),
+      h('button', { class: 'icon close', 'aria-label': 'Close', onclick: close }, '✕')),
+    strip,
+    h('p', { class: 'muted hint' }, 'Swipe · double-tap to zoom'));
   document.body.append(box);
+  document.addEventListener('keydown', onKey);
+  strip.scrollLeft = index * strip.clientWidth;
+  box.querySelector('.close').focus();
 }
 
 async function exerciseEditScreen(id, params) {
@@ -607,10 +640,26 @@ const routes = [
   [/^\/settings$/, settingsScreen],
 ];
 
+// iOS may kill the home-screen app between sets; reopen where you were (within 3 hours).
+const RESUME_MS = 3 * 60 * 60 * 1000;
+function rememberScreen(path) {
+  if (!path.endsWith('/edit')) localStorage.setItem('lastScreen', JSON.stringify({ hash: location.hash, t: Date.now() }));
+}
+function resumeHash() {
+  if (location.hash.replace(/^#\/?/, '')) return;
+  try {
+    const { hash, t } = JSON.parse(localStorage.getItem('lastScreen'));
+    if (Date.now() - t < RESUME_MS && hash) history.replaceState(null, '', hash);
+  } catch {
+    // nothing saved
+  }
+}
+
 let renderId = 0;
 async function render() {
   const id = ++renderId;
   const [path, query = ''] = location.hash.replace(/^#/, '').split('?');
+  rememberScreen(path);
   const params = new URLSearchParams(query);
   revokeURLs();
   document.querySelector('.lightbox')?.remove();
@@ -628,8 +677,37 @@ async function render() {
 }
 
 window.addEventListener('hashchange', render);
+resumeHash();
 render().then(upgradeDefaults).catch((err) => console.error(err));
 
+// Updates: a new service worker waits until you tap "Update", then the page reloads once.
+function offerUpdate(worker) {
+  if (document.querySelector('.update-banner')) return;
+  document.body.append(h('div', { class: 'update-banner', role: 'status' },
+    h('span', {}, 'A new version is ready.'),
+    h('button', { class: 'btn small primary', onclick: () => worker.postMessage('skipWaiting') }, 'Update')));
+}
+
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  navigator.serviceWorker.register('./sw.js');
+  navigator.serviceWorker.register('./sw.js').then((reg) => {
+    if (reg.waiting && navigator.serviceWorker.controller) offerUpdate(reg.waiting);
+    reg.addEventListener('updatefound', () => {
+      const w = reg.installing;
+      w?.addEventListener('statechange', () => {
+        if (w.state === 'installed' && navigator.serviceWorker.controller) offerUpdate(w);
+      });
+    });
+    // Home-screen apps are often resumed rather than reloaded: check for updates on resume.
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update().catch(() => {}); });
+  });
+  // Reload only when replacing a running version, not when the first install takes control.
+  let reloading = false;
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController && !reloading) { reloading = true; location.reload(); }
+  });
+  // Keep the default exercise photos available offline (fetched by defaultPhotoOps).
+  caches.open('gymreference-defaults-v1').then(async (cache) => {
+    for (const s of STARTER) for (const p of s.photos) if (!(await cache.match(p.src))) await cache.add(p.src).catch(() => {});
+  });
 }
