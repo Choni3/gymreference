@@ -22,7 +22,7 @@ See [docs/SCOPE.md](docs/SCOPE.md) for goals, non-goals and design choices.
 
 ## Use it on your iPhone
 
-1. Open the GitHub Pages URL in **Safari**.
+1. Open <https://choni3.github.io/gymreference/> in **Safari**.
 2. Tap **Share → Add to Home Screen**. Opening it from the home screen keeps
    your data safe from Safari's storage clean-up and works offline.
 3. Optional: in Strong, *Settings → Export Strong Data*, save the CSV to Files,
