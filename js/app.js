@@ -2,7 +2,7 @@ import * as db from './db.js';
 import { h, blobURL, revokeURLs, takeURLs, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
-import { STARTER, STARTER_ROUTINES, RENAMED, SWAPS, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
+import { STARTER, STARTER_ROUTINES, RENAMED, SWAPS, ADDS, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
 import { exportBackup, importBackup } from './backup.js';
 
 const app = document.getElementById('app');
@@ -252,6 +252,38 @@ async function applySwaps(prev) {
   return swapped;
 }
 
+// Routine additions (ADDS): put the exercises at the start of the named routine, in order,
+// unless it already has them (any exercise with that name). Exercises are created with their
+// defaults if needed; the routine is re-read after the downloads before writing.
+async function applyAdds(prev) {
+  let changed = 0;
+  const key = (n) => n.trim().toLowerCase();
+  for (const add of ADDS) {
+    if (prev >= add.since) continue;
+    const isTarget = (r) => key(r.name) === key(add.routine);
+    if (!(await db.all('routines')).some(isTarget)) continue;
+    const exercises = await db.all('exercises');
+    const byName = new Map(exercises.map((e) => [key(e.name), e]));
+    const ops = [];
+    const wanted = [];
+    for (const n of add.exercises) wanted.push(await exerciseFor(n, byName, ops));
+    if (ops.length) await db.writeMany(ops);
+    // Same-name duplicates count as already present.
+    const idsOf = (n) => new Set(exercises.filter((e) => key(e.name) === key(n)).map((e) => e.id));
+    const routineOps = [];
+    for (const r of (await db.all('routines')).filter(isTarget)) {
+      const missing = wanted.filter((ex) => !r.items.some((i) => i.exerciseId === ex.id || idsOf(ex.name).has(i.exerciseId)));
+      if (!missing.length) continue;
+      routineOps.push({ store: 'routines', value: {
+        ...r, items: [...missing.map((ex) => ({ exerciseId: ex.id, sets: '3', reps: '', note: '' })), ...r.items], updatedAt: Date.now(),
+      } });
+    }
+    await db.writeMany(routineOps);
+    changed += routineOps.length;
+  }
+  return changed;
+}
+
 // Once per DEFAULTS_VERSION (retried while offline), refresh defaults on existing exercises.
 // Version 3 introduced the routine templates: create them once. Version 4 repairs duplicates.
 function upgradeDefaults() {
@@ -263,7 +295,7 @@ async function upgradeDefaultsLocked() {
   const routinesAdded = prev < 3 && !localStorage.getItem('templatesAdded') ? (await addTemplateRoutines()).added : 0;
   localStorage.setItem('templatesAdded', '1');
   const renames = await applyRenames();
-  const swapped = await applySwaps(prev);
+  const swapped = await applySwaps(prev) + await applyAdds(prev);
   const repaired = await dedupeTemplates();
   const { updated, complete } = await applyDefaultsToAll();
   if (complete && renames.complete) localStorage.setItem('defaultsVersion', String(DEFAULTS_VERSION));

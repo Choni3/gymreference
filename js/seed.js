@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 6;
+export const DEFAULTS_VERSION = 7;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -1209,7 +1209,9 @@ export const STARTER_ROUTINES = [
   },
   {
     name: 'Pull',
-    exercises: ['Lat Pulldown (Cable)', 'Iso-Lateral Row (Machine)', 'Reverse Fly (Machine)', 'Hammer Curl (Dumbbell)', 'Bicep Curl (Dumbbell)'],
+    exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)', 'Lat Pulldown (Cable)', 'Iso-Lateral Row (Machine)', 'Reverse Fly (Machine)', 'Hammer Curl (Dumbbell)', 'Bicep Curl (Dumbbell)'],
+    // Added by the user on top of their Strong routine: kept if a Strong import replaces it.
+    ensure: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)'],
   },
   {
     name: 'Legs',
@@ -1231,4 +1233,10 @@ export const STARTER_ROUTINES = [
 // library). Applied once to existing routines when upgrading from before `since`.
 export const SWAPS = [
   { since: 6, routine: 'Legs', from: 'Lying Leg Curl (Machine)', to: 'Leg Curl (Machine)' },
+];
+
+// Exercises added to the start of a routine at the user's request. Applied once to existing
+// routines when upgrading from before `since` (skipped if the routine already has them).
+export const ADDS = [
+  { since: 7, routine: 'Pull', exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)'] },
 ];
