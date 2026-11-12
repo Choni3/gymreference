@@ -274,9 +274,9 @@ async function applyAdds(prev) {
     for (const r of (await db.all('routines')).filter(isTarget)) {
       const missing = wanted.filter((ex) => !r.items.some((i) => i.exerciseId === ex.id || idsOf(ex.name).has(i.exerciseId)));
       if (!missing.length) continue;
-      routineOps.push({ store: 'routines', value: {
-        ...r, items: [...missing.map((ex) => ({ exerciseId: ex.id, sets: '3', reps: '', note: '' })), ...r.items], updatedAt: Date.now(),
-      } });
+      const added = missing.map((ex) => ({ exerciseId: ex.id, sets: '3', reps: '', note: '' }));
+      const items = add.at === 'end' ? [...r.items, ...added] : [...added, ...r.items];
+      routineOps.push({ store: 'routines', value: { ...r, items, updatedAt: Date.now() } });
     }
     await db.writeMany(routineOps);
     changed += routineOps.length;

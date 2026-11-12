@@ -1,6 +1,6 @@
 // Offline support: the app shell is served cache-first from a versioned cache.
 // Bump VERSION on every release; the app then shows "A new version is ready".
-const VERSION = 'v11';
+const VERSION = 'v12';
 const CACHE = `gymreference-${VERSION}`;
 const DEFAULTS_CACHE = 'gymreference-defaults-v1'; // filled by the page, see app.js
 const SHELL = [

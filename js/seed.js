@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 7;
+export const DEFAULTS_VERSION = 8;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -1197,6 +1197,48 @@ Programming tips
 - Add reps first, then the smallest weight step
 - Seated beats lying for growth: ~14% vs ~9% (Maeo 2021)`,
   },
+  {
+    name: 'Hip Abductor (Machine)',
+    photos: photos('Thigh_Abductor', 'Start: knees together, back against the pad', 'End: knees pushed apart, short squeeze'),
+    muscles: 'Glute medius, glute minimus, upper glute max, TFL',
+    links: [
+      'https://www.strengthlog.com/hip-abduction-machine/',
+      'https://en.wikipedia.org/wiki/Gluteus_medius',
+    ],
+    cues: `Setup
+- Set the start width so the pads touch the outer knees with the legs together
+- Pads on the outside of the knees, not the shins
+- Sit all the way back, feet flat on the footrests
+- Hold the handles to keep the hips planted
+
+Execution
+- Brace, then push the knees out as wide as the machine allows
+- Lead with the knees; keep the feet and shins along for the ride
+- Hold the widest point for about a second
+- Let the pads come back slowly; stop just before the stack touches
+
+Torso options
+- Upright, back on the pad: more glute medius, the classic version
+- Lean forward from the hips: more upper glute max
+- Pick one and keep it the same so progress is comparable
+
+Breathing & tempo
+- Exhale as you push out, inhale on the way back
+- About 1 s out, 1 s pause, 2–3 s back
+- Constant tension: no resting with the pads together
+
+Common mistakes
+- Bouncing or using momentum → lighten the load, pause at the end
+- Short partial reps → use the full range the machine allows
+- Hips sliding or lifting off the seat → hold the handles, sit back
+- Rocking the torso to move the weight → keep the torso position fixed
+
+Programming tips
+- 2–3 sets × 12–20 reps, 0–2 reps in reserve
+- Rest 1–1.5 min; works well as a finisher after heavy leg work
+- Add reps first, then the smallest weight step
+- Light warm-up sets also help knee tracking before squats`,
+  },
 ];
 
 // Routine templates (the user's Strong routines). Created once automatically if a
@@ -1215,7 +1257,9 @@ export const STARTER_ROUTINES = [
   },
   {
     name: 'Legs',
-    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Leg Curl (Machine)', 'Calf Press (Machine)'],
+    exercises: ['Squat (Barbell)', 'Bulgarian Split Squat', 'Leg Extension (Machine)', 'Leg Curl (Machine)', 'Calf Press (Machine)', 'Hip Abductor (Machine)'],
+    // Added by the user on top of their Strong routine: kept if a Strong import replaces it.
+    ensure: ['Hip Abductor (Machine)'],
   },
   {
     name: 'Workout A',
@@ -1235,8 +1279,10 @@ export const SWAPS = [
   { since: 6, routine: 'Legs', from: 'Lying Leg Curl (Machine)', to: 'Leg Curl (Machine)' },
 ];
 
-// Exercises added to the start of a routine at the user's request. Applied once to existing
-// routines when upgrading from before `since` (skipped if the routine already has them).
+// Exercises added to a routine at the user's request: at the start, or the end with
+// `at: 'end'`. Applied once to existing routines when upgrading from before `since`
+// (skipped if the routine already has them).
 export const ADDS = [
   { since: 7, routine: 'Pull', exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)'] },
+  { since: 8, routine: 'Legs', exercises: ['Hip Abductor (Machine)'], at: 'end' },
 ];
