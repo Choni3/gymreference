@@ -7,7 +7,7 @@
 const photos = (id, ...captions) => captions.map((caption, i) => ({ src: `defaults/images/${id}/${i}.jpg`, caption }));
 
 // Bump when defaults change so existing exercises pick them up (see upgradeDefaults in app.js).
-export const DEFAULTS_VERSION = 8;
+export const DEFAULTS_VERSION = 9;
 
 // Short hash of a cues text, used to recognise untouched older default cues.
 export function cueHash(text) {
@@ -1239,6 +1239,49 @@ Programming tips
 - Add reps first, then the smallest weight step
 - Light warm-up sets also help knee tracking before squats`,
   },
+  {
+    name: 'Seated Wide-Grip Row (Cable)',
+    photos: photos('Seated_Wide-Grip_Row', 'Start: arms long, chest up (V-handle shown: use a long straight bar, hands wider than shoulders)', 'Elbow path reference: rope row to the neck, elbows flared (with the bar, finish at the lower chest)'),
+    muscles: 'Upper back (mid traps, rhomboids), rear delts, lats, biceps',
+    links: [
+      'https://www.muscleandfitness.com/exercise/workouts/back-exercises/wide-grip-seated-cable-row/',
+      'https://barbend.com/seated-cable-row/',
+    ],
+    cues: `Setup
+- Long straight bar (or wide lat bar) on the low pulley
+- Overhand grip, hands a bit wider than shoulder width
+- Feet on the platform, knees slightly bent
+- Slide back until the weight lifts, chest up, back neutral
+
+Execution
+- Start with the shoulder blades pulling back, then bend the elbows
+- Elbows travel out to the sides (about 45–70° from the body)
+- Pull the bar to the lower chest / upper stomach
+- Squeeze the shoulder blades together for a moment
+- Let the arms go long and the shoulder blades spread forward
+
+Open vs close grip
+- Open (this one): elbows out → more upper back and rear delts
+- Close (Seated Row, V-handle): elbows tucked → more lats
+- Use a lighter weight than the close-grip row
+
+Breathing & tempo
+- Breathe in and brace before each pull
+- Exhale as you pull the bar in
+- About 1 s pull, 1 s squeeze, 2–3 s return
+
+Common mistakes
+- Leaning back to finish the rep → reduce the weight, torso nearly still
+- Shrugging toward the ears → shoulders down and back
+- Wrists bending back → straight wrists, grip the bar firmly
+- Rounding the lower back at the stretch → reach less, chest up
+- Elbows dropping to the sides → keep them flared to hit the upper back
+
+Programming tips
+- Hypertrophy: 3 sets × 10–15 reps, 0–2 reps in reserve
+- Rest 1.5–2 min
+- Add reps first, then one pin heavier`,
+  },
 ];
 
 // Routine templates (the user's Strong routines). Created once automatically if a
@@ -1251,9 +1294,9 @@ export const STARTER_ROUTINES = [
   },
   {
     name: 'Pull',
-    exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)', 'Lat Pulldown (Cable)', 'Iso-Lateral Row (Machine)', 'Reverse Fly (Machine)', 'Hammer Curl (Dumbbell)', 'Bicep Curl (Dumbbell)'],
+    exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)', 'Lat Pulldown (Cable)', 'Iso-Lateral Row (Machine)', 'Seated Wide-Grip Row (Cable)', 'Seated Row (Cable)', 'Reverse Fly (Machine)', 'Hammer Curl (Dumbbell)', 'Bicep Curl (Dumbbell)'],
     // Added by the user on top of their Strong routine: kept if a Strong import replaces it.
-    ensure: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)'],
+    ensure: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)', 'Seated Wide-Grip Row (Cable)', 'Seated Row (Cable)'],
   },
   {
     name: 'Legs',
@@ -1279,10 +1322,11 @@ export const SWAPS = [
   { since: 6, routine: 'Legs', from: 'Lying Leg Curl (Machine)', to: 'Leg Curl (Machine)' },
 ];
 
-// Exercises added to a routine at the user's request: at the start, or the end with
-// `at: 'end'`. Applied once to existing routines when upgrading from before `since`
+// Exercises added to a routine at the user's request: at the start, the end with
+// `at: 'end'`, or right after another exercise with `after`. Applied once to existing routines when upgrading from before `since`
 // (skipped if the routine already has them).
 export const ADDS = [
   { since: 7, routine: 'Pull', exercises: ['Deadlift (Barbell)', 'Romanian Deadlift (Barbell)'] },
   { since: 8, routine: 'Legs', exercises: ['Hip Abductor (Machine)'], at: 'end' },
+  { since: 9, routine: 'Pull', exercises: ['Seated Wide-Grip Row (Cable)', 'Seated Row (Cable)'], after: 'Iso-Lateral Row (Machine)' },
 ];

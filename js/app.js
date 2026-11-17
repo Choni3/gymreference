@@ -275,7 +275,14 @@ async function applyAdds(prev) {
       const missing = wanted.filter((ex) => !r.items.some((i) => i.exerciseId === ex.id || idsOf(ex.name).has(i.exerciseId)));
       if (!missing.length) continue;
       const added = missing.map((ex) => ({ exerciseId: ex.id, sets: '3', reps: '', note: '' }));
-      const items = add.at === 'end' ? [...r.items, ...added] : [...added, ...r.items];
+      const items = [...r.items];
+      if (add.after) {
+        // After the named exercise, or at the end if the routine doesn't have it.
+        const anchor = idsOf(add.after);
+        const at = items.findLastIndex((i) => anchor.has(i.exerciseId));
+        items.splice(at < 0 ? items.length : at + 1, 0, ...added);
+      } else if (add.at === 'end') items.push(...added);
+      else items.unshift(...added);
       routineOps.push({ store: 'routines', value: { ...r, items, updatedAt: Date.now() } });
     }
     await db.writeMany(routineOps);
