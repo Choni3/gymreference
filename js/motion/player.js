@@ -54,7 +54,7 @@ function buildPlayer(section, motion) {
   const step = (d) => {
     setPlaying(false);
     let f = Math.round(t * frames) + d;
-    if (loop) f = (f + frames) % frames;
+    if (loop) f = (f + frames + 1) % (frames + 1);
     t = Math.min(frames, Math.max(0, f)) / frames;
     show();
   };
@@ -131,7 +131,7 @@ function buildPlayer(section, motion) {
 
   function frame(now) {
     raf = 0;
-    if (disposed || !visible || !section.isConnected) return;
+    if (disposed || !view || !visible || !section.isConnected) return;
     if (playing) {
       const next = last ? t + ((now - last) * speed) / motion.durationMs : t;
       const boundary = stopAtPhase && motion.phases.find((p) => p.end > t && p.end <= next);
@@ -149,7 +149,7 @@ function buildPlayer(section, motion) {
     if (playing && visible) raf = requestAnimationFrame(frame);
   }
   function kick() {
-    if (!raf && !disposed && visible) raf = requestAnimationFrame(frame);
+    if (!raf && !disposed && view && visible) raf = requestAnimationFrame(frame);
   }
   function setPlaying(p) {
     if (p && t === 1) t = 0;
@@ -188,24 +188,29 @@ function buildPlayer(section, motion) {
       ro.observe(stage);
       status.remove();
       show();
+      kick();
     } catch (err) {
       console.warn('3D view failed:', err);
       status.textContent = '3D view is not available on this device.';
     }
   }
 
+  const preload = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && section.isConnected && !loading) load();
+  }, { rootMargin: '200px 0px' });
+  preload.observe(stage);
   const io = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting && section.isConnected;
-    if (visible && !loading) load();
     if (visible) kick();
     else last = 0;
-  }, { rootMargin: '200px 0px' });
+  });
   io.observe(stage);
 
   function dispose() {
     if (disposed) return;
     disposed = true;
     cancelAnimationFrame(raf);
+    preload.disconnect();
     io.disconnect();
     ro?.disconnect();
     view?.dispose();

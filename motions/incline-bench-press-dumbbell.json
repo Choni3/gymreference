@@ -43,8 +43,8 @@
   "keyframes": [
     {"t":0,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
     {"t":0.06,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
-    {"t":0.52,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.385,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.385,"dbR.z":0.11,"dbR.x":-0.16},
-    {"t":0.61,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.385,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.385,"dbR.z":0.11,"dbR.x":-0.16},
+    {"t":0.52,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.43,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.43,"dbR.z":0.11,"dbR.x":-0.16},
+    {"t":0.61,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.43,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.43,"dbR.z":0.11,"dbR.x":-0.16},
     {"t":0.94,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
     {"t":1,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0}
   ],

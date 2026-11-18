@@ -48,6 +48,6 @@
   ],
   "mistakes": [
     {"id":"elbow-flare","label":"Elbows flared to 90°","cue":"Tuck elbows slightly toward your sides","fails":["tuck"],"delta":[{"t":0.52,"elbowOut":55},{"t":0.61,"elbowOut":55}]},
-    {"id":"low-back-arch","label":"Hard lower-back arch or butt lifting","cue":"Glutes down, reduce load","fails":["arch","hips"],"delta":[{"t":0.62},{"t":0.83,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"bar.y":-0.045,"bar.z":-0.056},{"t":0.93,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"bar.y":-0.045,"bar.z":-0.056}]}
+    {"id":"low-back-arch","label":"Hard lower-back arch or butt lifting","cue":"Glutes down, reduce load","fails":["arch","hips"],"delta":[{"t":0.62},{"t":0.83,"lumbarFlex":-22,"thoracicFlex":8,"rootY":0.04,"bar.y":-0.072,"bar.z":-0.056},{"t":0.93,"lumbarFlex":-22,"thoracicFlex":8,"rootY":0.04,"bar.y":-0.072,"bar.z":-0.056}]}
   ]
 }

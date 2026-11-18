@@ -44,10 +44,12 @@
     {"id": "pad", "label": "Keep the chest against the pad", "measure": {"delta": ["t12", "pad"], "axis": "z"}, "parts": ["thorax", "pad"], "min": -0.134, "max": -0.096, "tol": 0.02},
     {"id": "level", "label": "Sweep with hands at shoulder height", "measure": {"delta": ["grip", "shoulder"], "axis": "y"}, "parts": ["arms"], "min": -0.055, "max": 0.065, "tol": 0.02},
     {"id": "bend", "label": "Keep a small elbow bend", "measure": "elbowFlex", "parts": ["arms"], "min": 8, "max": 48, "sides": true, "tol": 3},
-    {"id": "spread", "label": "Sweep the arms out in line with the chest", "measure": "shAbd", "parts": ["upperArms"], "min": 62, "phases": ["Finish"], "sides": true, "tol": 4}
+    {"id": "spread", "label": "Sweep the arms out in line with the chest", "measure": "shAbd", "parts": ["upperArms"], "min": 62, "phases": ["Finish"], "sides": true, "tol": 4},
+    {"id": "shoulders", "label": "Keep shoulders down at the squeeze", "measure": {"delta": ["c7", "shoulder"], "axis": "y"}, "parts": ["thorax", "upperArms"], "min": 0.05, "phases": ["Finish"], "tol": 0.01}
   ],
   "mistakes": [
     {"id": "low-seat", "label": "Seat too low", "cue": "Raise until arms are level with shoulders", "fails": ["level"], "delta": [{"t": 0, "rootY": -0.11, "seat.y": -0.11, "seatPost.y": -0.11}, {"t": 1, "rootY": -0.11, "seat.y": -0.11, "seatPost.y": -0.11}]},
-    {"id": "off-pad", "label": "Chest leaving the pad", "cue": "Stay pressed in, no rocking", "fails": ["pad"], "delta": [{"t": 0.28}, {"t": 0.35, "rootPitch": -11, "rootZ": -0.009}, {"t": 0.49, "rootPitch": -11, "rootZ": -0.009}, {"t": 0.57}]}
+    {"id": "off-pad", "label": "Chest leaving the pad", "cue": "Stay pressed in, no rocking", "fails": ["pad"], "delta": [{"t": 0.28}, {"t": 0.35, "rootPitch": -11, "rootZ": -0.009}, {"t": 0.49, "rootPitch": -11, "rootZ": -0.009}, {"t": 0.57}]},
+    {"id": "shrug", "label": "Too heavy, traps/lats take over", "cue": "lighter, feel the rear delts", "fails": ["shoulders"], "delta": [{"t": 0.08}, {"t": 0.35, "scapElev": 32}, {"t": 0.49, "scapElev": 32}, {"t": 0.85}]}
   ]
 }

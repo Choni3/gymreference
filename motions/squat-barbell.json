@@ -17,14 +17,14 @@
     { "name": "Lockout", "start": 0.94, "end": 1 }
   ],
   "keyframes": [
-    { "t": 0, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
-    { "t": 0.06, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9 },
+    { "t": 0, "rootY": 0.92, "rootZ": 0.067, "rootPitch": 3, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
+    { "t": 0.06, "rootY": 0.92, "rootZ": 0.067, "rootPitch": 3 },
     { "t": 0.3, "rootY": 0.66, "rootZ": -0.06, "rootPitch": 18, "lumbarFlex": 2, "neckFlex": -4 },
     { "t": 0.48, "rootY": 0.37, "rootZ": -0.16, "rootPitch": 28, "lumbarFlex": 6, "thoracicFlex": 3, "neckFlex": -10 },
     { "t": 0.54, "rootY": 0.37, "rootZ": -0.16, "rootPitch": 28, "lumbarFlex": 6, "thoracicFlex": 3, "neckFlex": -10 },
     { "t": 0.75, "rootY": 0.66, "rootZ": -0.06, "rootPitch": 18, "lumbarFlex": 2, "neckFlex": -4 },
-    { "t": 0.94, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
-    { "t": 1, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 }
+    { "t": 0.94, "rootY": 0.92, "rootZ": 0.067, "rootPitch": 3, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
+    { "t": 1, "rootY": 0.92, "rootZ": 0.067, "rootPitch": 3, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 }
   ],
   "checks": [
     { "id": "depth", "label": "Hip crease below the knee", "measure": { "delta": ["hip", "knee"], "axis": "y" }, "max": 0, "tol": 0.04, "phases": ["Bottom"], "parts": ["thighs", "pelvis"] },
@@ -44,10 +44,12 @@
       ] },
     { "id": "shallow", "label": "Cutting depth short", "cue": "Lower the load, squat to your full depth: hip crease below the knee", "fails": ["depth"],
       "delta": [
+        { "t": 0.12, "rootY": 0 },
         { "t": 0.3, "rootY": 0.03 },
         { "t": 0.48, "rootY": 0.14, "rootZ": 0.05, "rootPitch": -4 },
         { "t": 0.54, "rootY": 0.14, "rootZ": 0.05, "rootPitch": -4 },
-        { "t": 0.75, "rootY": 0.03 }
+        { "t": 0.75, "rootY": 0.03 },
+        { "t": 0.88, "rootY": 0 }
       ] },
     { "id": "hips-up", "label": "Hips shoot up first", "cue": "Lead with the chest and traps: hips and bar rise together", "fails": ["chest"],
       "delta": [

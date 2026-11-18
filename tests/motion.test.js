@@ -81,6 +81,19 @@ test('arm IK preserves upper arm length when the target and pole both point alon
   near(Math.hypot(...points.elbowL.map((v, i) => v - points.shoulderL[i])), LEN.upperArm);
 });
 
+test('hands attachment keeps a rotation for staggered and coincident grips', () => {
+  const props = [{ id: 'bar', type: 'barbell', attach: { to: 'hands' } }];
+  const pose = (z) => evaluate(base({ props, contacts: {
+    handL: { at: [0, 1.1, z] }, handR: { at: [0, 1.1, 0.2] },
+  } }), 0);
+  const staggered = pose(0.4);
+  const R = staggered.props.bar.R;
+  [0, 0, -1, 0, 1, 0, 1, 0, 0].forEach((v, i) => near(R[i], v));
+  staggered.props.bar.o.forEach((v, i) => near(v, [0, 1.1, 0.3][i]));
+  const coincident = pose(0.2);
+  assert.deepEqual(coincident.props.bar.R, coincident.segments.thorax.R);
+});
+
 test('squat: feet stay planted, hands stay on the bar, IK limbs reach', () => {
   const m = squat();
   const p0 = evaluate(m, 0);
@@ -134,11 +147,22 @@ test('validate-motions writes an index of valid files only', () => {
   const dir = mkdtempSync(join(tmpdir(), 'motions-'));
   writeFileSync(join(dir, 'squat-barbell.json'), JSON.stringify(squat()));
   writeFileSync(join(dir, 'bad.json'), JSON.stringify({ ...squat(), exercise: 'Nope' }));
+  writeFileSync(join(dir, 'bad-type.json'), JSON.stringify({ ...squat(), exercise: 123 }));
   const logs = [];
   const r = validateDir(dir, { log: (l) => logs.push(l) });
-  assert.equal(r.failed, 1);
+  assert.equal(r.failed, 2);
+  assert.ok(logs.includes('ERROR bad-type.json: exercise is required'));
   assert.deepEqual(JSON.parse(read(join(dir, 'index.json'), 'utf8')), [{ exercise: 'Squat (Barbell)', file: 'squat-barbell.json' }]);
   assert.equal(slug('Triceps Pushdown (Cable - Straight Bar)'), 'triceps-pushdown-cable-straight-bar');
+});
+
+test('validator samples off-grid base and mistake delta keyframes', () => {
+  const checks = [{ id: 'lean', label: 'Stay upright', measure: 'trunkLean', max: 0, parts: ['thorax'] }];
+  const peak = [{ t: 0.504 }, { t: 0.505, rootPitch: 10 }, { t: 0.506 }];
+  const keyframes = [{ t: 0, rootPitch: 0 }, ...peak.map((kf) => ({ rootPitch: 0, ...kf })), { t: 1, rootPitch: 0 }];
+  assert.match(validateMotion(base({ checks, keyframes })).errors.join('\n'), /correct rep t=0\.505: check "lean" is red/);
+  const mistakes = [{ id: 'lean', label: 'Lean', cue: 'Stay upright', fails: ['lean'], delta: peak }];
+  assert.deepEqual(validateMotion(base({ checks, mistakes })).errors, []);
 });
 
 test('motions/index.json is up to date', () => {

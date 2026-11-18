@@ -3,9 +3,9 @@
   "exercise": "Triceps Pushdown (Cable - Straight Bar)",
   "durationMs": 3600,
   "props": [
-    {"id":"stack","type":"box","size":[0.1,2.2,0.1],"pos":[0,1.1,1.25]},
+    {"id":"stack","type":"box","size":[0.1,2.2,0.1],"pos":[0,1.1,0.55]},
     {"id":"bar","type":"rod","grip":0.42,"length":0.6,"attach":{"to":"hands"}},
-    {"id":"cable","type":"cable","from":[0,2.04,1.11],"to":"bar.center"}
+    {"id":"cable","type":"cable","from":[0,2.04,0.45],"to":"bar.center"}
   ],
   "contacts": {
     "feet": {

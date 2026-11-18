@@ -49,8 +49,8 @@
     { "id": "bent-elbows", "label": "Elbows bent to 90°", "cue": "Keep just a slight bend", "fails": ["elbows"],
       "delta": [
         { "t": 0.05, "elbowFlex": 70 },
-        { "t": 0.38, "elbowFlex": 75, "shRot": -40 },
-        { "t": 0.46, "elbowFlex": 75, "shRot": -40 },
+        { "t": 0.38, "elbowFlex": 75 },
+        { "t": 0.46, "elbowFlex": 75 },
         { "t": 0.95, "elbowFlex": 70 }
       ] },
     { "id": "too-high", "label": "Raising far above the shoulders", "cue": "Stop at shoulder height", "fails": ["height"],

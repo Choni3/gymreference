@@ -4,10 +4,10 @@
   "durationMs": 4400,
   "props": [
     {"id": "bench", "type": "bench", "pos": [0, 0, 0], "incline": 81, "height": 0.43, "width": 0.31, "backLength": 0.64},
-    {"id": "dbL", "type": "dumbbell", "pos": [0.485, 1.3, 0.196], "rot": [0, 90, 0]},
-    {"id": "dbR", "type": "dumbbell", "pos": [-0.485, 1.3, 0.196], "rot": [0, 90, 0]}
+    {"id": "dbL", "type": "dumbbell", "pos": [0.40, 1.3, 0.196], "rot": [0, 90, 0]},
+    {"id": "dbR", "type": "dumbbell", "pos": [-0.40, 1.3, 0.196], "rot": [0, 90, 0]}
   ],
-  "contacts": {"feet": {"at": [0.225, 0, 0.49], "toeOut": 12}, "handL": {"at": "dbL.grip", "elbowPole": [0.7, -1, 0.48]}, "handR": {"at": "dbR.grip", "elbowPole": [0.7, -1, 0.48]}},
+  "contacts": {"feet": {"at": [0.225, 0, 0.49], "toeOut": 12}, "handL": {"at": "dbL.grip", "elbowPole": [0.7, -1, 0.62]}, "handR": {"at": "dbR.grip", "elbowPole": [0.7, -1, 0.62]}},
   "phases": [
     {"name": "Shoulder level", "start": 0, "end": 0.055},
     {"name": "Press", "start": 0.055, "end": 0.32},
@@ -18,10 +18,10 @@
   "keyframes": [
     {"t": 0, "rootY": 0.519, "rootZ": 0.093, "rootPitch": -9, "lumbarFlex": 0, "neckFlex": 9, "dbL.x": 0, "dbR.x": 0, "dbL.y": 0, "dbR.y": 0, "dbL.z": 0, "dbR.z": 0, "scapElev": 0},
     {"t": 0.055, "rootY": 0.519, "rootZ": 0.093, "rootPitch": -9, "lumbarFlex": 0, "neckFlex": 9, "dbL.x": 0, "dbR.x": 0, "dbL.y": 0, "dbR.y": 0, "dbL.z": 0, "dbR.z": 0, "scapElev": 0},
-    {"t": 0.19, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.19, "dbR.y": 0.19, "dbL.z": -0.055, "dbR.z": -0.055, "scapElev": 6},
-    {"t": 0.32, "dbL.x": -0.245, "dbR.x": 0.245, "dbL.y": 0.397, "dbR.y": 0.397, "dbL.z": -0.135, "dbR.z": -0.135, "scapElev": 17},
-    {"t": 0.41, "dbL.x": -0.245, "dbR.x": 0.245, "dbL.y": 0.397, "dbR.y": 0.397, "dbL.z": -0.135, "dbR.z": -0.135, "scapElev": 17},
-    {"t": 0.69, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.19, "dbR.y": 0.19, "dbL.z": -0.055, "dbR.z": -0.055, "scapElev": 6},
+    {"t": 0.19, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.19, "dbR.y": 0.19, "dbL.z": -0.055, "dbR.z": -0.055, "scapElev": 6},
+    {"t": 0.32, "dbL.x": -0.16, "dbR.x": 0.16, "dbL.y": 0.397, "dbR.y": 0.397, "dbL.z": -0.135, "dbR.z": -0.135, "scapElev": 17},
+    {"t": 0.41, "dbL.x": -0.16, "dbR.x": 0.16, "dbL.y": 0.397, "dbR.y": 0.397, "dbL.z": -0.135, "dbR.z": -0.135, "scapElev": 17},
+    {"t": 0.69, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.19, "dbR.y": 0.19, "dbL.z": -0.055, "dbR.z": -0.055, "scapElev": 6},
     {"t": 0.95, "rootY": 0.519, "rootZ": 0.093, "rootPitch": -9, "lumbarFlex": 0, "neckFlex": 9, "dbL.x": 0, "dbR.x": 0, "dbL.y": 0, "dbR.y": 0, "dbL.z": 0, "dbR.z": 0, "scapElev": 0},
     {"t": 1, "rootY": 0.519, "rootZ": 0.093, "rootPitch": -9, "lumbarFlex": 0, "neckFlex": 9, "dbL.x": 0, "dbR.x": 0, "dbL.y": 0, "dbR.y": 0, "dbL.z": 0, "dbR.z": 0, "scapElev": 0}
   ],
@@ -32,7 +32,8 @@
     {"id": "lockout", "label": "Extend the elbows over the shoulders", "measure": "elbowFlex", "parts": ["arms"], "max": 20, "tol": 7, "phases": ["Lockout"], "sides": true}
   ],
   "mistakes": [
+    {"id": "lean-back", "label": "Leaning back into an incline press", "cue": "Back on the pad, lighter load", "fails": ["torso"], "delta": [{"t": 0.15, "rootPitch": -14, "lumbarFlex": -10, "rootZ": 0.11, "dbL.y": -0.078, "dbR.y": -0.078, "dbL.z": -0.025, "dbR.z": -0.025}, {"t": 0.6, "rootPitch": -14, "lumbarFlex": -10, "rootZ": 0.11, "dbL.y": -0.078, "dbR.y": -0.078, "dbL.z": -0.025, "dbR.z": -0.025}]},
     {"id": "hips-slide", "label": "Hips sliding forward", "cue": "Sit all the way back.", "fails": ["hips"], "delta": [{"t": 0.23, "rootZ": 0.13, "rootPitch": -8, "dbL.x": 0, "dbR.x": 0, "dbL.y": -0.035, "dbR.y": -0.035, "dbL.z": 0.035, "dbR.z": 0.035}, {"t": 0.46, "rootZ": 0.13, "rootPitch": -8, "dbL.x": 0, "dbR.x": 0, "dbL.y": -0.035, "dbR.y": -0.035, "dbL.z": 0.035, "dbR.z": 0.035}]},
-    {"id": "short-reps", "label": "Short reps", "cue": "Lower to shoulder level each rep.", "fails": ["depth"], "delta": [{"t": 0, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.165, "dbR.y": 0.165, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 0.055, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.165, "dbR.y": 0.165, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 0.24}, {"t": 0.69}, {"t": 0.95, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.165, "dbR.y": 0.165, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 1, "dbL.x": -0.045, "dbR.x": 0.045, "dbL.y": 0.165, "dbR.y": 0.165, "dbL.z": -0.035, "dbR.z": -0.035}]}
+    {"id": "short-reps", "label": "Short reps", "cue": "Lower to shoulder level each rep.", "fails": ["depth"], "delta": [{"t": 0, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.24, "dbR.y": 0.24, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 0.055, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.24, "dbR.y": 0.24, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 0.24}, {"t": 0.69}, {"t": 0.95, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.24, "dbR.y": 0.24, "dbL.z": -0.035, "dbR.z": -0.035}, {"t": 1, "dbL.x": -0.025, "dbR.x": 0.025, "dbL.y": 0.24, "dbR.y": 0.24, "dbL.z": -0.035, "dbR.z": -0.035}]}
   ]
 }

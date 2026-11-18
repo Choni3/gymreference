@@ -244,7 +244,17 @@ export function evaluate(motion, t, mistakeId = null) {
     if (to === 'hands') {
       // X from the right grip to the left one, Z as close as possible to the chest's forward.
       const x = norm(sub(P.gripL, P.gripR));
-      return { o: mid(P.gripL, P.gripR), R: frameYZ(cross(col(S.thorax.R, 2), x), col(S.thorax.R, 2)) };
+      const chest = S.thorax.R;
+      const o = mid(P.gripL, P.gripR);
+      if (!len(x)) return { o, R: chest };
+      let y = cross(col(chest, 2), x);
+      if (len(y) < 1e-6) {
+        const up = col(chest, 1);
+        y = sub(up, scale(x, dot(up, x)));
+      }
+      y = norm(y);
+      const z = cross(x, y);
+      return { o, R: [x[0], y[0], z[0], x[1], y[1], z[1], x[2], y[2], z[2]] };
     }
     if (to === 'handL' || to === 'handR') return { o: P['grip' + to.slice(-1)], R: S[to].R };
     return S[to] || world;

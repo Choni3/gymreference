@@ -52,7 +52,7 @@
   ],
   "mistakes": [
     {"id": "partial", "label": "Short partial reps", "cue": "use the full range the machine allows", "fails": ["width"], "delta": [{"t": 0.36, "hipAbd": -23}, {"t": 0.53, "hipAbd": -23}]},
-    {"id": "hips-lift", "label": "Hips sliding or lifting off the seat", "cue": "hold the handles, sit back", "fails": ["seat"], "delta": [{"t": 0.35, "rootY": 0.073, "rootZ": 0.043}, {"t": 0.53, "rootY": 0.073, "rootZ": 0.043}]},
-    {"id": "torso-rock", "label": "Rocking the torso to move the weight", "cue": "keep the torso position fixed", "fails": ["torso"], "delta": [{"t": 0.36, "lumbarFlex": 25}, {"t": 0.53, "lumbarFlex": 25}]}
+{"id": "hips-lift", "label": "Hips sliding or lifting off the seat", "cue": "hold the handles, sit back", "fails": ["seat"], "delta": [{"t": 0.18}, {"t": 0.36, "rootY": 0.053, "rootZ": 0.062, "rootPitch": -8, "hipFlex": -8}, {"t": 0.53, "rootY": 0.053, "rootZ": 0.062, "rootPitch": -8, "hipFlex": -8}, {"t": 0.78}]},
+{"id": "torso-rock", "label": "Rocking the torso to move the weight", "cue": "keep the torso position fixed", "fails": ["torso"], "delta": [{"t": 0.09}, {"t": 0.31, "rootPitch": 18, "hipFlex": 18}, {"t": 0.43, "rootPitch": 10, "hipFlex": 10}, {"t": 0.7, "rootPitch": -13, "hipFlex": -13}, {"t": 0.91}]}
   ]
 }

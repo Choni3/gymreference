@@ -33,11 +33,13 @@
     {"id": "back", "label": "Keep the lower back neutral", "measure": "lumbarFlex", "parts": ["lumbar"], "min": -7, "max": 8, "tol": 4},
     {"id": "stretch", "label": "Lengthen both arms at the start", "measure": "elbowFlex", "parts": ["arms"], "max": 32, "phases": ["Start"], "sides": true, "tol": 4},
     {"id": "elbows", "label": "Elbows travel out to the sides", "measure": "shAbd", "parts": ["upperArms"], "min": 44, "max": 78, "phases": ["Finish"], "sides": true, "tol": 4},
-    {"id": "finish", "label": "Bar reaches the lower chest", "measure": {"delta": ["bar", "t12"], "axis": "z"}, "parts": ["bar", "hands"], "min": 0.13, "max": 0.22, "phases": ["Finish"], "tol": 0.02}
+    {"id": "finish", "label": "Bar reaches the lower chest", "measure": {"delta": ["bar", "t12"], "axis": "z"}, "parts": ["bar", "hands"], "min": 0.13, "max": 0.22, "phases": ["Finish"], "tol": 0.02},
+    {"id": "shoulders", "label": "Keep shoulders down at the squeeze", "measure": {"delta": ["c7", "shoulder"], "axis": "y"}, "parts": ["thorax", "upperArms"], "min": 0.058, "phases": ["Finish"], "tol": 0.01}
   ],
   "mistakes": [
     {"id": "lean-back", "label": "Leaning back to finish", "cue": "Reduce the weight, torso nearly still", "fails": ["torso"], "delta": [{"t": 0.13}, {"t": 0.35, "rootPitch": -23, "bar.z": -0.1}, {"t": 0.49, "rootPitch": -23, "bar.z": -0.1}]},
-    {"id": "rounding", "label": "Rounding the lower back at the stretch", "cue": "Reach less, chest up", "fails": ["back"], "delta": [{"t": 0, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 0.08, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 0.32}, {"t": 0.6}, {"t": 0.96, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 1, "lumbarFlex": 24, "bar.z": 0.09}]},
-    {"id": "elbows-drop", "label": "Elbows dropping to the sides", "cue": "Keep them flared to hit the upper back", "fails": ["elbows"], "delta": [{"t": 0.2}, {"t": 0.35, "elbowOut": -48}, {"t": 0.55, "elbowOut": -48}, {"t": 0.74}]}
+    {"id": "rounding", "label": "Rounding the lower back at the stretch", "cue": "Reach less, chest up", "fails": ["back"], "delta": [{"t": 0, "lumbarFlex": 24, "bar.z": 0.15}, {"t": 0.08, "lumbarFlex": 24, "bar.z": 0.15}, {"t": 0.32}, {"t": 0.6}, {"t": 0.96, "lumbarFlex": 24, "bar.z": 0.15}, {"t": 1, "lumbarFlex": 24, "bar.z": 0.15}]},
+    {"id": "elbows-drop", "label": "Elbows dropping to the sides", "cue": "Keep them flared to hit the upper back", "fails": ["elbows"], "delta": [{"t": 0.2}, {"t": 0.35, "elbowOut": -48}, {"t": 0.55, "elbowOut": -48}, {"t": 0.74}]},
+    {"id": "shrug", "label": "Shrugging toward the ears", "cue": "Shoulders down", "fails": ["shoulders"], "delta": [{"t": 0.24}, {"t": 0.35, "scapElev": 38}, {"t": 0.55, "scapElev": 38}, {"t": 0.73}]}
   ]
 }

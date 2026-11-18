@@ -277,11 +277,13 @@ the computed pose (so they work for IK limbs and for mistakes):
 **Delta measures** (metres): `{ "delta": [a, b], "axis": "x" | "y" | "z" | "dist" }` =
 `a − b` along that world axis, or the distance. Points: `root seat l5 t12 c7 head
 upperBack`, sided `hip knee ankle heel midfoot ball toe shoulder elbow wrist grip` (with
-`L`/`R`, or without for the midpoint of both sides), prop ids (`"bar"` = its centre) and
-prop points (`"bar.gripL"`). Example: bar over mid-foot = `{ "delta": ["bar", "midfoot"], "axis": "z" }`, `min -0.05, max 0.05`.
+`L`/`R`, or without for the midpoint of both sides), prop ids and prop points
+(`"bar.gripL"`). A bare prop id resolves to the prop's placement origin. Use
+`<prop>.center` (e.g. `"bar.center"`) to measure from its center. Example: bar over
+mid-foot = `{ "delta": ["bar", "midfoot"], "axis": "z" }`, `min -0.05, max 0.05`.
 
 Rules the validator enforces: on the correct rep **every active check is green on every
-frame** (30 fps), not just at keyframes. Leave margin: tune bands from real technique,
+frame** (30 fps), at phase starts, and at authored keyframes. Leave margin: tune bands from real technique,
 not just from your keyframes.
 
 ## Mistakes

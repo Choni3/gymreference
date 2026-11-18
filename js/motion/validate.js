@@ -202,9 +202,10 @@ export function validateMotion(motion, { exerciseNames = null } = {}) {
 
   if (errors.length) return { errors, warnings };
 
-  // Simulation at 30 fps, including exact phase starts.
-  const times = [...new Set([...frameTimes(motion), ...phases.map((p) => p.start)])].sort((a, b) => a - b);
+  // Simulation at 30 fps, including exact phase starts and authored keyframes.
+  const baseTimes = [...frameTimes(motion), ...phases.map((p) => p.start), ...kfs.map((kf) => kf.t)];
   for (const m of [null, ...mistakes]) {
+    const times = [...new Set([...baseTimes, ...(m?.delta ?? []).map((kf) => kf.t)])].sort((a, b) => a - b);
     const name = m ? `mistake "${m.id}"` : 'correct rep';
     const red = new Set(), once = new Set();
     const report = (key, msg) => { if (!once.has(key)) { once.add(key); err(msg); } };

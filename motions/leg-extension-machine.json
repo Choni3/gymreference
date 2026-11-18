@@ -54,7 +54,7 @@
     {"id": "bend", "label": "Use a full knee bend", "measure": "kneeFlex", "parts": ["knees", "roller"], "min": 88, "tol": 7, "phases": ["Stretch"], "sides": true}
   ],
   "mistakes": [
-    {"id": "hips-lift", "label": "Hips lift off the seat", "cue": "hold the handles, lighten the load", "fails": ["seat"], "delta": [{"t": 0.31, "rootY": 0.087, "hipFlex": -7}, {"t": 0.53, "rootY": 0.087, "hipFlex": -7}]},
+{"id": "hips-lift", "label": "Hips lift off the seat", "cue": "hold the handles, lighten the load", "fails": ["seat"], "delta": [{"t": 0.18}, {"t": 0.36, "rootY": 0.053, "rootZ": 0.062, "rootPitch": -8, "hipFlex": -8}, {"t": 0.53, "rootY": 0.053, "rootZ": 0.062, "rootPitch": -8, "hipFlex": -8}, {"t": 0.78}]},
     {"id": "off-pivot", "label": "Knee not lined up with the pivot", "cue": "re-adjust back pad and shin pad", "fails": ["pivot"], "delta": [{"t": 0, "rootZ": 0.083}, {"t": 1, "rootZ": 0.083}]},
     {"id": "skips-stretch", "label": "Skipping the stretch", "cue": "use the deepest range you can control", "fails": ["bend"], "delta": [{"t": 0, "kneeFlex": -30}, {"t": 0.1, "kneeFlex": -25}, {"t": 0.36, "kneeFlex": 0}, {"t": 0.53, "kneeFlex": 0}, {"t": 0.88, "kneeFlex": -23}, {"t": 1, "kneeFlex": -30}]}
   ]

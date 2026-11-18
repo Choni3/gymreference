@@ -26,9 +26,11 @@ export function validateDir(dir = join(root, 'motions'), { write = true, log = c
     } catch (e) {
       result = { errors: [`cannot read: ${e.message}`], warnings: [] };
     }
-    if (motion?.exercise && seen.has(motion.exercise)) result.errors.push(`"${motion.exercise}" is already animated by ${seen.get(motion.exercise)}`);
-    const expected = `${slug(motion?.exercise || '')}.json`;
-    if (motion?.exercise && file !== expected) result.warnings.push(`file name should be ${expected}`);
+    if (typeof motion?.exercise === 'string' && motion.exercise) {
+      if (seen.has(motion.exercise)) result.errors.push(`"${motion.exercise}" is already animated by ${seen.get(motion.exercise)}`);
+      const expected = `${slug(motion.exercise)}.json`;
+      if (file !== expected) result.warnings.push(`file name should be ${expected}`);
+    }
     for (const w of result.warnings) log(`warn  ${file}: ${w}`);
     for (const e of result.errors) log(`ERROR ${file}: ${e}`);
     if (result.errors.length) failed++;

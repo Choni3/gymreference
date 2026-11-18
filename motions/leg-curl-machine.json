@@ -57,6 +57,6 @@
   "mistakes": [
     {"id": "off-pivot", "label": "Knees off the pivot", "cue": "realign the knee with the machine axis", "fails": ["pivot"], "delta": [{"t": 0, "rootZ": 0.083}, {"t": 1, "rootZ": 0.083}]},
     {"id": "thighs-lift", "label": "Loose thigh pad, thighs lift", "cue": "tighten the pad on the thighs", "fails": ["pivot"], "delta": [{"t": 0.35, "rootY": 0.048, "hipFlex": 12, "thighPad.y": 0.137}, {"t": 0.53, "rootY": 0.048, "hipFlex": 12, "thighPad.y": 0.137}]},
-    {"id": "partial", "label": "Partial reps near the stretch", "cue": "use the full range", "fails": ["bend"], "delta": [{"t": 0.36, "kneeFlex": -38}, {"t": 0.53, "kneeFlex": -38}]}
+{"id": "partial", "label": "Partial reps near the stretch", "cue": "use the full range", "fails": ["range"], "delta": [{"t": 0, "kneeFlex": 40}, {"t": 0.08, "kneeFlex": 40}, {"t": 0.36}, {"t": 0.53}, {"t": 0.94, "kneeFlex": 40}, {"t": 1, "kneeFlex": 40}]}
   ]
 }

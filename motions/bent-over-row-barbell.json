@@ -3,7 +3,7 @@
   "exercise": "Bent Over Row (Barbell)",
   "durationMs": 3600,
   "props": [
-    {"id": "bar", "type": "barbell", "pos": [0, 0.462, 0.275], "grip": 0.49}
+    {"id": "bar", "type": "barbell", "pos": [0, 0.422, 0.12], "grip": 0.49}
   ],
   "contacts": {"feet": {"at": [0.12, 0, 0], "toeOut": 12}, "hands": {"at": "bar.grip", "elbowPole": [0.21, -0.35, -1]}},
   "phases": [
@@ -14,12 +14,12 @@
     {"name": "Full reach", "start": 0.94, "end": 1}
   ],
   "keyframes": [
-    {"t": 0, "rootY": 0.862, "rootZ": -0.18, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
-    {"t": 0.04, "rootY": 0.862, "rootZ": -0.18, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
-    {"t": 0.3, "bar.y": 0.478, "bar.z": -0.145, "scapProt": -15},
-    {"t": 0.4, "bar.y": 0.478, "bar.z": -0.145, "scapProt": -15},
-    {"t": 0.94, "rootY": 0.862, "rootZ": -0.18, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
-    {"t": 1, "rootY": 0.862, "rootZ": -0.18, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0}
+    {"t": 0, "rootY": 0.825, "rootZ": -0.33, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
+    {"t": 0.04, "rootY": 0.825, "rootZ": -0.33, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
+    {"t": 0.3, "bar.y": 0.481, "bar.z": -0.14, "scapProt": -15},
+    {"t": 0.4, "bar.y": 0.481, "bar.z": -0.14, "scapProt": -15},
+    {"t": 0.94, "rootY": 0.825, "rootZ": -0.33, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0},
+    {"t": 1, "rootY": 0.825, "rootZ": -0.33, "rootPitch": 58, "lumbarFlex": 0, "neckFlex": -19, "scapProt": 13, "bar.y": 0, "bar.z": 0}
   ],
   "checks": [
     {"id": "hinge", "label": "Keep the hip hinge fixed", "measure": "pelvisTilt", "parts": ["pelvis"], "min": 52, "max": 65, "tol": 5},
@@ -29,7 +29,7 @@
   ],
   "mistakes": [
     {"id": "torso-rises", "label": "Torso rises each rep", "cue": "Use a lighter load and hold the hip angle.", "fails": ["hinge"], "delta": [{"t": 0.3, "rootPitch": -25, "bar.y": 0.12, "bar.z": -0.16}, {"t": 0.4, "rootPitch": -25, "bar.y": 0.12, "bar.z": -0.16}]},
-    {"id": "rounded-back", "label": "Rounded lower back", "cue": "Brace and shorten the hinge depth.", "fails": ["neutral"], "delta": [{"t": 0.3, "lumbarFlex": 28, "neckFlex": -16, "bar.y": -0.08, "bar.z": 0.055}, {"t": 0.4, "lumbarFlex": 28, "neckFlex": -16, "bar.y": -0.08, "bar.z": 0.055}]},
+    {"id": "rounded-back", "label": "Rounded lower back", "cue": "Brace and shorten the hinge depth.", "fails": ["neutral"], "delta": [{"t": 0, "lumbarFlex": 23, "neckFlex": -12, "bar.z": 0.055}, {"t": 0.3, "lumbarFlex": 28, "neckFlex": -16, "bar.y": -0.08, "bar.z": 0.055}, {"t": 0.4, "lumbarFlex": 28, "neckFlex": -16, "bar.y": -0.08, "bar.z": 0.055}, {"t": 0.9, "lumbarFlex": 23, "neckFlex": -12, "bar.z": 0.055}, {"t": 1, "lumbarFlex": 23, "neckFlex": -12, "bar.z": 0.055}]},
     {"id": "short-bottom", "label": "Short reps at the bottom", "cue": "Reach the arms fully each rep.", "fails": ["reach"], "delta": [{"t": 0, "bar.y": 0.19}, {"t": 0.28}, {"t": 0.55}, {"t": 0.94, "bar.y": 0.19}, {"t": 1, "bar.y": 0.19}]}
   ]
 }

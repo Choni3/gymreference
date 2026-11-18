@@ -40,6 +40,6 @@
   "mistakes": [
     {"id": "lean-back", "label": "Leaning way back", "cue": "Stay nearly upright", "fails": ["torso"], "delta": [{"t": 0.13}, {"t": 0.35, "rootPitch": -23, "bar.z": -0.1}, {"t": 0.48, "rootPitch": -23, "bar.z": -0.1}]},
     {"id": "half-rep", "label": "Half reps", "cue": "Full stretch at the top every rep", "fails": ["stretch"], "delta": [{"t": 0, "bar.y": -0.23}, {"t": 0.08, "bar.y": -0.23}, {"t": 0.35}, {"t": 0.49}, {"t": 0.96, "bar.y": -0.23}, {"t": 1, "bar.y": -0.23}]},
-    {"id": "swing", "label": "Swinging the torso", "cue": "Lighter load, keep chest still", "fails": ["torso"], "delta": [{"t": 0.11}, {"t": 0.2, "rootPitch": -13}, {"t": 0.44, "rootPitch": 14}, {"t": 0.7, "rootPitch": -13}, {"t": 0.85}]}
+{"id": "swing", "label": "Swinging the torso", "cue": "Lighter load, keep chest still", "fails": ["torso"], "delta": [{"t": 0.08, "rootPitch": 10}, {"t": 0.35, "rootPitch": -16, "bar.z": -0.1}, {"t": 0.49, "rootPitch": -16, "bar.z": -0.1}, {"t": 0.9, "rootPitch": 10}, {"t": 1}]}
   ]
 }
