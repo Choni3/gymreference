@@ -133,7 +133,8 @@ function buildPlayer(section, motion) {
     raf = 0;
     if (disposed || !view || !visible || !section.isConnected) return;
     if (playing) {
-      const next = last ? t + ((now - last) * speed) / motion.durationMs : t;
+      // Cap the step so a suspended tab or app doesn't jump the rep forward on return.
+      const next = last ? t + (Math.min(now - last, 100) * speed) / motion.durationMs : t;
       const boundary = stopAtPhase && motion.phases.find((p) => p.end > t && p.end <= next);
       last = now;
       t = next;
@@ -205,6 +206,8 @@ function buildPlayer(section, motion) {
     else last = 0;
   });
   io.observe(stage);
+  const onVisibility = () => { last = 0; if (!document.hidden) kick(); };
+  document.addEventListener('visibilitychange', onVisibility);
 
   function dispose() {
     if (disposed) return;
@@ -212,6 +215,7 @@ function buildPlayer(section, motion) {
     cancelAnimationFrame(raf);
     preload.disconnect();
     io.disconnect();
+    document.removeEventListener('visibilitychange', onVisibility);
     ro?.disconnect();
     view?.dispose();
     view = null;

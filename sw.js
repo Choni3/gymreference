@@ -1,6 +1,6 @@
 // Offline support: the app shell is served cache-first from a versioned cache.
 // Bump VERSION on every release; the app then shows "A new version is ready".
-const VERSION = 'v15';
+const VERSION = 'v16';
 const CACHE = `gymreference-${VERSION}`;
 const DEFAULTS_CACHE = 'gymreference-defaults-v1'; // filled by the page, see app.js
 const SHELL = [
@@ -55,10 +55,20 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// A motion that failed to download during install is cached the first time it loads.
+async function fetchAndKeep(req) {
+  const res = await fetch(req);
+  if (res.ok && new URL(req.url).pathname.includes('/motions/')) {
+    const copy = res.clone();
+    caches.open(CACHE).then((c) => c.put(req, copy));
+  }
+  return res;
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   event.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((cached) => cached || fetch(req))
+    caches.match(req, { ignoreSearch: true }).then((cached) => cached || fetchAndKeep(req))
   );
 });
