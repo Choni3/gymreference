@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "exercise": "Preacher Curl (Machine)",
+  "durationMs": 3850,
+  "props": [
+    {"id": "seat", "type": "box", "pos": [0, 0.41, -0.087], "size": [0.34, 0.05, 0.36]},
+    {"id": "seatPost", "type": "box", "pos": [0, 0.2, -0.12], "size": [0.07, 0.4, 0.08]},
+    {"id": "base", "type": "box", "pos": [0, 0.023, 0.24], "size": [0.32, 0.046, 0.73]},
+    {"id": "pad", "type": "box", "pos": [0, 0.854, 0.149], "size": [0.49, 0.049, 0.31], "rot": [42, 0, 0]},
+    {"id": "support", "type": "box", "pos": [0, 0.408, 0.26], "size": [0.068, 0.765, 0.07], "rot": [-9, 0, 0]},
+    {"id": "pivot", "type": "roller", "pos": [0, 0.83, 0.254], "length": 0.52, "radius": 0.027},
+    {"id": "leverL", "type": "box", "size": [0.035, 0.321, 0.039], "attach": {"to": "forearmL", "offset": [-0.007, -0.16, 0.073]}},
+    {"id": "leverR", "type": "box", "size": [0.035, 0.321, 0.039], "attach": {"to": "forearmR", "offset": [0.007, -0.16, 0.073]}},
+    {"id": "bar", "type": "rod", "length": 0.54, "grip": 0.36, "attach": {"to": "hands"}}
+  ],
+  "contacts": {"feet": {"at": [0.245, 0, 0.4], "toeOut": 17}},
+  "phases": [
+    {"name": "Start", "start": 0, "end": 0.055},
+    {"name": "Curl", "start": 0.055, "end": 0.29},
+    {"name": "Squeeze", "start": 0.29, "end": 0.39},
+    {"name": "Lower", "start": 0.39, "end": 0.95},
+    {"name": "Arms long", "start": 0.95, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.526, "rootZ": -0.041, "rootPitch": 7, "shFlex": 55, "forearmPro": -90, "elbowFlex": 8, "wristFlex": 0},
+    {"t": 0.055, "rootY": 0.526, "rootZ": -0.041, "rootPitch": 7, "shFlex": 55, "forearmPro": -90, "elbowFlex": 8, "wristFlex": 0},
+    {"t": 0.29, "elbowFlex": 129},
+    {"t": 0.39, "elbowFlex": 129},
+    {"t": 0.95, "rootY": 0.526, "rootZ": -0.041, "rootPitch": 7, "shFlex": 55, "forearmPro": -90, "elbowFlex": 8, "wristFlex": 0},
+    {"t": 1, "rootY": 0.526, "rootZ": -0.041, "rootPitch": 7, "shFlex": 55, "forearmPro": -90, "elbowFlex": 8, "wristFlex": 0}
+  ],
+  "checks": [
+    {"id": "pivot-align", "label": "Line up the elbows with the machine pivot", "measure": {"delta": ["elbow", "pivot"], "axis": "dist"}, "parts": ["upperArms", "pivot", "pad"], "max": 0.065, "tol": 0.022},
+    {"id": "extension", "label": "Lower to nearly straight arms", "measure": "elbowFlex", "parts": ["forearms"], "max": 17, "tol": 6, "phases": ["Start", "Arms long"], "sides": true},
+    {"id": "vertical", "label": "Finish with forearms nearly vertical", "measure": {"delta": ["wrist", "elbow"], "axis": "z"}, "parts": ["forearms"], "min": -0.06, "max": 0.07, "tol": 0.025, "phases": ["Squeeze"]},
+    {"id": "wrists", "label": "Keep wrists neutral at the squeeze", "measure": {"delta": ["grip", "wrist"], "axis": "z"}, "parts": ["hands"], "min": -0.015, "max": 0.025, "tol": 0.014, "phases": ["Squeeze"]}
+  ],
+  "mistakes": [
+    {"id": "half-reps", "label": "Half reps at the bottom", "cue": "Lower to nearly straight arms.", "fails": ["extension"], "delta": [{"t": 0, "elbowFlex": 40}, {"t": 0.055, "elbowFlex": 40}, {"t": 0.26}, {"t": 0.54}, {"t": 0.95, "elbowFlex": 40}, {"t": 1, "elbowFlex": 40}]},
+    {"id": "wrists-curl", "label": "Wrists curling at the top", "cue": "Keep the wrists neutral.", "fails": ["wrists"], "delta": [{"t": 0.27, "wristFlex": 46, "leverL.x": -0.029, "leverR.x": 0.029, "leverL.y": 0.004, "leverR.y": 0.004, "leverL.roll": 10.5, "leverR.roll": -10.5}, {"t": 0.41, "wristFlex": 46, "leverL.x": -0.029, "leverR.x": 0.029, "leverL.y": 0.004, "leverR.y": 0.004, "leverL.roll": 10.5, "leverR.roll": -10.5}]}
+  ]
+}

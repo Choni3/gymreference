@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "exercise": "Romanian Deadlift (Barbell)",
+  "durationMs": 4700,
+  "props": [
+    {"id": "bar", "type": "barbell", "pos": [0, 0.225, 0.112], "grip": 0.5, "plateRadius": 0.18}
+  ],
+  "contacts": {
+    "feet": {
+      "at": [
+        0.105,
+        0,
+        0
+      ],
+      "toeOut": 3
+    },
+    "hands": {
+      "at": "bar.grip",
+      "elbowPole": [
+        0.3,
+        0,
+        -1
+      ]
+    }
+  },
+  "phases": [
+    {"name": "Hinge", "start": 0, "end": 0.52},
+    {"name": "Stretch", "start": 0.52, "end": 0.61},
+    {"name": "Stand", "start": 0.61, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.914, "rootZ": -0.006, "rootPitch": 3, "neckFlex": -1.05, "lumbarFlex": 0, "bar.y": 0.5717, "bar.z": -0.01},
+    {"t": 0.08, "rootY": 0.914, "rootZ": -0.006, "rootPitch": 3, "neckFlex": -1.05, "lumbarFlex": 0, "bar.y": 0.5717, "bar.z": -0.01},
+    {"t": 0.26, "rootY": 0.885, "rootZ": -0.17, "rootPitch": 34, "neckFlex": -11.9, "lumbarFlex": 0, "bar.y": 0.44753, "bar.z": -0.012},
+    {"t": 0.52, "rootY": 0.835, "rootZ": -0.325, "rootPitch": 63, "neckFlex": -22.05, "lumbarFlex": 0, "bar.y": 0.20433, "bar.z": -0.026},
+    {"t": 0.61, "rootY": 0.835, "rootZ": -0.325, "rootPitch": 63, "neckFlex": -22.05, "lumbarFlex": 0, "bar.y": 0.20433, "bar.z": -0.026},
+    {"t": 0.8, "rootY": 0.885, "rootZ": -0.17, "rootPitch": 34, "neckFlex": -11.9, "lumbarFlex": 0, "bar.y": 0.44753, "bar.z": -0.012},
+    {"t": 1, "rootY": 0.914, "rootZ": -0.006, "rootPitch": 3, "neckFlex": -1.05, "lumbarFlex": 0, "bar.y": 0.5717, "bar.z": -0.01}
+  ],
+  "checks": [
+    {"id": "back", "label": "Keep the lower back neutral", "measure": "lumbarFlex", "parts": ["back"], "min": -8, "max": 8, "tol": 5},
+    {"id": "bar-path", "label": "Keep the bar close to the legs", "measure": {"delta": ["bar", "midfoot"], "axis": "z"}, "parts": ["bar"], "min": -0.025, "max": 0.11, "tol": 0.025},
+    {"id": "knees", "label": "Keep the knees softly bent", "measure": "kneeFlex", "parts": ["knees"], "min": 5, "max": 31, "tol": 5, "sides": true},
+    {"id": "shins", "label": "Keep the shins near vertical", "measure": "shinLean", "parts": ["shins"], "min": -15, "max": 12, "tol": 5, "sides": true},
+    {"id": "stretch", "label": "Lower the bar below the knees", "measure": {"delta": ["bar", "knee"], "axis": "y"}, "parts": ["bar"], "min": -0.24, "max": -0.025, "tol": 0.03, "phases": ["Stretch"]}
+  ],
+  "mistakes": [
+    {"id": "rounded-back", "label": "Rounded lower back", "cue": "stop where the hips stop moving back", "fails": ["back"], "delta": [{"t": 0.52, "lumbarFlex": 23, "rootZ": -0.04}, {"t": 0.61, "lumbarFlex": 23, "rootZ": -0.04}]},
+    {"id": "too-much-knee-bend", "label": "Too much knee bend", "cue": "hips back, knees soft only", "fails": ["knees"], "delta": [{"t": 0.52, "rootY": -0.18, "rootZ": 0.13, "rootPitch": -12, "bar.y": -0.055, "bar.z": 0.07}, {"t": 0.61, "rootY": -0.18, "rootZ": 0.13, "rootPitch": -12, "bar.y": -0.055, "bar.z": 0.07}]},
+    {"id": "bar-drifts", "label": "Bar drifts forward", "cue": "lats on, bar touching legs", "fails": ["bar-path"], "delta": [{"t": 0.49, "bar.z": 0.13, "bar.y": 0.025}, {"t": 0.61, "bar.z": 0.13, "bar.y": 0.025}]}
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "exercise": "Face Pull (Cable)",
+  "durationMs": 4200,
+  "props": [
+    {"id": "columnL", "type": "box", "pos": [0.39, 0.87, 1.41], "size": [0.075, 1.74, 0.1]},
+    {"id": "columnR", "type": "box", "pos": [-0.39, 0.87, 1.41], "size": [0.075, 1.74, 0.1]},
+    {"id": "beam", "type": "box", "pos": [0, 1.683, 1.414], "size": [0.84, 0.07, 0.1]},
+    {"id": "base", "type": "box", "pos": [0, 0.025, 1.38], "size": [0.86, 0.05, 0.42]},
+    {"id": "join", "type": "roller", "pos": [0, 0, 0], "length": 0.052, "radius": 0.029},
+    {"id": "ropeL", "type": "rod", "pos": [0, 0, 0], "length": 0.36, "grip": 0.36, "radius": 0.012},
+    {"id": "ropeR", "type": "rod", "pos": [0, 0, 0], "length": 0.36, "grip": 0.36, "radius": 0.012},
+    {"id": "cable", "type": "cable", "from": [0, 1.683, 1.3], "to": "join.center"}
+  ],
+  "contacts": {"feet": {"at": [0.16, 0, 0], "toeOut": 12}, "handL": {"at": "ropeL.gripL", "elbowPole": [1, 0.6, -0.5]}, "handR": {"at": "ropeR.gripL", "elbowPole": [1, 0.6, -0.5]}},
+  "phases": [
+    {"name": "Pull", "start": 0, "end": 0.27},
+    {"name": "Squeeze", "start": 0.27, "end": 0.5},
+    {"name": "Return", "start": 0.5, "end": 0.96},
+    {"name": "Full reach", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.909, "rootZ": 0.025, "rootPitch": 0, "scapProt": 9, "join.y": 1.53, "join.z": 1.026, "ropeL.x": 0.0425, "ropeL.y": 1.53, "ropeL.z": 0.85109, "ropeL.yaw": 76.34287, "ropeL.roll": -0.0, "ropeR.x": -0.0425, "ropeR.y": 1.53, "ropeR.z": 0.85109, "ropeR.yaw": 103.65713, "ropeR.roll": -0.0},
+    {"t": 0.105, "join.y": 1.56, "join.z": 0.75, "ropeL.x": 0.075, "ropeL.y": 1.5725, "ropeL.z": 0.58685, "ropeL.yaw": 65.31211, "ropeL.roll": -3.98208, "ropeR.x": -0.075, "ropeR.y": 1.5725, "ropeR.z": 0.58685, "ropeR.yaw": 114.68789, "ropeR.roll": -3.98208, "scapProt": 3},
+    {"t": 0.27, "join.y": 1.58, "join.z": 0.225, "ropeL.x": 0.1585, "ropeL.y": 1.6075, "ropeL.z": 0.14424, "ropeL.yaw": 26.99886, "ropeL.roll": -8.78794, "ropeR.x": -0.1585, "ropeR.y": 1.6075, "ropeR.z": 0.14424, "ropeR.yaw": 153.00114, "ropeR.roll": -8.78794, "scapProt": -16},
+    {"t": 0.5, "join.y": 1.58, "join.z": 0.225, "ropeL.x": 0.1585, "ropeL.y": 1.6075, "ropeL.z": 0.14424, "ropeL.yaw": 26.99886, "ropeL.roll": -8.78794, "ropeR.x": -0.1585, "ropeR.y": 1.6075, "ropeR.z": 0.14424, "ropeR.yaw": 153.00114, "ropeR.roll": -8.78794, "scapProt": -16},
+    {"t": 0.7, "join.y": 1.56, "join.z": 0.75, "ropeL.x": 0.075, "ropeL.y": 1.5725, "ropeL.z": 0.58685, "ropeL.yaw": 65.31211, "ropeL.roll": -3.98208, "ropeR.x": -0.075, "ropeR.y": 1.5725, "ropeR.z": 0.58685, "ropeR.yaw": 114.68789, "ropeR.roll": -3.98208, "scapProt": 3},
+    {"t": 0.96, "rootY": 0.909, "rootZ": 0.025, "rootPitch": 0, "scapProt": 9, "join.y": 1.53, "join.z": 1.026, "ropeL.x": 0.0425, "ropeL.y": 1.53, "ropeL.z": 0.85109, "ropeL.yaw": 76.34287, "ropeL.roll": -0.0, "ropeR.x": -0.0425, "ropeR.y": 1.53, "ropeR.z": 0.85109, "ropeR.yaw": 103.65713, "ropeR.roll": -0.0},
+    {"t": 1, "rootY": 0.909, "rootZ": 0.025, "rootPitch": 0, "scapProt": 9, "join.y": 1.53, "join.z": 1.026, "ropeL.x": 0.0425, "ropeL.y": 1.53, "ropeL.z": 0.85109, "ropeL.yaw": 76.34287, "ropeL.roll": -0.0, "ropeR.x": -0.0425, "ropeR.y": 1.53, "ropeR.z": 0.85109, "ropeR.yaw": 103.65713, "ropeR.roll": -0.0}
+  ],
+  "checks": [
+    {"id": "elbows", "label": "Finish with elbows at shoulder height", "measure": {"delta": ["elbow", "shoulder"], "axis": "y"}, "parts": ["upperArms"], "min": -0.05, "max": 0.15, "tol": 0.035, "phases": ["Squeeze"]},
+    {"id": "upright", "label": "Keep the torso tall and still", "measure": "trunkLean", "parts": ["back"], "min": -7, "max": 7, "tol": 5},
+    {"id": "separate", "label": "Pull the rope ends apart at the face", "measure": {"delta": ["gripL", "gripR"], "axis": "x"}, "parts": ["forearms", "ropeL", "ropeR"], "min": 0.53, "tol": 0.04, "phases": ["Squeeze"]},
+    {"id": "reach", "label": "Return until the arms are long", "measure": "elbowFlex", "parts": ["arms"], "max": 21, "tol": 6, "phases": ["Full reach"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "low-elbows", "label": "Elbows drop into a row", "cue": "Keep the elbows high and pull to the face.", "fails": ["elbows"], "delta": [{"t": 0.27, "join.y": -0.34, "ropeL.y": -0.34, "ropeR.y": -0.34, "join.z": 0.19, "ropeL.z": 0.19, "ropeR.z": 0.19, "elbowOut": 54}, {"t": 0.5, "join.y": -0.34, "ropeL.y": -0.34, "ropeR.y": -0.34, "join.z": 0.19, "ropeL.z": 0.19, "ropeR.z": 0.19, "elbowOut": 42}]},
+    {"id": "lean-back", "label": "Leaning back to move the weight", "cue": "Lighten the load and keep the torso still.", "fails": ["upright"], "delta": [{"t": 0.27, "rootPitch": -21, "neckFlex": 13, "join.z": -0.11, "ropeL.z": -0.11, "ropeR.z": -0.11}, {"t": 0.5, "rootPitch": -21, "neckFlex": 13, "join.z": -0.11, "ropeL.z": -0.11, "ropeR.z": -0.11}]}
+  ]
+}

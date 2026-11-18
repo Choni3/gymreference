@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "exercise": "Bicep Curl (Barbell)",
+  "durationMs": 3850,
+  "props": [
+    {"id": "bar", "type": "barbell", "length": 1.45, "plateRadius": 0.12, "grip": 0.38, "attach": {"to": "hands"}}
+  ],
+  "contacts": {"feet": {"at": [0.125, 0, 0], "toeOut": 9}},
+  "phases": [
+    {"name": "Early curl", "start": 0, "end": 0.13},
+    {"name": "Finish curl", "start": 0.13, "end": 0.3},
+    {"name": "Squeeze", "start": 0.3, "end": 0.38},
+    {"name": "Lower", "start": 0.38, "end": 0.96},
+    {"name": "Arms long", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.918, "rootZ": 0.028, "rootPitch": 0, "lumbarFlex": 0, "shFlex": 5, "shAbd": 1, "forearmPro": -90, "elbowFlex": 4},
+    {"t": 0.13, "shFlex": 5, "elbowFlex": 63},
+    {"t": 0.3, "shFlex": 13, "elbowFlex": 143},
+    {"t": 0.38, "shFlex": 13, "elbowFlex": 143},
+    {"t": 0.69, "shFlex": 6, "elbowFlex": 78},
+    {"t": 0.96, "rootY": 0.918, "rootZ": 0.028, "rootPitch": 0, "lumbarFlex": 0, "shFlex": 5, "shAbd": 1, "forearmPro": -90, "elbowFlex": 4},
+    {"t": 1, "rootY": 0.918, "rootZ": 0.028, "rootPitch": 0, "lumbarFlex": 0, "shFlex": 5, "shAbd": 1, "forearmPro": -90, "elbowFlex": 4}
+  ],
+  "checks": [
+    {"id": "still", "label": "Keep your torso still", "measure": "trunkLean", "parts": ["back"], "min": -6, "max": 6, "tol": 5},
+    {"id": "elbows", "label": "Keep the elbows at your sides early", "measure": "shFlex", "parts": ["upperArms"], "min": -6, "max": 12, "tol": 6, "phases": ["Early curl"], "sides": true},
+    {"id": "extension", "label": "Lower to nearly straight arms", "measure": "elbowFlex", "parts": ["arms"], "max": 12, "tol": 5, "phases": ["Arms long"], "sides": true},
+    {"id": "finish", "label": "Curl the bar toward the chest", "measure": "elbowFlex", "parts": ["forearms"], "min": 126, "tol": 7, "phases": ["Squeeze"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "swing", "label": "Swinging from rep one", "cue": "Reduce the weight and stay strict.", "fails": ["still"], "delta": [{"t": 0.06, "rootPitch": 13, "shFlex": 6}, {"t": 0.155, "rootPitch": -22, "shFlex": 14, "lumbarFlex": -5}, {"t": 0.3}]},
+    {"id": "elbows-forward", "label": "Elbows forward at the start", "cue": "Keep the elbows pinned early.", "fails": ["elbows"], "delta": [{"t": 0.102, "shFlex": 34, "elbowFlex": -12}, {"t": 0.22}]}
+  ]
+}

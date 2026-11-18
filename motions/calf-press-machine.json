@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "exercise": "Calf Press (Machine)",
+  "durationMs": 5000,
+  "props": [
+    {"id": "seat", "type": "box", "pos": [0, 0.58856, 0.004159999999999997], "size": [0.39, 0.075, 0.39]},
+    {"id": "backPad", "type": "box", "pos": [0, 0.88156, -0.19084], "size": [0.34, 0.49, 0.085]},
+    {"id": "handleL", "type": "rod", "pos": [0.257, 0.6775599999999999, 0.08416000000000001], "length": 0.17, "grip": 0.1, "rot": [0, 90, 0]},
+    {"id": "handleR", "type": "rod", "pos": [-0.257, 0.6775599999999999, 0.08416000000000001], "length": 0.17, "grip": 0.1, "rot": [0, 90, 0]},
+    {"id": "plate", "type": "box", "pos": [0, 0.283, 0.78], "size": [0.43, 0.05, 0.087], "rot": [-22, 0, 0]},
+    {"id": "railL", "type": "box", "pos": [0.18, 0.36, 0.38], "size": [0.055, 0.045, 1.05], "rot": [41, 0, 0]},
+    {"id": "railR", "type": "box", "pos": [-0.18, 0.36, 0.38], "size": [0.055, 0.045, 1.05], "rot": [41, 0, 0]},
+    {"id": "base", "type": "box", "pos": [0, 0.055, 0.39], "size": [0.51, 0.11, 1.11]}
+  ],
+  "contacts": {
+    "handL": {
+      "at": "handleL.center",
+      "elbowPole": [
+        0.4,
+        -0.5,
+        -1
+      ]
+    },
+    "handR": {
+      "at": "handleR.center",
+      "elbowPole": [
+        0.4,
+        -0.5,
+        -1
+      ]
+    }
+  },
+  "phases": [
+    {"name": "Stretch", "start": 0, "end": 0.19},
+    {"name": "Press", "start": 0.19, "end": 0.43},
+    {"name": "Squeeze", "start": 0.43, "end": 0.58},
+    {"name": "Lower", "start": 0.58, "end": 0.94},
+    {"name": "Reset", "start": 0.94, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.71356, "rootZ": -0.05084, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": 23, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0},
+    {"t": 0.19, "rootY": 0.71356, "rootZ": -0.05084, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": 23, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0},
+    {"t": 0.31, "rootY": 0.76525, "rootZ": -0.08518, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": 0, "seat.y": 0.05169, "seat.z": -0.03434, "backPad.y": 0.05169, "backPad.z": -0.03434, "handleL.y": 0.05169, "handleL.z": -0.03434, "handleR.y": 0.05169, "handleR.z": -0.03434},
+    {"t": 0.43, "rootY": 0.83439, "rootZ": -0.09625, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": -26, "seat.y": 0.12083, "seat.z": -0.04541, "backPad.y": 0.12083, "backPad.z": -0.04541, "handleL.y": 0.12083, "handleL.z": -0.04541, "handleR.y": 0.12083, "handleR.z": -0.04541},
+    {"t": 0.58, "rootY": 0.83439, "rootZ": -0.09625, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": -26, "seat.y": 0.12083, "seat.z": -0.04541, "backPad.y": 0.12083, "backPad.z": -0.04541, "handleL.y": 0.12083, "handleL.z": -0.04541, "handleR.y": 0.12083, "handleR.z": -0.04541},
+    {"t": 0.75, "rootY": 0.76778, "rootZ": -0.08618, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": -1, "seat.y": 0.05422, "seat.z": -0.03534, "backPad.y": 0.05422, "backPad.z": -0.03534, "handleL.y": 0.05422, "handleL.z": -0.03534, "handleR.y": 0.05422, "handleR.z": -0.03534},
+    {"t": 0.94, "rootY": 0.71356, "rootZ": -0.05084, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": 23, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0},
+    {"t": 1, "rootY": 0.71356, "rootZ": -0.05084, "rootPitch": 0, "hipFlex": 55, "kneeFlex": 7, "ankleFlex": 23, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0}
+  ],
+  "checks": [
+    {"id": "knees", "label": "Keep the knees softly bent and still", "measure": "kneeFlex", "parts": ["knees"], "min": 3, "max": 13, "tol": 5, "sides": true},
+    {"id": "torso", "label": "Keep the back steady against the pad", "measure": "trunkLean", "parts": ["back"], "min": -6, "max": 6, "tol": 5},
+    {"id": "stretch", "label": "Lower the heels into a full stretch", "measure": "ankleFlex", "parts": ["feet", "shins"], "min": 18, "tol": 5, "phases": ["Stretch"], "sides": true},
+    {"id": "contact", "label": "Keep the balls of the feet at the plate edge", "measure": {"delta": ["ball", "plate.top"], "axis": "dist"}, "parts": ["feet", "plate"], "min": 0.025, "max": 0.065, "tol": 0.014},
+    {"id": "point", "label": "Press through the balls of the feet", "measure": "ankleFlex", "parts": ["feet", "plate"], "max": -20, "tol": 5, "phases": ["Squeeze"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "short-range", "label": "Short range of motion", "cue": "move the seat closer, let the heels drop fully", "fails": ["stretch"], "delta": [{"t": 0, "rootY": 0.05422, "rootZ": -0.03534, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -24, "seat.y": 0.05422, "seat.z": -0.03534, "backPad.y": 0.05422, "backPad.z": -0.03534, "handleL.y": 0.05422, "handleL.z": -0.03534, "handleR.y": 0.05422, "handleR.z": -0.03534}, {"t": 0.19, "rootY": 0.05422, "rootZ": -0.03534, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -24, "seat.y": 0.05422, "seat.z": -0.03534, "backPad.y": 0.05422, "backPad.z": -0.03534, "handleL.y": 0.05422, "handleL.z": -0.03534, "handleR.y": 0.05422, "handleR.z": -0.03534}, {"t": 0.31, "rootY": 0.02064, "rootZ": -0.00674, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -8, "seat.y": 0.02064, "seat.z": -0.00674, "backPad.y": 0.02064, "backPad.z": -0.00674, "handleL.y": 0.02064, "handleL.z": -0.00674, "handleR.y": 0.02064, "handleR.z": -0.00674}, {"t": 0.43, "rootY": -0.01629, "rootZ": -0.00026, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": 6, "seat.y": -0.01629, "seat.z": -0.00026, "backPad.y": -0.01629, "backPad.z": -0.00026, "handleL.y": -0.01629, "handleL.z": -0.00026, "handleR.y": -0.01629, "handleR.z": -0.00026}, {"t": 0.58, "rootY": -0.01629, "rootZ": -0.00026, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": 6, "seat.y": -0.01629, "seat.z": -0.00026, "backPad.y": -0.01629, "backPad.z": -0.00026, "handleL.y": -0.01629, "handleL.z": -0.00026, "handleR.y": -0.01629, "handleR.z": -0.00026}, {"t": 0.75, "rootY": 0.02075, "rootZ": -0.00638, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -8, "seat.y": 0.02075, "seat.z": -0.00638, "backPad.y": 0.02075, "backPad.z": -0.00638, "handleL.y": 0.02075, "handleL.z": -0.00638, "handleR.y": 0.02075, "handleR.z": -0.00638}, {"t": 0.94, "rootY": 0.05422, "rootZ": -0.03534, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -24, "seat.y": 0.05422, "seat.z": -0.03534, "backPad.y": 0.05422, "backPad.z": -0.03534, "handleL.y": 0.05422, "handleL.z": -0.03534, "handleR.y": 0.05422, "handleR.z": -0.03534}, {"t": 1, "rootY": 0.05422, "rootZ": -0.03534, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": -24, "seat.y": 0.05422, "seat.z": -0.03534, "backPad.y": 0.05422, "backPad.z": -0.03534, "handleL.y": 0.05422, "handleL.z": -0.03534, "handleR.y": 0.05422, "handleR.z": -0.03534}]},
+    {"id": "knee-push", "label": "Knees bending/pushing", "cue": "legs fixed, only the ankles move", "fails": ["knees"], "delta": [{"t": 0, "rootY": 0.17561, "rootZ": 0.12738, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 27, "ankleFlex": 0, "seat.y": 0.17561, "seat.z": 0.12738, "backPad.y": 0.17561, "backPad.z": 0.12738, "handleL.y": 0.17561, "handleL.z": 0.12738, "handleR.y": 0.17561, "handleR.z": 0.12738}, {"t": 0.19, "rootY": 0.17561, "rootZ": 0.12738, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 27, "ankleFlex": 0, "seat.y": 0.17561, "seat.z": 0.12738, "backPad.y": 0.17561, "backPad.z": 0.12738, "handleL.y": 0.17561, "handleL.z": 0.12738, "handleR.y": 0.17561, "handleR.z": 0.12738}, {"t": 0.31, "rootY": 0.09141, "rootZ": 0.05778, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 12, "ankleFlex": 0, "seat.y": 0.09141, "seat.z": 0.05778, "backPad.y": 0.09141, "backPad.z": 0.05778, "handleL.y": 0.09141, "handleL.z": 0.05778, "handleR.y": 0.09141, "handleR.z": 0.05778}, {"t": 0.43, "rootY": 0.0, "rootZ": 0.0, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": 0, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0}, {"t": 0.58, "rootY": 0.0, "rootZ": 0.0, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 0, "ankleFlex": 0, "seat.y": 0.0, "seat.z": 0.0, "backPad.y": 0.0, "backPad.z": 0.0, "handleL.y": 0.0, "handleL.z": 0.0, "handleR.y": 0.0, "handleR.z": 0.0}, {"t": 0.75, "rootY": 0.09156, "rootZ": 0.05833, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 12, "ankleFlex": 0, "seat.y": 0.09156, "seat.z": 0.05833, "backPad.y": 0.09156, "backPad.z": 0.05833, "handleL.y": 0.09156, "handleL.z": 0.05833, "handleR.y": 0.09156, "handleR.z": 0.05833}, {"t": 0.94, "rootY": 0.17561, "rootZ": 0.12738, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 27, "ankleFlex": 0, "seat.y": 0.17561, "seat.z": 0.12738, "backPad.y": 0.17561, "backPad.z": 0.12738, "handleL.y": 0.17561, "handleL.z": 0.12738, "handleR.y": 0.17561, "handleR.z": 0.12738}, {"t": 1, "rootY": 0.17561, "rootZ": 0.12738, "rootPitch": 0, "hipFlex": 0, "kneeFlex": 27, "ankleFlex": 0, "seat.y": 0.17561, "seat.z": 0.12738, "backPad.y": 0.17561, "backPad.z": 0.12738, "handleL.y": 0.17561, "handleL.z": 0.12738, "handleR.y": 0.17561, "handleR.z": 0.12738}]}
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "exercise": "Hammer Curl (Dumbbell)",
+  "durationMs": 4000,
+  "props": [
+    {"id": "dbL", "type": "dumbbell", "attach": {"to": "handL"}},
+    {"id": "dbR", "type": "dumbbell", "attach": {"to": "handR"}}
+  ],
+  "contacts": {"feet": {"at": [0.15, 0, 0], "toeOut": 7}},
+  "phases": [
+    {"name": "Start", "start": 0, "end": 0.08},
+    {"name": "Curl", "start": 0.08, "end": 0.35},
+    {"name": "Finish", "start": 0.35, "end": 0.49},
+    {"name": "Lower", "start": 0.49, "end": 0.96},
+    {"name": "Reset", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 2, "forearmPro": 0, "wristFlex": 0},
+    {"t": 0.08, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 2, "forearmPro": 0, "wristFlex": 0},
+    {"t": 0.35, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 136, "forearmPro": 0, "wristFlex": 0},
+    {"t": 0.49, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 136, "forearmPro": 0, "wristFlex": 0},
+    {"t": 0.96, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 2, "forearmPro": 0, "wristFlex": 0},
+    {"t": 1, "rootY": 0.922, "rootPitch": 0, "scapProt": -6, "shFlex": 2, "shAbd": 9, "elbowFlex": 2, "forearmPro": 0, "wristFlex": 0}
+  ],
+  "checks": [
+    {"id": "torso", "label": "Keep the torso steady", "measure": "trunkLean", "parts": ["trunk"], "min": -6, "max": 6, "tol": 3},
+    {"id": "elbows", "label": "Keep upper arms by your sides", "measure": "shFlex", "parts": ["upperArms"], "min": -5, "max": 10, "sides": true, "tol": 4},
+    {"id": "stretch", "label": "Lengthen both arms at the start", "measure": "elbowFlex", "parts": ["arms"], "max": 8, "phases": ["Start"], "sides": true, "tol": 4},
+    {"id": "squeeze", "label": "Curl the dumbbells toward the shoulders", "measure": "elbowFlex", "parts": ["forearms"], "min": 125, "phases": ["Finish"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "swing", "label": "Swinging the torso", "cue": "Lighten the load, stand tall", "fails": ["torso"], "delta": [{"t": 0.17, "rootPitch": 9}, {"t": 0.32, "rootPitch": -22}, {"t": 0.49, "rootPitch": -22}]},
+    {"id": "elbows-forward", "label": "Elbows drift forward", "cue": "Pin upper arms to your sides", "fails": ["elbows"], "delta": [{"t": 0.32, "shFlex": 31}, {"t": 0.49, "shFlex": 31}]},
+    {"id": "half-rep", "label": "Half reps at the bottom", "cue": "Straighten the arm fully", "fails": ["stretch"], "delta": [{"t": 0, "elbowFlex": 40}, {"t": 0.08, "elbowFlex": 40}, {"t": 0.22}, {"t": 0.72}, {"t": 0.96, "elbowFlex": 40}, {"t": 1, "elbowFlex": 40}]}
+  ]
+}

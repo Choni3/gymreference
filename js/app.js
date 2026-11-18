@@ -1,9 +1,10 @@
 import * as db from './db.js';
-import { h, blobURL, revokeURLs, takeURLs, toast, pickFiles, renderCues } from './ui.js';
+import { h, blobURL, revokeURLs, takeURLs, runLeaves, toast, pickFiles, renderCues } from './ui.js';
 import { compressImage, captureFrame } from './images.js';
 import { parseStrong } from './strong.js';
 import { STARTER, STARTER_ROUTINES, RENAMED, SWAPS, ADDS, DEFAULTS_VERSION, LEGACY_CUES, cueHash } from './seed.js';
 import { exportBackup, importBackup } from './backup.js';
+import { animationSection } from './motion/player.js';
 
 const app = document.getElementById('app');
 
@@ -655,6 +656,7 @@ async function exerciseScreen(id, params) {
     notesSection,
     ex.muscles && h('p', { class: 'muted' }, ex.muscles),
     ex.cues ? h('section', { class: 'cues' }, renderCues(ex.cues)) : h('p', { class: 'muted' }, 'No technique cues yet. Tap Edit to write some.'),
+    animationSection(ex.name),
     ex.links.length > 0 && h('section', {}, h('h2', {}, 'Sources & videos'),
       h('ul', { class: 'links' }, ex.links.map((l) => h('li', {}, h('a', { href: l, target: '_blank', rel: 'noopener' }, l.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')))))),
     h('h2', {}, 'Add your own'),
@@ -961,6 +963,7 @@ async function render() {
   if (id !== renderId) return; // a newer navigation won
   app.replaceChildren(...[view].flat());
   stale.forEach((u) => URL.revokeObjectURL(u));
+  runLeaves();
   window.scrollTo(0, 0);
 }
 

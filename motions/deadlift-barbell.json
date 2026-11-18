@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "exercise": "Deadlift (Barbell)",
+  "durationMs": 4400,
+  "props": [
+    {"id": "bar", "type": "barbell", "pos": [0, 0.225, 0.112], "grip": 0.5}
+  ],
+  "contacts": {
+    "feet": {
+      "at": [
+        0.115,
+        0,
+        0
+      ],
+      "toeOut": 8
+    },
+    "hands": {
+      "at": "bar.grip",
+      "elbowPole": [
+        0.3,
+        0,
+        -1
+      ]
+    }
+  },
+  "phases": [
+    {"name": "Setup", "start": 0, "end": 0.08},
+    {"name": "Pull", "start": 0.08, "end": 0.43},
+    {"name": "Lockout", "start": 0.43, "end": 0.54},
+    {"name": "Lower", "start": 0.54, "end": 0.92},
+    {"name": "Floor", "start": 0.92, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.556, "rootZ": -0.252, "rootPitch": 54, "neckFlex": -18.9, "lumbarFlex": 0, "bar.y": 0.0, "bar.z": 0.0},
+    {"t": 0.08, "rootY": 0.556, "rootZ": -0.252, "rootPitch": 54, "neckFlex": -18.9, "lumbarFlex": 0, "bar.y": 0.0, "bar.z": 0.0},
+    {"t": 0.2, "rootY": 0.644, "rootZ": -0.231, "rootPitch": 51, "neckFlex": -17.85, "lumbarFlex": 0, "bar.y": 0.10418, "bar.z": 0.008},
+    {"t": 0.3, "rootY": 0.769, "rootZ": -0.172, "rootPitch": 32, "neckFlex": -11.2, "lumbarFlex": 0, "bar.y": 0.34109, "bar.z": -0.003},
+    {"t": 0.43, "rootY": 0.91, "rootZ": 0.008, "rootPitch": 2, "neckFlex": -0.7, "lumbarFlex": 0, "bar.y": 0.56814, "bar.z": -0.006},
+    {"t": 0.54, "rootY": 0.91, "rootZ": 0.008, "rootPitch": 2, "neckFlex": -0.7, "lumbarFlex": 0, "bar.y": 0.56814, "bar.z": -0.006},
+    {"t": 0.67, "rootY": 0.769, "rootZ": -0.172, "rootPitch": 32, "neckFlex": -11.2, "lumbarFlex": 0, "bar.y": 0.34109, "bar.z": -0.003},
+    {"t": 0.78, "rootY": 0.644, "rootZ": -0.231, "rootPitch": 51, "neckFlex": -17.85, "lumbarFlex": 0, "bar.y": 0.10418, "bar.z": 0.008},
+    {"t": 0.92, "rootY": 0.556, "rootZ": -0.252, "rootPitch": 54, "neckFlex": -18.9, "lumbarFlex": 0, "bar.y": 0.0, "bar.z": 0.0},
+    {"t": 1, "rootY": 0.556, "rootZ": -0.252, "rootPitch": 54, "neckFlex": -18.9, "lumbarFlex": 0, "bar.y": 0.0, "bar.z": 0.0}
+  ],
+  "checks": [
+    {"id": "back", "label": "Keep the lower back neutral", "measure": "lumbarFlex", "parts": ["back"], "min": -8, "max": 8, "tol": 5},
+    {"id": "bar-path", "label": "Keep the bar close to the legs", "measure": {"delta": ["bar", "midfoot"], "axis": "z"}, "parts": ["bar"], "min": -0.025, "max": 0.11, "tol": 0.025},
+    {"id": "tall", "label": "Stand tall at lockout", "measure": "trunkLean", "parts": ["trunk"], "min": -5, "max": 6, "tol": 4, "phases": ["Lockout"]},
+    {"id": "arms", "label": "Keep the elbows straight", "measure": "elbowFlex", "parts": ["arms"], "max": 19, "tol": 5, "sides": true},
+    {"id": "chest", "label": "Chest rises with the hips off the floor", "measure": "trunkLean", "parts": ["thorax"], "max": 57, "tol": 4, "phases": ["Pull"]}
+  ],
+  "mistakes": [
+    {"id": "bar-drifts", "label": "Bar drifts forward", "cue": "engage lats, keep bar touching legs", "fails": ["bar-path"], "delta": [{"t": 0.23, "bar.z": 0.11, "bar.y": 0.026}, {"t": 0.31, "bar.z": 0.11, "bar.y": 0.026}]},
+    {"id": "rounded-back", "label": "Rounded lower back", "cue": "lighter load, brace, set spine first", "fails": ["back"], "delta": [{"t": 0.04, "lumbarFlex": 22, "rootZ": -0.085}, {"t": 0.16, "lumbarFlex": 22, "rootZ": -0.085}]},
+    {"id": "lean-back", "label": "Leaning back at lockout", "cue": "just stand tall, glutes squeezed", "fails": ["tall"], "delta": [{"t": 0.32}, {"t": 0.43, "thoracicFlex": -18, "bar.y": 0.045, "bar.z": -0.035}, {"t": 0.54, "thoracicFlex": -18, "bar.y": 0.045, "bar.z": -0.035}, {"t": 0.65}]}
+  ]
+}

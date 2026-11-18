@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "exercise": "Overhead Press (Barbell)",
+  "durationMs": 3300,
+  "props": [
+    {"id": "bar", "type": "barbell", "pos": [0, 1.442, 0.192], "grip": 0.47, "plateRadius": 0.16}
+  ],
+  "contacts": {"feet": {"at": [0.145, 0, 0], "toeOut": 8}, "hands": {"at": "bar.grip", "elbowPole": [0.25, -0.88, 0.93]}},
+  "phases": [
+    {"name": "Press", "start": 0, "end": 0.32},
+    {"name": "Lockout", "start": 0.32, "end": 0.41},
+    {"name": "Lower", "start": 0.41, "end": 0.95},
+    {"name": "Rack position", "start": 0.95, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.922, "rootZ": 0.04, "rootPitch": 0, "lumbarFlex": 0, "neckFlex": 0, "scapElev": 0, "bar.y": 0, "bar.z": 0},
+    {"t": 0.145, "bar.y": 0.27, "bar.z": -0.005, "lumbarFlex": -6, "neckFlex": -10, "scapElev": 3},
+    {"t": 0.32, "bar.y": 0.677, "bar.z": -0.11, "lumbarFlex": 0, "neckFlex": 0, "scapElev": 20},
+    {"t": 0.41, "bar.y": 0.677, "bar.z": -0.11, "lumbarFlex": 0, "neckFlex": 0, "scapElev": 20},
+    {"t": 0.69, "bar.y": 0.27, "bar.z": -0.005, "lumbarFlex": -6, "neckFlex": -10, "scapElev": 3},
+    {"t": 0.95, "rootY": 0.922, "rootZ": 0.04, "rootPitch": 0, "lumbarFlex": 0, "neckFlex": 0, "scapElev": 0, "bar.y": 0, "bar.z": 0},
+    {"t": 1, "rootY": 0.922, "rootZ": 0.04, "rootPitch": 0, "lumbarFlex": 0, "neckFlex": 0, "scapElev": 0, "bar.y": 0, "bar.z": 0}
+  ],
+  "checks": [
+    {"id": "path", "label": "Keep the bar close through the press", "measure": {"delta": ["bar", "midfoot"], "axis": "z"}, "parts": ["bar"], "min": -0.1, "max": 0.14, "tol": 0.035},
+    {"id": "ribs", "label": "Keep ribs down and torso upright", "measure": "trunkLean", "parts": ["back"], "min": -8, "max": 6, "tol": 5},
+    {"id": "legs", "label": "Keep the knees straight during the press", "measure": "kneeFlex", "parts": ["legs"], "max": 18, "tol": 6, "sides": true},
+    {"id": "lockout", "label": "Reach straight arms overhead", "measure": "elbowFlex", "parts": ["arms"], "max": 15, "tol": 6, "phases": ["Lockout"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "bar-forward", "label": "Pressing around the head", "cue": "Move the head back to keep the bar path straight.", "fails": ["path"], "delta": [{"t": 0.145, "bar.z": 0.145}, {"t": 0.22, "bar.z": 0.13}, {"t": 0.32}, {"t": 0.55}, {"t": 0.69, "bar.z": 0.145}]},
+    {"id": "lean-back", "label": "Big lower-back lean", "cue": "Glutes tight, ribs down, lighter load.", "fails": ["ribs"], "delta": [{"t": 0.14, "lumbarFlex": -18, "bar.z": -0.055, "bar.y": -0.02}, {"t": 0.23, "lumbarFlex": -16, "bar.z": -0.06, "bar.y": -0.055}, {"t": 0.32}]},
+    {"id": "leg-drive", "label": "Sneaky leg drive", "cue": "Keep the knees locked for a strict press.", "fails": ["legs"], "delta": [{"t": 0.07, "rootY": -0.13, "bar.y": -0.13}, {"t": 0.16}]}
+  ]
+}

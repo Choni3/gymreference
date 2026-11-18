@@ -1,0 +1,126 @@
+[
+  {
+    "exercise": "Bench Press (Barbell)",
+    "file": "bench-press-barbell.json"
+  },
+  {
+    "exercise": "Bent Over Row (Barbell)",
+    "file": "bent-over-row-barbell.json"
+  },
+  {
+    "exercise": "Bicep Curl (Barbell)",
+    "file": "bicep-curl-barbell.json"
+  },
+  {
+    "exercise": "Bicep Curl (Dumbbell)",
+    "file": "bicep-curl-dumbbell.json"
+  },
+  {
+    "exercise": "Bulgarian Split Squat",
+    "file": "bulgarian-split-squat.json"
+  },
+  {
+    "exercise": "Calf Press (Machine)",
+    "file": "calf-press-machine.json"
+  },
+  {
+    "exercise": "Deadlift (Barbell)",
+    "file": "deadlift-barbell.json"
+  },
+  {
+    "exercise": "Face Pull (Cable)",
+    "file": "face-pull-cable.json"
+  },
+  {
+    "exercise": "Hammer Curl (Dumbbell)",
+    "file": "hammer-curl-dumbbell.json"
+  },
+  {
+    "exercise": "Hip Abductor (Machine)",
+    "file": "hip-abductor-machine.json"
+  },
+  {
+    "exercise": "Incline Bench Press (Barbell)",
+    "file": "incline-bench-press-barbell.json"
+  },
+  {
+    "exercise": "Incline Bench Press (Dumbbell)",
+    "file": "incline-bench-press-dumbbell.json"
+  },
+  {
+    "exercise": "Iso-Lateral Row (Machine)",
+    "file": "iso-lateral-row-machine.json"
+  },
+  {
+    "exercise": "Lat Pulldown (Cable)",
+    "file": "lat-pulldown-cable.json"
+  },
+  {
+    "exercise": "Lateral Raise (Dumbbell)",
+    "file": "lateral-raise-dumbbell.json"
+  },
+  {
+    "exercise": "Leg Curl (Machine)",
+    "file": "leg-curl-machine.json"
+  },
+  {
+    "exercise": "Leg Extension (Machine)",
+    "file": "leg-extension-machine.json"
+  },
+  {
+    "exercise": "Lying Leg Curl (Machine)",
+    "file": "lying-leg-curl-machine.json"
+  },
+  {
+    "exercise": "Overhead Press (Barbell)",
+    "file": "overhead-press-barbell.json"
+  },
+  {
+    "exercise": "Pec Deck (Machine)",
+    "file": "pec-deck-machine.json"
+  },
+  {
+    "exercise": "Preacher Curl (Machine)",
+    "file": "preacher-curl-machine.json"
+  },
+  {
+    "exercise": "Pull Up",
+    "file": "pull-up.json"
+  },
+  {
+    "exercise": "Reverse Fly (Machine)",
+    "file": "reverse-fly-machine.json"
+  },
+  {
+    "exercise": "Romanian Deadlift (Barbell)",
+    "file": "romanian-deadlift-barbell.json"
+  },
+  {
+    "exercise": "Seated Overhead Press (Dumbbell)",
+    "file": "seated-overhead-press-dumbbell.json"
+  },
+  {
+    "exercise": "Seated Row (Cable)",
+    "file": "seated-row-cable.json"
+  },
+  {
+    "exercise": "Seated Wide-Grip Row (Cable)",
+    "file": "seated-wide-grip-row-cable.json"
+  },
+  {
+    "exercise": "Shoulder Press (Machine)",
+    "file": "shoulder-press-machine.json"
+  },
+  {
+    "exercise": "Squat (Barbell)",
+    "file": "squat-barbell.json"
+  },
+  {
+    "exercise": "Triceps Extension (Cable)",
+    "file": "triceps-extension-cable.json"
+  },
+  {
+    "exercise": "Triceps Pushdown (Cable - Straight Bar)",
+    "file": "triceps-pushdown-cable-straight-bar.json"
+  }
+]

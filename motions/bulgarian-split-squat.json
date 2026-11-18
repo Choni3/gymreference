@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "exercise": "Bulgarian Split Squat",
+  "durationMs": 4700,
+  "props": [
+    {"id": "bench", "type": "bench", "pos": [0, 0, -0.65], "height": 0.425, "length": 0.39, "width": 0.36},
+    {"id": "dbL", "type": "dumbbell", "attach": {"to": "handL", "offset": [0, 0, 0]}},
+    {"id": "dbR", "type": "dumbbell", "attach": {"to": "handR", "offset": [0, 0, 0]}}
+  ],
+  "contacts": {
+    "footL": {
+      "at": [
+        0.145,
+        0,
+        0.25
+      ],
+      "toeOut": 7
+    }
+  },
+  "phases": [
+    {"name": "Descent", "start": 0, "end": 0.53},
+    {"name": "Bottom", "start": 0.53, "end": 0.63},
+    {"name": "Ascent", "start": 0.63, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.846, "rootZ": 0.02, "rootPitch": 11, "rootX": 0.02, "hipFlexR": 0.91085, "hipAbdR": 0, "kneeFlexR": 88.78936, "ankleFlexR": -46.12149, "shFlex": 8, "shAbd": 9, "elbowFlex": 5, "neckFlex": -5.5},
+    {"t": 0.25, "rootY": 0.644, "rootZ": 0.036, "rootPitch": 21, "rootX": 0.02, "hipFlexR": -1.1197, "hipAbdR": 0, "kneeFlexR": 102.35938, "ankleFlexR": -20.52092, "shFlex": 18, "shAbd": 9, "elbowFlex": 5, "neckFlex": -10.5},
+    {"t": 0.53, "rootY": 0.394, "rootZ": 0.04, "rootPitch": 28, "rootX": 0.02, "hipFlexR": -20.36889, "hipAbdR": 0, "kneeFlexR": 104.01126, "ankleFlexR": 7.38015, "shFlex": 25, "shAbd": 9, "elbowFlex": 5, "neckFlex": -14.0},
+    {"t": 0.63, "rootY": 0.394, "rootZ": 0.04, "rootPitch": 28, "rootX": 0.02, "hipFlexR": -20.36889, "hipAbdR": 0, "kneeFlexR": 104.01126, "ankleFlexR": 7.38015, "shFlex": 25, "shAbd": 9, "elbowFlex": 5, "neckFlex": -14.0},
+    {"t": 0.82, "rootY": 0.644, "rootZ": 0.036, "rootPitch": 21, "rootX": 0.02, "hipFlexR": -1.1197, "hipAbdR": 0, "kneeFlexR": 102.35938, "ankleFlexR": -20.52092, "shFlex": 18, "shAbd": 9, "elbowFlex": 5, "neckFlex": -10.5},
+    {"t": 1, "rootY": 0.846, "rootZ": 0.02, "rootPitch": 11, "rootX": 0.02, "hipFlexR": 0.91085, "hipAbdR": 0, "kneeFlexR": 88.78936, "ankleFlexR": -46.12149, "shFlex": 8, "shAbd": 9, "elbowFlex": 5, "neckFlex": -5.5}
+  ],
+  "checks": [
+    {"id": "tracking", "label": "Front knee tracks over the toes", "measure": "kneeTrackL", "parts": ["legL"], "min": -8, "max": 12, "tol": 5},
+    {"id": "heel", "label": "Keep the whole front foot planted", "measure": "heelRaiseL", "parts": ["footL"], "max": 2, "tol": 4},
+    {"id": "depth", "label": "Lower the rear knee toward the floor", "measure": {"delta": ["kneeR", "heelL"], "axis": "y"}, "parts": ["legR"], "min": 0.025, "max": 0.115, "tol": 0.03, "phases": ["Bottom"]},
+    {"id": "support", "label": "Rear laces stay at bench height", "measure": {"delta": ["toeR", "bench.top"], "axis": "y"}, "parts": ["footR", "bench"], "min": -0.045, "max": 0.065, "tol": 0.025}
+  ],
+  "mistakes": [
+    {"id": "heel-lifts", "label": "Front foot too close, heel lifts", "cue": "step further forward", "fails": ["heel"], "delta": [{"t": 0, "heelRaiseL": 0}, {"t": 0.25, "rootZ": 0.0175, "hipFlexR": -1.97309, "kneeFlexR": -2.90503, "ankleFlexR": -0.93193, "heelRaiseL": 5.95}, {"t": 0.53, "rootZ": 0.05, "hipFlexR": -3.40972, "kneeFlexR": -8.59493, "ankleFlexR": -5.18521, "heelRaiseL": 17}, {"t": 0.63, "rootZ": 0.05, "hipFlexR": -3.40972, "kneeFlexR": -8.59493, "ankleFlexR": -5.18521, "heelRaiseL": 17}, {"t": 0.82, "rootZ": 0.0175, "hipFlexR": -1.97309, "kneeFlexR": -2.90503, "ankleFlexR": -0.93193, "heelRaiseL": 5.95}, {"t": 1, "heelRaiseL": 0}]},
+    {"id": "knee-caves", "label": "Front knee caves in", "cue": "push the knee out over the middle toes", "fails": ["tracking"], "delta": [{"t": 0.5, "kneeOutL": -30}, {"t": 0.63, "kneeOutL": -30}]},
+    {"id": "shallow", "label": "Shallow reps", "cue": "lighten the load, reach full depth", "fails": ["depth"], "delta": [{"t": 0}, {"t": 0.25, "rootY": 0.056, "rootPitch": -1.75, "hipFlexR": 2.16158, "kneeFlexR": -3.22255, "ankleFlexR": -7.13413, "shFlex": -1.75, "neckFlex": 0.875}, {"t": 0.53, "rootY": 0.16, "rootPitch": -5, "hipFlexR": 12.88819, "kneeFlexR": 0.821, "ankleFlexR": -17.06718, "shFlex": -5, "neckFlex": 2.5}, {"t": 0.63, "rootY": 0.16, "rootPitch": -5, "hipFlexR": 12.88819, "kneeFlexR": 0.821, "ankleFlexR": -17.06718, "shFlex": -5, "neckFlex": 2.5}, {"t": 0.82, "rootY": 0.056, "rootPitch": -1.75, "hipFlexR": 2.16158, "kneeFlexR": -3.22255, "ankleFlexR": -7.13413, "shFlex": -1.75, "neckFlex": 0.875}, {"t": 1}]}
+  ]
+}

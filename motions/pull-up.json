@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "exercise": "Pull Up",
+  "durationMs": 4000,
+  "props": [
+    {"id": "bar", "type": "rod", "pos": [0, 2.27, 0.07], "length": 1.18, "grip": 0.56},
+    {"id": "uprightL", "type": "box", "pos": [0.59, 1.13, -0.3], "size": [0.055, 2.31, 0.055]},
+    {"id": "braceL", "type": "box", "pos": [0.59, 2.27, -0.115], "size": [0.055, 0.055, 0.425]},
+    {"id": "uprightR", "type": "box", "pos": [-0.59, 1.13, -0.3], "size": [0.055, 2.31, 0.055]},
+    {"id": "braceR", "type": "box", "pos": [-0.59, 2.27, -0.115], "size": [0.055, 0.055, 0.425]}
+  ],
+  "contacts": {"hands": {"at": "bar.grip", "elbowPole": [0.75, -1, -0.08]}},
+  "phases": [
+    {"name": "Start", "start": 0, "end": 0.08},
+    {"name": "Climb", "start": 0.08, "end": 0.35},
+    {"name": "Finish", "start": 0.35, "end": 0.49},
+    {"name": "Lower", "start": 0.49, "end": 0.96},
+    {"name": "Reset", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 1.089, "rootZ": 0, "rootPitch": -4, "hipFlex": 17, "kneeFlex": 21, "ankleFlex": -9, "scapElev": 19, "scapProt": 5},
+    {"t": 0.08, "rootY": 1.089, "rootZ": 0, "rootPitch": -4, "hipFlex": 17, "kneeFlex": 21, "ankleFlex": -9, "scapElev": 19, "scapProt": 5},
+    {"t": 0.35, "rootY": 1.658, "rootZ": -0.01, "rootPitch": -10, "hipFlex": 20, "kneeFlex": 22, "ankleFlex": -9, "scapElev": -7, "scapProt": -9},
+    {"t": 0.49, "rootY": 1.658, "rootZ": -0.01, "rootPitch": -10, "hipFlex": 20, "kneeFlex": 22, "ankleFlex": -9, "scapElev": -7, "scapProt": -9},
+    {"t": 0.96, "rootY": 1.089, "rootZ": 0, "rootPitch": -4, "hipFlex": 17, "kneeFlex": 21, "ankleFlex": -9, "scapElev": 19, "scapProt": 5},
+    {"t": 1, "rootY": 1.089, "rootZ": 0, "rootPitch": -4, "hipFlex": 17, "kneeFlex": 21, "ankleFlex": -9, "scapElev": 19, "scapProt": 5}
+  ],
+  "checks": [
+    {"id": "torso", "label": "Keep the torso steady", "measure": "trunkLean", "parts": ["trunk"], "min": -15, "max": 4, "tol": 3},
+    {"id": "stretch", "label": "Lengthen both arms at the start", "measure": "elbowFlex", "parts": ["arms"], "max": 24, "phases": ["Start"], "sides": true, "tol": 4},
+    {"id": "chin", "label": "Chin clears the bar", "measure": {"delta": ["head", "bar"], "axis": "y"}, "parts": ["head", "bar"], "min": 0.07, "phases": ["Finish"], "tol": 0.02},
+    {"id": "legs", "label": "Keep legs still below the hips", "measure": "hipFlex", "parts": ["legs"], "min": 9, "max": 29, "sides": true, "tol": 6},
+    {"id": "shoulders", "label": "Keep shoulders away from ears at the top", "measure": {"delta": ["c7", "shoulder"], "axis": "y"}, "parts": ["upperArms", "thorax"], "min": 0.06, "phases": ["Finish"], "tol": 0.01}
+  ],
+  "mistakes": [
+    {"id": "kip", "label": "Kipping or swinging", "cue": "Pause in the dead hang, strict reps", "fails": ["legs"], "delta": [{"t": 0.08}, {"t": 0.19, "hipFlex": -29, "kneeFlex": 28}, {"t": 0.36, "hipFlex": 53, "kneeFlex": 30, "rootPitch": -9}]},
+    {"id": "half-rep", "label": "Half reps", "cue": "Full hang to chin over bar", "fails": ["stretch", "chin"], "delta": [{"t": 0, "rootY": 0.2}, {"t": 0.08, "rootY": 0.2}, {"t": 0.35, "rootY": -0.18}, {"t": 0.49, "rootY": -0.18}, {"t": 0.96, "rootY": 0.2}, {"t": 1, "rootY": 0.2}]},
+    {"id": "shrug", "label": "Shrugging up to the ears", "cue": "Shoulders down, away from ears", "fails": ["shoulders"], "delta": [{"t": 0.35, "scapElev": 38}, {"t": 0.49, "scapElev": 38}]}
+  ]
+}

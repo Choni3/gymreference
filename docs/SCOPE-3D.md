@@ -1,6 +1,6 @@
 # Scope: animated 3D exercise models (v2)
 
-Status: proposal, not started.
+Status: phases 0 and 1 done (option A, live three.js). Format: [MOTION-FORMAT.md](MOTION-FORMAT.md); first motion: `motions/squat-barbell.json`.
 
 ## Goal
 

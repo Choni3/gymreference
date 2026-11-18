@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "exercise": "Triceps Pushdown (Cable - Straight Bar)",
+  "durationMs": 3600,
+  "props": [
+    {"id":"stack","type":"box","size":[0.1,2.2,0.1],"pos":[0,1.1,1.25]},
+    {"id":"bar","type":"rod","grip":0.42,"length":0.6,"attach":{"to":"hands"}},
+    {"id":"cable","type":"cable","from":[0,2.04,1.11],"to":"bar.center"}
+  ],
+  "contacts": {
+    "feet": {
+      "at": [
+        0.1,
+        0,
+        0
+      ],
+      "toeOut": 8
+    }
+  },
+  "phases": [
+    {"name":"Top","start":0,"end":0.05},
+    {"name":"Push","start":0.05,"end":0.32},
+    {"name":"Lockout","start":0.32,"end":0.4},
+    {"name":"Return","start":0.4,"end":0.95},
+    {"name":"Reset","start":0.95,"end":1}
+  ],
+  "keyframes": [
+    {"t":0,"rootY":0.915,"rootZ":-0.05,"rootPitch":12,"lumbarFlex":0,"thoracicFlex":0,"neckFlex":-6,"scapElev":0,"scapProt":0,"shFlex":13,"shAbd":4,"shRot":0,"elbowFlex":89,"forearmPro":85,"wristFlex":0},
+    {"t":0.05,"shFlex":13,"elbowFlex":89},
+    {"t":0.32,"shFlex":13,"elbowFlex":2},
+    {"t":0.4,"shFlex":13,"elbowFlex":2},
+    {"t":0.95,"shFlex":13,"elbowFlex":89},
+    {"t":1,"rootY":0.915,"rootZ":-0.05,"rootPitch":12,"lumbarFlex":0,"thoracicFlex":0,"neckFlex":-6,"scapElev":0,"scapProt":0,"shFlex":13,"shAbd":4,"shRot":0,"elbowFlex":89,"forearmPro":85,"wristFlex":0}
+  ],
+  "checks": [
+    {"id":"pinned","label":"Elbows pinned at your sides","measure":"shFlex","sides":true,"min":-10,"max":16,"tol":8,"parts":["upperArms"]},
+    {"id":"lockout","label":"Push until the arms are fully straight","measure":"elbowFlex","sides":true,"max":10,"tol":10,"phases":["Lockout"],"parts":["forearms"]},
+    {"id":"top","label":"Forearms come back to about level","measure":{"delta":["wrist","elbow"],"axis":"y"},"min":-0.035,"max":0.05,"tol":0.032,"parts":["forearms"],"phases":["Top","Reset"]},
+    {"id":"posture","label":"Stand tall, slight lean from the hips","measure":"trunkLean","min":0,"max":20,"tol":6,"parts":["trunk"]}
+  ],
+  "mistakes": [
+    {"id":"elbows-forward","label":"Elbows drift forward","cue":"Pin them to your sides","fails":["pinned"],"delta":[{"t":0,"shFlex":38,"elbowFlex":20},{"t":0.05,"shFlex":38,"elbowFlex":20},{"t":0.25,"shFlex":10},{"t":0.4},{"t":0.75,"shFlex":22,"elbowFlex":10},{"t":0.95,"shFlex":38,"elbowFlex":20},{"t":1,"shFlex":38,"elbowFlex":20}]},
+    {"id":"lean-over","label":"Leaning over the bar","cue":"Stand taller, use less weight","fails":["posture"],"delta":[{"t":0,"rootPitch":14,"thoracicFlex":8,"shFlex":-10},{"t":0.05,"rootPitch":14,"thoracicFlex":8,"shFlex":-10},{"t":0.32,"rootPitch":19,"thoracicFlex":9,"shFlex":-20,"neckFlex":-10},{"t":0.4,"rootPitch":19,"thoracicFlex":9,"shFlex":-20,"neckFlex":-10},{"t":0.95,"rootPitch":14,"thoracicFlex":8,"shFlex":-10},{"t":1,"rootPitch":14,"thoracicFlex":8,"shFlex":-10}]},
+    {"id":"short-top","label":"Cutting the top short","cue":"Let forearms come back to level","fails":["top"],"delta":[{"t":0,"elbowFlex":-45},{"t":0.05,"elbowFlex":-45},{"t":0.32},{"t":0.4},{"t":0.95,"elbowFlex":-45},{"t":1,"elbowFlex":-45}]}
+  ]
+}

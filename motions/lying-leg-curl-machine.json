@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "exercise": "Lying Leg Curl (Machine)",
+  "durationMs": 4600,
+  "props": [
+    {"id": "bench", "type": "bench", "pos": [0, 0, 0.167], "height": 0.466, "length": 1.085, "width": 0.33},
+    {"id": "pivot", "type": "rod", "pos": [0, 0.563, -0.429], "length": 0.58, "grip": 0.54, "radius": 0.02},
+    {"id": "frame", "type": "box", "pos": [0.28, 0.287, -0.429], "size": [0.07, 0.55, 0.09]},
+    {"id": "roller", "type": "roller", "attach": {"to": "shinL", "offset": [-0.09, -0.355, -0.079]}, "length": 0.55, "radius": 0.05},
+    {"id": "lever", "type": "box", "attach": {"to": "shinL", "offset": [0.169, -0.1775, -0.0395]}, "size": [0.05, 0.36368, 0.055], "rot": [12.5459, 0, 0]},
+    {"id": "handleL", "type": "rod", "pos": [0.245, 0.3, 0.45], "length": 0.17, "grip": 0.1, "radius": 0.021, "rot": [0, 90, 0]},
+    {"id": "handleR", "type": "rod", "pos": [-0.245, 0.3, 0.45], "length": 0.17, "grip": 0.1, "radius": 0.021, "rot": [0, 90, 0]}
+  ],
+  "contacts": {
+    "handL": {
+      "at": "handleL.center",
+      "elbowPole": [
+        0.42,
+        -1,
+        0.2
+      ]
+    },
+    "handR": {
+      "at": "handleR.center",
+      "elbowPole": [
+        0.42,
+        -1,
+        0.2
+      ]
+    }
+  },
+  "phases": [
+    {"name": "Stretch", "start": 0, "end": 0.08},
+    {"name": "Curl", "start": 0.08, "end": 0.36},
+    {"name": "Squeeze", "start": 0.36, "end": 0.53},
+    {"name": "Return", "start": 0.53, "end": 0.94},
+    {"name": "Reset", "start": 0.94, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 7, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0},
+    {"t": 0.08, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 7, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0},
+    {"t": 0.36, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 113, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0},
+    {"t": 0.53, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 113, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0},
+    {"t": 0.94, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 7, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0},
+    {"t": 1, "rootPitch": 90, "rootY": 0.563, "rootZ": 0, "hipFlex": 0, "kneeFlex": 7, "ankleFlex": -12, "neckFlex": -12, "lumbarFlex": 0}
+  ],
+  "checks": [
+    {"id": "hips", "label": "Press the hips into the pad", "measure": {"delta": ["root", "bench.top"], "axis": "y"}, "parts": ["pelvis", "bench"], "min": 0.08, "max": 0.112, "tol": 0.021},
+    {"id": "back", "label": "Keep the lower back neutral", "measure": "lumbarFlex", "parts": ["back"], "min": -8, "max": 8, "tol": 5},
+    {"id": "pivot", "label": "Line up the knees with the machine pivot", "measure": {"delta": ["pivot", "knee"], "axis": "dist"}, "parts": ["knees", "pivot"], "min": 0, "max": 0.027, "tol": 0.019},
+    {"id": "curl", "label": "Curl past 90°", "measure": "kneeFlex", "parts": ["knees", "roller"], "min": 95, "tol": 7, "phases": ["Squeeze"], "sides": true},
+    {"id": "start", "label": "Return to nearly straight legs", "measure": "kneeFlex", "parts": ["shins"], "max": 13, "tol": 5, "phases": ["Stretch"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "hips-lift", "label": "Hips lift off the pad", "cue": "lighten the load, press hips down", "fails": ["hips"], "delta": [{"t": 0.36, "rootY": 0.081, "rootPitch": 8, "hipFlex": 18}, {"t": 0.53, "rootY": 0.081, "rootPitch": 8, "hipFlex": 18}]},
+    {"id": "back-arches", "label": "Lower back arches", "cue": "brace abs, reduce the weight", "fails": ["back"], "delta": [{"t": 0.36, "lumbarFlex": -22}, {"t": 0.53, "lumbarFlex": -22}]},
+    {"id": "partial", "label": "Partial reps", "cue": "full stretch at the bottom, curl past 90°", "fails": ["curl"], "delta": [{"t": 0.08}, {"t": 0.36, "kneeFlex": -48}, {"t": 0.53, "kneeFlex": -48}, {"t": 0.94}]}
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "exercise": "Incline Bench Press (Barbell)",
+  "durationMs": 4100,
+  "props": [
+    {"id":"bench","type":"bench","incline":32,"height":0.43,"width":0.31,"backLength":0.81,"length":1.25,"pos":[0,0,0]},
+    {"id":"bar","type":"barbell","pos":[0,1.354,-0.333],"grip":0.73}
+  ],
+  "contacts": {
+    "feet": {
+      "at": [
+        0.245,
+        0,
+        0.48
+      ],
+      "toeOut": 13
+    },
+    "hands": {
+      "at": "bar.grip",
+      "elbowPole": [
+        0.72,
+        -0.95,
+        -0.4
+      ]
+    }
+  },
+  "phases": [
+    {"name":"Start","start":0,"end":0.06},
+    {"name":"Lower","start":0.06,"end":0.52},
+    {"name":"Chest touch","start":0.52,"end":0.61},
+    {"name":"Press","start":0.61,"end":0.94},
+    {"name":"Finish","start":0.94,"end":1}
+  ],
+  "keyframes": [
+    {"t":0,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":0,"bar.z":0},
+    {"t":0.06,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":0,"bar.z":0},
+    {"t":0.52,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":-0.393,"bar.z":0.12},
+    {"t":0.61,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":-0.393,"bar.z":0.12},
+    {"t":0.94,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":0,"bar.z":0},
+    {"t":1,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"bar.y":0,"bar.z":0}
+  ],
+  "checks": [
+    {"id":"hips","label":"Keep hips on the bench","measure":{"delta":["seat","bench.top"],"axis":"y"},"min":-0.015,"max":0.018,"tol":0.014,"parts":["pelvis","bench"]},
+    {"id":"forearms","label":"Stack wrists over elbows at the bottom","measure":{"delta":["wristL","elbowL"],"axis":"z"},"min":-0.075,"max":0.075,"tol":0.035,"parts":["forearms"],"phases":["Chest touch"]},
+    {"id":"tuck","label":"Tuck elbows slightly toward the torso","measure":"shAbd","min":30,"max":63,"tol":5,"parts":["upperArms"],"phases":["Chest touch"],"sides":true},
+    {"id":"arch","label":"Keep the low-back arch moderate","measure":"lumbarFlex","min":-12,"max":10,"tol":5,"parts":["lumbar"]},
+    {"id":"stack","label":"Finish with the bar over the shoulders","measure":{"delta":["grip","shoulder"],"axis":"z"},"min":-0.065,"max":0.075,"tol":0.025,"parts":["bar","arms"],"phases":["Finish"]}
+  ],
+  "mistakes": [
+    {"id":"elbow-flare","label":"Elbows flared to 90°","cue":"Tuck elbows slightly toward your sides","fails":["tuck"],"delta":[{"t":0.52,"elbowOut":55},{"t":0.61,"elbowOut":55}]},
+    {"id":"low-back-arch","label":"Hard lower-back arch or butt lifting","cue":"Glutes down, reduce load","fails":["arch","hips"],"delta":[{"t":0.62},{"t":0.83,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"bar.y":-0.045,"bar.z":-0.056},{"t":0.93,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"bar.y":-0.045,"bar.z":-0.056}]}
+  ]
+}

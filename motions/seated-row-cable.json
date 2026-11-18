@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "exercise": "Seated Row (Cable)",
+  "durationMs": 3900,
+  "props": [
+    {"id": "seat", "type": "bench", "pos": [0, 0, -0.085], "height": 0.32, "length": 0.54, "width": 0.31},
+    {"id": "rail", "type": "box", "pos": [0, 0.13, 0.52], "size": [0.09, 0.08, 1.3]},
+    {"id": "pulley", "type": "box", "pos": [0, 0.24, 1.08], "size": [0.16, 0.48, 0.2]},
+    {"id": "footCrossbar", "type": "box", "pos": [0, 0.114, 0.81], "size": [0.48, 0.061, 0.095]},
+    {"id": "footplateL", "type": "box", "pos": [0.18, 0.137, 0.81], "size": [0.18, 0.045, 0.32], "rot": [-35, 0, 0]},
+    {"id": "footplateR", "type": "box", "pos": [-0.18, 0.137, 0.81], "size": [0.18, 0.045, 0.32], "rot": [-35, 0, 0]},
+    {"id": "bar", "type": "handle", "pos": [0, 0.62, 0.667], "width": 0.15, "neutral": true},
+    {"id": "cable", "type": "cable", "from": [0, 0.36, 0.98], "to": "bar.center"}
+  ],
+  "contacts": {"footL": {"at": "footplateL.top"}, "footR": {"at": "footplateR.top"}, "hands": {"at": "bar.grip", "elbowPole": [0.27, -1, -0.52]}},
+  "phases": [
+    {"name": "Start", "start": 0, "end": 0.08},
+    {"name": "Pull", "start": 0.08, "end": 0.35},
+    {"name": "Finish", "start": 0.35, "end": 0.47},
+    {"name": "Return", "start": 0.47, "end": 0.96},
+    {"name": "Reset", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.408, "rootPitch": 4, "lumbarFlex": 0, "scapElev": 0, "scapProt": 26, "bar.z": 0, "bar.y": 0, "elbowOut": 0},
+    {"t": 0.08, "rootY": 0.408, "rootPitch": 4, "lumbarFlex": 0, "scapElev": 0, "scapProt": 26, "bar.z": 0, "bar.y": 0, "elbowOut": 0},
+    {"t": 0.35, "rootY": 0.408, "rootPitch": 0, "lumbarFlex": 0, "scapElev": -6, "scapProt": -16, "bar.z": -0.504, "bar.y": -0.035, "elbowOut": 0},
+    {"t": 0.47, "rootY": 0.408, "rootPitch": 0, "lumbarFlex": 0, "scapElev": -6, "scapProt": -16, "bar.z": -0.504, "bar.y": -0.035, "elbowOut": 0},
+    {"t": 0.96, "rootY": 0.408, "rootPitch": 4, "lumbarFlex": 0, "scapElev": 0, "scapProt": 26, "bar.z": 0, "bar.y": 0, "elbowOut": 0},
+    {"t": 1, "rootY": 0.408, "rootPitch": 4, "lumbarFlex": 0, "scapElev": 0, "scapProt": 26, "bar.z": 0, "bar.y": 0, "elbowOut": 0}
+  ],
+  "checks": [
+    {"id": "torso", "label": "Keep the torso steady", "measure": "trunkLean", "parts": ["trunk"], "min": -6, "max": 9, "tol": 3},
+    {"id": "shoulders", "label": "Keep shoulders down at the squeeze", "measure": {"delta": ["c7", "shoulder"], "axis": "y"}, "parts": ["thorax", "upperArms"], "min": 0.058, "phases": ["Finish"], "tol": 0.01},
+    {"id": "stretch", "label": "Lengthen both arms at the start", "measure": "elbowFlex", "parts": ["arms"], "max": 32, "phases": ["Start"], "sides": true, "tol": 4},
+    {"id": "elbows", "label": "Elbows track close to the sides", "measure": "shAbd", "parts": ["upperArms"], "min": -8, "max": 22, "phases": ["Finish"], "sides": true, "tol": 4},
+    {"id": "finish", "label": "Handle reaches the stomach", "measure": {"delta": ["bar", "t12"], "axis": "z"}, "parts": ["bar", "hands"], "min": 0.13, "max": 0.22, "phases": ["Finish"], "tol": 0.02}
+  ],
+  "mistakes": [
+    {"id": "lean-back", "label": "Leaning back to finish", "cue": "Weight too heavy, reduce it", "fails": ["torso"], "delta": [{"t": 0.13}, {"t": 0.35, "rootPitch": -23, "bar.z": -0.1}, {"t": 0.49, "rootPitch": -23, "bar.z": -0.1}]},
+    {"id": "rounding", "label": "Rounding the lower back at the stretch", "cue": "Reach less, chest up", "fails": ["torso"], "delta": [{"t": 0, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 0.08, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 0.32}, {"t": 0.6}, {"t": 0.96, "lumbarFlex": 24, "bar.z": 0.09}, {"t": 1, "lumbarFlex": 24, "bar.z": 0.09}]},
+    {"id": "shrug", "label": "Shrugging toward the ears", "cue": "Shoulders down", "fails": ["shoulders"], "delta": [{"t": 0.35, "scapElev": 38}, {"t": 0.49, "scapElev": 38}]}
+  ]
+}

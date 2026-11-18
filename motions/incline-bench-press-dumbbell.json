@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "exercise": "Incline Bench Press (Dumbbell)",
+  "durationMs": 4100,
+  "props": [
+    {"id":"bench","type":"bench","incline":32,"height":0.43,"width":0.31,"backLength":0.81,"length":1.25,"pos":[0,0,0]},
+    {"id":"dbL","type":"dumbbell","pos":[0.23,1.354,-0.333],"rot":[0,90,0],"headRadius":0.05},
+    {"id":"dbR","type":"dumbbell","pos":[-0.23,1.354,-0.333],"rot":[0,90,0],"headRadius":0.05}
+  ],
+  "contacts": {
+    "feet": {
+      "at": [
+        0.245,
+        0,
+        0.48
+      ],
+      "toeOut": 13
+    },
+    "handL": {
+      "at": "dbL.grip",
+      "elbowPole": [
+        0.45,
+        -0.95,
+        -0.4
+      ]
+    },
+    "handR": {
+      "at": "dbR.grip",
+      "elbowPole": [
+        0.45,
+        -0.95,
+        -0.4
+      ]
+    }
+  },
+  "phases": [
+    {"name":"Start","start":0,"end":0.06},
+    {"name":"Lower","start":0.06,"end":0.52},
+    {"name":"Stretch","start":0.52,"end":0.61},
+    {"name":"Press","start":0.61,"end":0.94},
+    {"name":"Finish","start":0.94,"end":1}
+  ],
+  "keyframes": [
+    {"t":0,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
+    {"t":0.06,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
+    {"t":0.52,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.385,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.385,"dbR.z":0.11,"dbR.x":-0.16},
+    {"t":0.61,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":-0.385,"dbL.z":0.11,"dbL.x":0.16,"dbR.y":-0.385,"dbR.z":0.11,"dbR.x":-0.16},
+    {"t":0.94,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0},
+    {"t":1,"rootY":0.502,"rootZ":0.102,"rootPitch":-58,"scapProt":-12,"neckFlex":10,"lumbarFlex":0,"thoracicFlex":0,"dbL.y":0,"dbL.z":0,"dbL.x":0,"dbR.y":0,"dbR.z":0,"dbR.x":0}
+  ],
+  "checks": [
+    {"id":"hips","label":"Keep hips on the bench","measure":{"delta":["seat","bench.top"],"axis":"y"},"min":-0.015,"max":0.018,"tol":0.014,"parts":["pelvis","bench"]},
+    {"id":"forearms","label":"Stack wrists over elbows at the bottom","measure":{"delta":["wristL","elbowL"],"axis":"z"},"min":-0.075,"max":0.075,"tol":0.035,"parts":["forearms"],"phases":["Stretch"]},
+    {"id":"tuck","label":"Elbows angle about 45° from the torso","measure":"shAbd","min":30,"max":59,"tol":5,"parts":["upperArms"],"phases":["Stretch"],"sides":true},
+    {"id":"arch","label":"Keep the low-back arch moderate","measure":"lumbarFlex","min":-12,"max":10,"tol":5,"parts":["lumbar"]},
+    {"id":"stack","label":"Finish with dumbbells over the upper chest","measure":{"delta":["grip","shoulder"],"axis":"z"},"min":-0.065,"max":0.075,"tol":0.025,"parts":["dbL","dbR","arms"],"phases":["Finish"]}
+  ],
+  "mistakes": [
+    {"id":"elbow-flare","label":"Elbows flared straight out","cue":"Angle them ~45° from the torso","fails":["tuck"],"delta":[{"t":0.52,"elbowOut":55},{"t":0.61,"elbowOut":55}]},
+    {"id":"low-back-arch","label":"Arching to finish reps","cue":"Reduce the load, ribs down","fails":["arch","hips"],"delta":[{"t":0.62},{"t":0.83,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"dbL.y":-0.045,"dbL.z":-0.056,"dbR.y":-0.045,"dbR.z":-0.056},{"t":0.93,"lumbarFlex":-22,"thoracicFlex":20,"rootY":0.04,"dbL.y":-0.045,"dbL.z":-0.056,"dbR.y":-0.045,"dbR.z":-0.056}]}
+  ]
+}

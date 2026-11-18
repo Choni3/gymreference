@@ -35,6 +35,16 @@ export function takeURLs() {
   return taken;
 }
 
+// Cleanups for things a screen owns (e.g. the 3D player's WebGL context). render()
+// calls runLeaves() after swapping screens; anything no longer in the page is cleaned up.
+let leaves = [];
+export function onLeave(el, fn) {
+  leaves.push([el, fn]);
+}
+export function runLeaves() {
+  leaves = leaves.filter(([el, fn]) => el.isConnected || (fn(), false));
+}
+
 let toastTimer;
 export function toast(msg) {
   let el = document.getElementById('toast');

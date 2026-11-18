@@ -23,6 +23,9 @@ See [docs/SCOPE.md](docs/SCOPE.md) for goals, non-goals and design choices.
 - Routine templates (Push, Pull, Legs, Workout A, Biceps) created on first launch,
   re-addable from Settings
 - Import routines from a **Strong CSV export**
+- **Animated 3D model** of one rep for exercises that have a motion file: play,
+  step frames, slow motion, rotate, and replay common mistakes with the faulty
+  body parts in red (✓ / ⚠ / ✕ checks)
 - Works offline, data stays on your device; export/restore a backup file
 
 ## Use it on your iPhone
@@ -40,8 +43,14 @@ No build step: plain HTML, CSS and ES modules.
 
 ```sh
 npm run serve   # python3 -m http.server 8080 → http://localhost:8080
-npm test        # Strong CSV parser tests (Node 20+)
+npm test        # Strong CSV parser + motion engine/validator tests (Node 20+)
+node scripts/validate-motions.mjs   # validate motions/*.json, rebuild motions/index.json
+node scripts/contact-sheet.mjs squat-barbell   # PNG contact sheets (needs Playwright)
 ```
+
+Animations: one JSON file per exercise in `motions/`, format in
+[docs/MOTION-FORMAT.md](docs/MOTION-FORMAT.md). three.js (`vendor/three`, MIT) is
+loaded only when an Animation section scrolls into view.
 
 When you ship changes, bump `VERSION` in `sw.js`: the app is served cache-first,
 so installed copies only update (via the "A new version is ready" prompt) when

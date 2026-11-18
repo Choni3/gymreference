@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "exercise": "Squat (Barbell)",
+  "durationMs": 3600,
+  "props": [
+    { "id": "bar", "type": "barbell", "grip": 0.78, "attach": { "to": "thorax", "offset": [0, 0.235, -0.05] } }
+  ],
+  "contacts": {
+    "feet": { "at": [0.17, 0, 0], "toeOut": 20 },
+    "hands": { "at": "bar.grip", "elbowPole": [0.25, -1, -0.45] }
+  },
+  "phases": [
+    { "name": "Brace", "start": 0, "end": 0.06 },
+    { "name": "Descent", "start": 0.06, "end": 0.46 },
+    { "name": "Bottom", "start": 0.46, "end": 0.56 },
+    { "name": "Ascent", "start": 0.56, "end": 0.94 },
+    { "name": "Lockout", "start": 0.94, "end": 1 }
+  ],
+  "keyframes": [
+    { "t": 0, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
+    { "t": 0.06, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9 },
+    { "t": 0.3, "rootY": 0.66, "rootZ": -0.06, "rootPitch": 18, "lumbarFlex": 2, "neckFlex": -4 },
+    { "t": 0.48, "rootY": 0.37, "rootZ": -0.16, "rootPitch": 28, "lumbarFlex": 6, "thoracicFlex": 3, "neckFlex": -10 },
+    { "t": 0.54, "rootY": 0.37, "rootZ": -0.16, "rootPitch": 28, "lumbarFlex": 6, "thoracicFlex": 3, "neckFlex": -10 },
+    { "t": 0.75, "rootY": 0.66, "rootZ": -0.06, "rootPitch": 18, "lumbarFlex": 2, "neckFlex": -4 },
+    { "t": 0.94, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 },
+    { "t": 1, "rootY": 0.92, "rootZ": 0.04, "rootPitch": 9, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0 }
+  ],
+  "checks": [
+    { "id": "depth", "label": "Hip crease below the knee", "measure": { "delta": ["hip", "knee"], "axis": "y" }, "max": 0, "tol": 0.04, "phases": ["Bottom"], "parts": ["thighs", "pelvis"] },
+    { "id": "back", "label": "Neutral lower back", "measure": "lumbarFlex", "min": -10, "max": 12, "tol": 6, "parts": ["lumbar", "pelvis"] },
+    { "id": "chest", "label": "Chest up, hips and bar rise together", "measure": "trunkLean", "max": 45, "tol": 5, "parts": ["thorax"] },
+    { "id": "knees", "label": "Knees track over the toes", "measure": "kneeTrack", "sides": true, "min": -8, "max": 15, "tol": 6, "parts": ["knees"] },
+    { "id": "heels", "label": "Heels down", "measure": "heelRaise", "sides": true, "max": 2, "tol": 4, "parts": ["feet"] },
+    { "id": "barpath", "label": "Bar over mid-foot", "measure": { "delta": ["bar", "midfoot"], "axis": "z" }, "min": -0.05, "max": 0.05, "tol": 0.04, "parts": ["bar"] }
+  ],
+  "mistakes": [
+    { "id": "knees-cave", "label": "Knees caving in", "cue": "Push the knees out over the toes", "fails": ["knees"],
+      "delta": [
+        { "t": 0.3, "kneeOut": -6 },
+        { "t": 0.5, "kneeOut": -20 },
+        { "t": 0.66, "kneeOut": -30 },
+        { "t": 0.86, "kneeOut": -10 }
+      ] },
+    { "id": "shallow", "label": "Cutting depth short", "cue": "Lower the load, squat to your full depth: hip crease below the knee", "fails": ["depth"],
+      "delta": [
+        { "t": 0.3, "rootY": 0.03 },
+        { "t": 0.48, "rootY": 0.14, "rootZ": 0.05, "rootPitch": -4 },
+        { "t": 0.54, "rootY": 0.14, "rootZ": 0.05, "rootPitch": -4 },
+        { "t": 0.75, "rootY": 0.03 }
+      ] },
+    { "id": "hips-up", "label": "Hips shoot up first", "cue": "Lead with the chest and traps: hips and bar rise together", "fails": ["chest"],
+      "delta": [
+        { "t": 0.56 },
+        { "t": 0.66, "rootY": 0.12, "rootZ": -0.11, "rootPitch": 26 },
+        { "t": 0.76, "rootY": 0.08, "rootZ": -0.1, "rootPitch": 30 },
+        { "t": 0.9, "rootZ": -0.03, "rootPitch": 8 }
+      ] },
+    { "id": "toes", "label": "Rocking onto the toes", "cue": "Keep pressure mid-foot, whole foot planted", "fails": ["heels", "barpath"],
+      "delta": [
+        { "t": 0.3, "heelRaise": 4, "rootZ": 0.03 },
+        { "t": 0.5, "heelRaise": 16, "rootZ": 0.09 },
+        { "t": 0.62, "heelRaise": 14, "rootZ": 0.08 },
+        { "t": 0.82, "heelRaise": 3, "rootZ": 0.01 }
+      ] }
+  ]
+}

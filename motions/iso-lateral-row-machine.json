@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "exercise": "Iso-Lateral Row (Machine)",
+  "durationMs": 4500,
+  "props": [
+    {"id": "seat", "type": "box", "pos": [0, 0.465, -0.025], "size": [0.33, 0.08, 0.34]},
+    {"id": "seatPost", "type": "box", "pos": [0, 0.22, -0.025], "size": [0.09, 0.44, 0.1]},
+    {"id": "pad", "type": "box", "pos": [0, 1.015, 0.142], "size": [0.25, 0.26, 0.085], "rot": [8, 0, 0]},
+    {"id": "padPost", "type": "box", "pos": [0, 0.45999999999999996, 0.207], "size": [0.09, 0.9199999999999999, 0.065]},
+    {"id": "base", "type": "box", "pos": [0, 0.035, 0.3], "size": [0.78, 0.07, 0.83]},
+    {"id": "gripL", "type": "rod", "pos": [0.3, 0.929, 0.753], "length": 0.145, "grip": 0, "rot": [0, 0, 90]},
+    {"id": "pivotPostL", "type": "box", "pos": [0.433, 0.745, 0.471], "size": [0.075, 1.49, 0.065]},
+    {"id": "leverL", "type": "box", "pos": [0.405, 1.209, 0.612], "size": [0.055, 0.628, 0.055], "rot": [-26.7, 0, 0]},
+    {"id": "linkL", "type": "rod", "pos": [0.3525, 0.929, 0.753], "length": 0.108, "grip": 0, "radius": 0.019},
+    {"id": "plateL", "type": "barbell", "pos": [0.48, 1.1, 0.667], "length": 0.32, "plateRadius": 0.15},
+    {"id": "gripR", "type": "rod", "pos": [-0.3, 0.929, 0.753], "length": 0.145, "grip": 0, "rot": [0, 0, 90]},
+    {"id": "pivotPostR", "type": "box", "pos": [-0.433, 0.745, 0.471], "size": [0.075, 1.49, 0.065]},
+    {"id": "leverR", "type": "box", "pos": [-0.405, 1.209, 0.612], "size": [0.055, 0.628, 0.055], "rot": [-26.7, 0, 0]},
+    {"id": "linkR", "type": "rod", "pos": [-0.3525, 0.929, 0.753], "length": 0.108, "grip": 0, "radius": 0.019},
+    {"id": "plateR", "type": "barbell", "pos": [-0.48, 1.1, 0.667], "length": 0.32, "plateRadius": 0.15}
+  ],
+  "contacts": {"feet": {"at": [0.22, 0.07, 0.39], "toeOut": 7}, "handL": {"at": "gripL.center", "elbowPole": [0.24, -0.95, -0.19]}, "handR": {"at": "gripR.center", "elbowPole": [0.24, -0.95, -0.19]}},
+  "phases": [
+    {"name": "Start", "start": 0, "end": 0.08},
+    {"name": "Pull", "start": 0.08, "end": 0.35},
+    {"name": "Finish", "start": 0.35, "end": 0.55},
+    {"name": "Return", "start": 0.55, "end": 0.96},
+    {"name": "Reset", "start": 0.96, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.595, "rootPitch": 8, "scapElev": 0, "scapProt": 24, "gripL.z": 0, "leverL.z": 0, "leverL.pitch": 0, "plateL.z": 0, "linkL.z": 0, "gripR.z": 0, "leverR.z": 0, "leverR.pitch": 0, "plateR.z": 0, "linkR.z": 0, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0},
+    {"t": 0.08, "rootY": 0.595, "rootPitch": 8, "scapElev": 0, "scapProt": 24, "gripL.z": 0, "leverL.z": 0, "leverL.pitch": 0, "plateL.z": 0, "linkL.z": 0, "gripR.z": 0, "leverR.z": 0, "leverR.pitch": 0, "plateR.z": 0, "linkR.z": 0, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0},
+    {"t": 0.215, "leverL.y": -0.01675, "gripL.y": -0.067, "linkL.y": -0.067, "plateL.y": -0.045, "leverR.y": -0.01675, "gripR.y": -0.067, "linkR.y": -0.067, "plateR.y": -0.045},
+    {"t": 0.35, "rootY": 0.595, "rootPitch": 8, "scapElev": -7, "scapProt": -15, "gripL.z": -0.564, "leverL.z": -0.282, "leverL.pitch": 53.4, "plateL.z": -0.392, "linkL.z": -0.564, "gripR.z": -0.564, "leverR.z": -0.282, "leverR.pitch": 53.4, "plateR.z": -0.392, "linkR.z": -0.564, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0},
+    {"t": 0.55, "rootY": 0.595, "rootPitch": 8, "scapElev": -7, "scapProt": -15, "gripL.z": -0.564, "leverL.z": -0.282, "leverL.pitch": 53.4, "plateL.z": -0.392, "linkL.z": -0.564, "gripR.z": -0.564, "leverR.z": -0.282, "leverR.pitch": 53.4, "plateR.z": -0.392, "linkR.z": -0.564, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0},
+    {"t": 0.755, "leverL.y": -0.01675, "gripL.y": -0.067, "linkL.y": -0.067, "plateL.y": -0.045, "leverR.y": -0.01675, "gripR.y": -0.067, "linkR.y": -0.067, "plateR.y": -0.045},
+    {"t": 0.96, "rootY": 0.595, "rootPitch": 8, "scapElev": 0, "scapProt": 24, "gripL.z": 0, "leverL.z": 0, "leverL.pitch": 0, "plateL.z": 0, "linkL.z": 0, "gripR.z": 0, "leverR.z": 0, "leverR.pitch": 0, "plateR.z": 0, "linkR.z": 0, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0},
+    {"t": 1, "rootY": 0.595, "rootPitch": 8, "scapElev": 0, "scapProt": 24, "gripL.z": 0, "leverL.z": 0, "leverL.pitch": 0, "plateL.z": 0, "linkL.z": 0, "gripR.z": 0, "leverR.z": 0, "leverR.pitch": 0, "plateR.z": 0, "linkR.z": 0, "leverL.y": 0, "gripL.y": 0, "linkL.y": 0, "plateL.y": 0, "leverR.y": 0, "gripR.y": 0, "linkR.y": 0, "plateR.y": 0}
+  ],
+  "checks": [
+    {"id": "pad", "label": "Keep the chest against the pad", "measure": {"delta": ["t12", "pad"], "axis": "z"}, "parts": ["thorax", "pad"], "min": -0.145, "max": -0.1, "tol": 0.025},
+    {"id": "stretch", "label": "Lengthen both arms at the start", "measure": "elbowFlex", "parts": ["arms"], "max": 31, "phases": ["Start"], "sides": true, "tol": 4},
+    {"id": "drive", "label": "Drive elbows behind the torso", "measure": {"delta": ["elbow", "shoulder"], "axis": "z"}, "parts": ["upperArms"], "max": -0.075, "phases": ["Finish"], "tol": 0.025},
+    {"id": "shoulders", "label": "Keep shoulders down at the squeeze", "measure": {"delta": ["c7", "shoulder"], "axis": "y"}, "parts": ["thorax", "upperArms"], "min": 0.057, "phases": ["Finish"], "tol": 0.01}
+  ],
+  "mistakes": [
+    {"id": "off-pad", "label": "Chest lifting off the pad", "cue": "Lighten the load, stay pinned", "fails": ["pad"], "delta": [{"t": 0.2}, {"t": 0.35, "rootPitch": -20}, {"t": 0.55, "rootPitch": -20}]},
+    {"id": "shrug", "label": "Shrugging toward the ears", "cue": "Shoulders down, lead with the elbows", "fails": ["shoulders"], "delta": [{"t": 0.35, "scapElev": 36}, {"t": 0.55, "scapElev": 36}]},
+    {"id": "short-rep", "label": "Short reps", "cue": "Full stretch and full squeeze", "fails": ["stretch", "drive"], "delta": [{"t": 0, "gripL.z": -0.13, "gripR.z": -0.13, "linkL.z": -0.13, "linkR.z": -0.13, "leverL.z": -0.065, "leverR.z": -0.065, "plateL.z": -0.0936, "plateR.z": -0.0936, "leverL.pitch": 14.3, "leverR.pitch": 14.3}, {"t": 0.08, "gripL.z": -0.13, "gripR.z": -0.13, "linkL.z": -0.13, "linkR.z": -0.13, "leverL.z": -0.065, "leverR.z": -0.065, "plateL.z": -0.0936, "plateR.z": -0.0936, "leverL.pitch": 14.3, "leverR.pitch": 14.3}, {"t": 0.35, "gripL.z": 0.25, "gripR.z": 0.25, "linkL.z": 0.25, "linkR.z": 0.25, "leverL.z": 0.125, "leverR.z": 0.125, "plateL.z": 0.18, "plateR.z": 0.18, "leverL.pitch": -27.5, "leverR.pitch": -27.5}, {"t": 0.55, "gripL.z": 0.25, "gripR.z": 0.25, "linkL.z": 0.25, "linkR.z": 0.25, "leverL.z": 0.125, "leverR.z": 0.125, "plateL.z": 0.18, "plateR.z": 0.18, "leverL.pitch": -27.5, "leverR.pitch": -27.5}, {"t": 0.96, "gripL.z": -0.13, "gripR.z": -0.13, "linkL.z": -0.13, "linkR.z": -0.13, "leverL.z": -0.065, "leverR.z": -0.065, "plateL.z": -0.0936, "plateR.z": -0.0936, "leverL.pitch": 14.3, "leverR.pitch": 14.3}, {"t": 1, "gripL.z": -0.13, "gripR.z": -0.13, "linkL.z": -0.13, "linkR.z": -0.13, "leverL.z": -0.065, "leverR.z": -0.065, "plateL.z": -0.0936, "plateR.z": -0.0936, "leverL.pitch": 14.3, "leverR.pitch": 14.3}]}
+  ]
+}

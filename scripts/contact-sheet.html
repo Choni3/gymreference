@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Motion contact sheet</title>
+  <style>body { margin: 0; background: #111214; color: #f2f3f5; font: 14px system-ui, sans-serif; } canvas { display: block; max-width: 100%; }</style>
+</head>
+<body>
+<!-- Renders contact sheets of a motion with the in-app renderer (js/motion/view3d.js).
+     Driven by scripts/contact-sheet.mjs; also works by hand:
+     scripts/contact-sheet.html?motion=squat-barbell.json&frames=8&views=side,front -->
+<script type="module">
+import { createView, motionBounds, COLORS } from '../js/motion/view3d.js';
+import { evaluate } from '../js/motion/pose.js';
+
+const q = new URLSearchParams(location.search);
+const motion = await (await fetch(`../motions/${q.get('motion')}`)).json();
+const views = (q.get('views') || 'side,front').split(',');
+const n = Number(q.get('frames') || 8);
+const times = q.get('t') ? q.get('t').split(',').map(Number) : Array.from({ length: n }, (_, i) => i / n);
+const frames = times.length;
+const W = Number(q.get('w') || 240), H = Number(q.get('h') || 300), HEAD = 46, ROWLABEL = 22;
+
+const gl = document.createElement('canvas');
+gl.width = W;
+gl.height = H;
+const view = createView(gl, motion, { bounds: motionBounds(motion), pixelRatio: 1 });
+view.resize(W, H);
+
+const hex = (n) => `#${n.toString(16).padStart(6, '0')}`;
+const ICON = { good: '+', warn: '!', bad: 'x', off: '-' }; // ASCII: headless fonts lack ✓ ⚠ ✕
+const sheets = {};
+for (const m of [null, ...(motion.mistakes || [])]) {
+  const sheet = document.createElement('canvas');
+  sheet.width = frames * W;
+  sheet.height = HEAD + views.length * (H + ROWLABEL);
+  const ctx = sheet.getContext('2d');
+  ctx.fillStyle = '#111214';
+  ctx.fillRect(0, 0, sheet.width, sheet.height);
+  ctx.fillStyle = '#f2f3f5';
+  ctx.font = 'bold 20px system-ui, sans-serif';
+  ctx.fillText(`${motion.exercise} — ${m ? `Mistake: ${m.label}` : 'Correct'}`, 10, 28);
+  if (m) {
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText(`Cue: ${m.cue}   (must fail: ${m.fails.join(', ')})`, 10, 43);
+  }
+  views.forEach((v, row) => {
+    const y0 = HEAD + row * (H + ROWLABEL);
+    view.setView(v);
+    for (let i = 0; i < frames; i++) {
+      const t = times[i];
+      const pose = evaluate(motion, t, m?.id ?? null);
+      view.draw(pose);
+      ctx.drawImage(gl, i * W, y0 + ROWLABEL);
+      ctx.font = '13px system-ui, sans-serif';
+      ctx.fillStyle = '#9a9ca3';
+      ctx.fillText(`${v} · t=${t.toFixed(3)} · ${pose.phase?.name ?? ''}`, i * W + 6, y0 + 16);
+      // Check icons along the bottom of each cell.
+      let x = i * W + 6;
+      for (const c of pose.checks) {
+        const label = `${ICON[c.status]}${c.id}`;
+        ctx.fillStyle = c.status === 'off' ? '#6b6e75' : hex(COLORS[c.status]);
+        ctx.fillText(label, x, y0 + ROWLABEL + H - 8);
+        x += ctx.measureText(label).width + 6;
+      }
+      ctx.strokeStyle = '#33353b';
+      ctx.strokeRect(i * W + 0.5, y0 + ROWLABEL + 0.5, W - 1, H - 1);
+    }
+  });
+  sheets[m ? m.id : 'correct'] = sheet.toDataURL('image/png');
+  document.body.append(sheet);
+}
+view.dispose();
+window.__sheets = sheets;
+</script>
+</body>
+</html>

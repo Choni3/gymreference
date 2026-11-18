@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "exercise": "Leg Extension (Machine)",
+  "durationMs": 4800,
+  "props": [
+    {"id": "seat", "type": "bench", "pos": [0, 0, 0.09], "height": 0.51, "length": 0.52, "width": 0.4},
+    {"id": "backPad", "type": "box", "pos": [0, 0.785, -0.137], "size": [0.35, 0.55, 0.085]},
+    {"id": "handleL", "type": "rod", "pos": [0.265, 0.62, 0.18], "length": 0.16, "grip": 0.09, "rot": [0, 90, 0]},
+    {"id": "handleR", "type": "rod", "pos": [-0.265, 0.62, 0.18], "length": 0.16, "grip": 0.09, "rot": [0, 90, 0]},
+    {"id": "base", "type": "box", "pos": [0, 0.035, 0.14], "size": [0.54, 0.07, 0.6]},
+    {"id": "pivot", "type": "rod", "pos": [0, 0.6, 0.429], "length": 0.59, "grip": 0.56, "radius": 0.024},
+    {"id": "frame", "type": "box", "pos": [0.29, 0.32, 0.429], "size": [0.07, 0.54, 0.085]},
+    {"id": "roller", "type": "roller", "attach": {"to": "shinL", "offset": [-0.09, -0.359, 0.077]}, "length": 0.55, "radius": 0.05},
+    {"id": "lever", "type": "box", "attach": {"to": "shinL", "offset": [0.169, -0.1795, 0.0385]}, "size": [0.05, 0.36716, 0.055], "rot": [-12.10566, 0, 0]}
+  ],
+  "contacts": {
+    "handL": {
+      "at": "handleL.center",
+      "elbowPole": [
+        0.4,
+        -0.5,
+        -1
+      ]
+    },
+    "handR": {
+      "at": "handleR.center",
+      "elbowPole": [
+        0.4,
+        -0.5,
+        -1
+      ]
+    }
+  },
+  "phases": [
+    {"name": "Stretch", "start": 0, "end": 0.08},
+    {"name": "Extend", "start": 0.08, "end": 0.36},
+    {"name": "Squeeze", "start": 0.36, "end": 0.53},
+    {"name": "Return", "start": 0.53, "end": 0.94},
+    {"name": "Reset", "start": 0.94, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 92, "ankleFlex": 4},
+    {"t": 0.08, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 92, "ankleFlex": 4},
+    {"t": 0.36, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 7, "ankleFlex": 4},
+    {"t": 0.53, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 7, "ankleFlex": 4},
+    {"t": 0.94, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 92, "ankleFlex": 4},
+    {"t": 1, "rootY": 0.6, "rootZ": 0, "rootPitch": 0, "hipFlex": 90, "kneeFlex": 92, "ankleFlex": 4}
+  ],
+  "checks": [
+    {"id": "seat", "label": "Keep the hips on the seat", "measure": {"delta": ["seat", "seat.top"], "axis": "y"}, "parts": ["pelvis", "seat"], "min": -0.017, "max": 0.02, "tol": 0.018},
+    {"id": "torso", "label": "Keep the back steady against the pad", "measure": "trunkLean", "parts": ["back"], "min": -6, "max": 6, "tol": 5},
+    {"id": "pivot", "label": "Line up the knees with the machine pivot", "measure": {"delta": ["pivot", "knee"], "axis": "dist"}, "parts": ["knees", "pivot"], "min": 0, "max": 0.027, "tol": 0.019},
+    {"id": "range", "label": "Nearly straighten the knees", "measure": "kneeFlex", "parts": ["shins", "roller"], "max": 13, "tol": 5, "phases": ["Squeeze"], "sides": true},
+    {"id": "bend", "label": "Use a full knee bend", "measure": "kneeFlex", "parts": ["knees", "roller"], "min": 88, "tol": 7, "phases": ["Stretch"], "sides": true}
+  ],
+  "mistakes": [
+    {"id": "hips-lift", "label": "Hips lift off the seat", "cue": "hold the handles, lighten the load", "fails": ["seat"], "delta": [{"t": 0.31, "rootY": 0.087, "hipFlex": -7}, {"t": 0.53, "rootY": 0.087, "hipFlex": -7}]},
+    {"id": "off-pivot", "label": "Knee not lined up with the pivot", "cue": "re-adjust back pad and shin pad", "fails": ["pivot"], "delta": [{"t": 0, "rootZ": 0.083}, {"t": 1, "rootZ": 0.083}]},
+    {"id": "skips-stretch", "label": "Skipping the stretch", "cue": "use the deepest range you can control", "fails": ["bend"], "delta": [{"t": 0, "kneeFlex": -30}, {"t": 0.1, "kneeFlex": -25}, {"t": 0.36, "kneeFlex": 0}, {"t": 0.53, "kneeFlex": 0}, {"t": 0.88, "kneeFlex": -23}, {"t": 1, "kneeFlex": -30}]}
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "exercise": "Bench Press (Barbell)",
+  "durationMs": 3200,
+  "props": [
+    {"id": "bench", "type": "bench", "pos": [0, 0, 0.025], "height": 0.43, "width": 0.29, "length": 1.28},
+    {"id": "bar", "type": "barbell", "pos": [0, 1.124, -0.065], "grip": 0.65}
+  ],
+  "contacts": {"feet": {"at": [0.24, 0, 0.66], "toeOut": 15}, "hands": {"at": "bar.grip", "elbowPole": [0.6, -0.56, -1]}},
+  "phases": [
+    {"name": "Descent", "start": 0, "end": 0.49},
+    {"name": "Chest touch", "start": 0.49, "end": 0.64},
+    {"name": "Press", "start": 0.64, "end": 0.92},
+    {"name": "Lockout", "start": 0.92, "end": 1}
+  ],
+  "keyframes": [
+    {"t": 0, "rootPitch": -85, "rootY": 0.524, "rootZ": 0.435, "lumbarFlex": 3, "thoracicFlex": -15, "scapProt": -12, "neckFlex": 13, "bar.y": 0, "bar.z": 0},
+    {"t": 0.25, "bar.y": -0.2, "bar.z": 0.085},
+    {"t": 0.49, "rootPitch": -85, "rootY": 0.524, "rootZ": 0.435, "lumbarFlex": 3, "thoracicFlex": -15, "scapProt": -12, "neckFlex": 13, "bar.y": -0.43, "bar.z": 0.19},
+    {"t": 0.64, "rootPitch": -85, "rootY": 0.524, "rootZ": 0.435, "lumbarFlex": 3, "thoracicFlex": -15, "scapProt": -12, "neckFlex": 13, "bar.y": -0.43, "bar.z": 0.19},
+    {"t": 0.78, "bar.y": -0.17, "bar.z": 0.06},
+    {"t": 0.92, "rootPitch": -85, "rootY": 0.524, "rootZ": 0.435, "lumbarFlex": 3, "thoracicFlex": -15, "scapProt": -12, "neckFlex": 13, "bar.y": 0, "bar.z": 0},
+    {"t": 1, "rootPitch": -85, "rootY": 0.524, "rootZ": 0.435, "lumbarFlex": 3, "thoracicFlex": -15, "scapProt": -12, "neckFlex": 13, "bar.y": 0, "bar.z": 0}
+  ],
+  "checks": [
+    {"id": "glutes", "label": "Glutes stay on the bench", "measure": {"delta": ["root", "bench.top"], "axis": "y"}, "parts": ["pelvis", "bench"], "min": 0.08, "max": 0.105, "tol": 0.025},
+    {"id": "touch", "label": "Bar touches the lower chest", "measure": {"delta": ["bar", "t12"], "axis": "y"}, "parts": ["bar", "thorax"], "min": 0.13, "max": 0.22, "tol": 0.025, "phases": ["Chest touch"]},
+    {"id": "tuck", "label": "Elbows tuck toward the torso", "measure": "shAbd", "parts": ["upperArms"], "min": 20, "max": 59, "tol": 6, "phases": ["Chest touch"], "sides": true},
+    {"id": "arch", "label": "Keep the low-back arch moderate", "measure": "lumbarFlex", "parts": ["lumbar"], "min": -12, "max": 13, "tol": 6},
+    {"id": "stack", "label": "Finish with the bar above the shoulders", "measure": {"delta": ["bar", "shoulder"], "axis": "z"}, "parts": ["bar", "arms"], "min": -0.09, "max": 0.09, "tol": 0.025, "phases": ["Lockout"]}
+  ],
+  "mistakes": [
+    {"id": "elbow-flare", "label": "Elbows flared to 90°", "cue": "Tuck to about 45°.", "fails": ["tuck"], "delta": [{"t": 0.49, "elbowOut": 54}, {"t": 0.64, "elbowOut": 54}]},
+    {"id": "low-back-arch", "label": "Big low-back arch, flat chest", "cue": "Arch by lifting the chest.", "fails": ["arch"], "delta": [{"t": 0.42, "lumbarFlex": -24, "thoracicFlex": 24, "rootY": 0.06}, {"t": 0.68, "lumbarFlex": -24, "thoracicFlex": 24, "rootY": 0.06}]}
+  ]
+}

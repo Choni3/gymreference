@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "exercise": "Lateral Raise (Dumbbell)",
+  "durationMs": 4000,
+  "props": [
+    { "id": "dbL", "type": "dumbbell", "attach": { "to": "handL" } },
+    { "id": "dbR", "type": "dumbbell", "attach": { "to": "handR" } }
+  ],
+  "contacts": {
+    "feet": { "at": [0.11, 0, 0.01], "toeOut": 8 }
+  },
+  "phases": [
+    { "name": "Start", "start": 0, "end": 0.05 },
+    { "name": "Raise", "start": 0.05, "end": 0.38 },
+    { "name": "Top", "start": 0.38, "end": 0.46 },
+    { "name": "Lower", "start": 0.46, "end": 0.95 },
+    { "name": "Bottom", "start": 0.95, "end": 1 }
+  ],
+  "keyframes": [
+    { "t": 0, "rootY": 0.92, "rootPitch": 2, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0, "scapElev": 0, "scapProt": 0, "shAbd": 12, "shFlex": 6, "shRot": 0, "elbowFlex": 15, "forearmPro": 0, "wristFlex": 0 },
+    { "t": 0.05, "shAbd": 12, "shFlex": 6, "scapElev": 0 },
+    { "t": 0.38, "shAbd": 84, "shFlex": 10, "scapElev": 4, "elbowFlex": 15 },
+    { "t": 0.46, "shAbd": 84, "shFlex": 10, "scapElev": 4 },
+    { "t": 0.95, "shAbd": 12, "shFlex": 6, "scapElev": 0 },
+    { "t": 1, "rootY": 0.92, "rootPitch": 2, "lumbarFlex": 0, "thoracicFlex": 0, "neckFlex": 0, "scapElev": 0, "scapProt": 0, "shAbd": 12, "shFlex": 6, "shRot": 0, "elbowFlex": 15, "forearmPro": 0, "wristFlex": 0 }
+  ],
+  "checks": [
+    { "id": "height", "label": "Stop at about shoulder height", "measure": { "delta": ["elbow", "shoulder"], "axis": "y" }, "min": -0.09, "max": 0.05, "tol": 0.04, "phases": ["Top"], "parts": ["upperArms"] },
+    { "id": "elbows", "label": "Slight elbow bend, fixed", "measure": "elbowFlex", "sides": true, "min": 5, "max": 30, "tol": 10, "parts": ["forearms"] },
+    { "id": "torso", "label": "Torso still, no swing", "measure": "trunkLean", "min": -5, "max": 8, "tol": 5, "parts": ["trunk"] },
+    { "id": "shoulders", "label": "Shoulders down, away from the ears", "measure": { "delta": ["shoulder", "c7"], "axis": "y" }, "max": -0.025, "tol": 0.015, "parts": ["neck", "head"] }
+  ],
+  "mistakes": [
+    { "id": "swing", "label": "Swinging with hips/back", "cue": "Go lighter, torso still", "fails": ["torso"],
+      "delta": [
+        { "t": 0.03, "rootPitch": 16, "rootY": -0.03 },
+        { "t": 0.12, "rootPitch": 10, "rootY": -0.03 },
+        { "t": 0.3, "rootPitch": -14, "lumbarFlex": -8 },
+        { "t": 0.46, "rootPitch": -14, "lumbarFlex": -8 },
+        { "t": 0.7, "rootPitch": -4 }
+      ] },
+    { "id": "shrug", "label": "Shrugging", "cue": "Shoulders down, away from the ears", "fails": ["shoulders"],
+      "delta": [
+        { "t": 0.15, "scapElev": 8 },
+        { "t": 0.38, "scapElev": 24 },
+        { "t": 0.46, "scapElev": 24 },
+        { "t": 0.8, "scapElev": 8 }
+      ] },
+    { "id": "bent-elbows", "label": "Elbows bent to 90°", "cue": "Keep just a slight bend", "fails": ["elbows"],
+      "delta": [
+        { "t": 0.05, "elbowFlex": 70 },
+        { "t": 0.38, "elbowFlex": 75, "shRot": -40 },
+        { "t": 0.46, "elbowFlex": 75, "shRot": -40 },
+        { "t": 0.95, "elbowFlex": 70 }
+      ] },
+    { "id": "too-high", "label": "Raising far above the shoulders", "cue": "Stop at shoulder height", "fails": ["height"],
+      "delta": [
+        { "t": 0.05 },
+        { "t": 0.38, "shAbd": 40, "scapElev": 10 },
+        { "t": 0.46, "shAbd": 40, "scapElev": 10 },
+        { "t": 0.95 }
+      ] }
+  ]
+}
